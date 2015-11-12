@@ -143,7 +143,7 @@ static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *
                 if (!corto_ser_appendstr(data, "\"%s\"", escapedValue)) {
                     corto_dealloc(escapedValue);
                     goto finished;
-                }                
+                }
             }
 
             corto_dealloc(escapedValue);
@@ -350,13 +350,6 @@ static corto_int16 serializeMeta(corto_serializer s, corto_value* v, void* userD
     corto_fullname(corto_typeof(o), type_fullname);
     if (!corto_appendStringAttr("type", type_fullname, userData)) {
         goto finished;
-    }
-
-    if (corto_checkAttr(o, CORTO_ATTR_PERSISTENT)) {
-        corto_time t = corto_timestampof(o);
-        if (!corto_ser_appendstr(data, "\"timestamp\":\"%d.%.9d\",", t.tv_sec, t.tv_nsec)) {
-            goto finished;
-        }
     }
 
     char states[sizeof("V|DCL|DEF")];
