@@ -36,6 +36,10 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
 corto_object corto_json_deser(corto_string s);
 corto_string json_serialize(corto_object o);
 
+corto_string json_fromCorto(corto_object o);
+corto_int16 json_toCorto(corto_object *o, corto_string json);
+void json_release(corto_string json);
+
 /* $end */
 
 #ifdef __cplusplus

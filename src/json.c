@@ -548,9 +548,25 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
 
 corto_string json_serialize(corto_object o) {
     struct corto_serializer_s serializer = corto_json_ser(CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER);
-    corto_json_ser_t jsonData = {NULL, NULL, 0, 0, 0, FALSE, TRUE, FALSE, TRUE};
+    serializer.aliasAction = CORTO_SERIALIZER_ALIAS_IGNORE;
+    corto_json_ser_t jsonData = {NULL, NULL, 0, 0, 0, FALSE, TRUE, FALSE, FALSE, FALSE};
     corto_serialize(&serializer, o, &jsonData);
     return jsonData.buffer;
+}
+
+corto_string json_fromCorto(corto_object o) {
+    return json_serialize(o);
+}
+
+corto_int16 json_toCorto(corto_object *o, corto_string json) {
+    CORTO_UNUSED(o);
+    CORTO_UNUSED(json);
+    corto_seterr("JSON deserialization unsupported");
+    return -1;
+}
+
+void json_release(corto_string json) {
+    corto_dealloc(json);
 }
 
 int jsonMain(int argc, char* argv[]) {
