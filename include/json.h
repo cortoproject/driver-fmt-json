@@ -6,19 +6,17 @@
 #ifndef json_H
 #define json_H
 
-#include "corto.h"
+#include "corto/corto.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* $header() */
-#include "corto_serializer.h"
-
 #define CORTO_JSON_ROOT_NAME "::"
 #define CORTO_JSON_ROOT_PARENT ""
 
 /* JSON serializer data */
-typedef struct corto_json_ser_t {
+typedef struct json_ser_t {
     /* Public */
     corto_string buffer;
     corto_string ptr;
@@ -30,14 +28,15 @@ typedef struct corto_json_ser_t {
     corto_bool serializeScope;
     corto_bool alwaysIncludeHeaders;
     corto_bool serializePrefix;
-} corto_json_ser_t;
+} json_ser_t;
 
 struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_serializerTraceKind trace);
-corto_object corto_json_deser(corto_string s);
+
 corto_string json_serialize(corto_object o);
+corto_int16 json_deserialize(corto_object o, corto_string s);
 
 corto_string json_fromCorto(corto_object o);
-corto_int16 json_toCorto(corto_object *o, corto_string json);
+corto_int16 json_toCorto(corto_object o, corto_string json);
 void json_release(corto_string json);
 
 /* $end */
