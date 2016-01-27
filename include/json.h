@@ -1,17 +1,21 @@
-/* include/json.h
+/* json.h
  *
  * This file is generated. Do not modify.
  */
 
-#ifndef json_H
-#define json_H
+#ifndef JSON_H
+#define JSON_H
 
 #include "corto/corto.h"
+#include "json/_interface.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* $header() */
+#include "json/parson.h"
+
 #define CORTO_JSON_ROOT_NAME "::"
 #define CORTO_JSON_ROOT_PARENT ""
 

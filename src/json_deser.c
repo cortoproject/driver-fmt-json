@@ -1,6 +1,5 @@
 
 #include "json.h"
-#include "parson.h"
 
 static corto_int16 json_deserType(void *p, corto_type t, JSON_Value *v);
 
