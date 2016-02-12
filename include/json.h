@@ -7,14 +7,14 @@
 #define JSON_H
 
 #include "corto/corto.h"
-#include "json/_interface.h"
+#include "corto/fmt/json/_interface.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* $header() */
-#include "json/parson.h"
+#include "corto/fmt/json/parson.h"
 
 #define CORTO_JSON_ROOT_NAME "::"
 #define CORTO_JSON_ROOT_PARENT ""
@@ -49,4 +49,3 @@ void json_release(corto_string json);
 }
 #endif
 #endif
-
