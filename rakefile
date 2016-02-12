@@ -1,5 +1,7 @@
-TARGET = :json
+PACKAGE = 'corto/fmt/json'
 
+NOCORTO = true
+USE_PACKAGE = ["corto"]
 CFLAGS = ["-Wunused-parameter"]
 
-require "#{ENV['CORTO_BUILD']}/component"
+require "#{ENV['CORTO_BUILD']}/package"

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "json.h"
+#include "corto/fmt/json/json.h"
 
 /* agreed not to change anything except the first argument of the signature */
 static corto_bool corto_ser_appendstrbuff(json_ser_t* data, char* str) {
@@ -441,7 +441,7 @@ void json_release(corto_string json) {
     corto_dealloc(json);
 }
 
-int jsonMain(int argc, char* argv[]) {
+int cortomain(int argc, char* argv[]) {
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);
     return 0;
