@@ -371,12 +371,8 @@ finished:
 static corto_int16 serializeBase(corto_serializer s, corto_value* v, void* userData) {
     json_ser_t *data = userData;
 
-    if (data->serializePrefix) {
-        if (!corto_ser_appendstr(
-            data, "\"@%s\":", corto_fullpath(NULL, corto_valueType(v))))
-        {
-            goto finished;
-        }
+    if (!corto_ser_appendstr(data, "\"super\":")) {
+        goto finished;
     }
     if (corto_serializeValue(s, v, userData)) {
         goto error;
