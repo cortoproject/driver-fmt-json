@@ -437,7 +437,7 @@ void json_release(corto_string json) {
     corto_dealloc(json);
 }
 
-int cortomain(int argc, char* argv[]) {
+int jsonMain(int argc, char* argv[]) {
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);
     return 0;

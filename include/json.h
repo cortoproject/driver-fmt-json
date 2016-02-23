@@ -3,11 +3,10 @@
  * This file is generated. Do not modify.
  */
 
-#ifndef JSON_H
-#define JSON_H
+#ifndef CORTO_FMT_JSON_H
+#define CORTO_FMT_JSON_H
 
 #include "corto/corto.h"
-#include "corto/fmt/json/_interface.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,3 +48,4 @@ void json_release(corto_string json);
 }
 #endif
 #endif
+
