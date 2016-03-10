@@ -194,25 +194,55 @@ error:
 }
 
 corto_int16 json_deserialize(corto_object o, corto_string s) {
-    JSON_Value *jsonValue = json_parse_string(s);
+    char *json = s;
+    if ((json[0] != '{') && (json[1] != '[')) {
+        corto_asprintf(&json, "{\"value\": %s}", s);
+    }
+
+    JSON_Value *jsonValue = json_parse_string(json);
 
     if (o) {
-        if (!jsonValue || json_value_get_type(jsonValue) != JSONObject) {
+        JSON_Value *value = jsonValue;
+
+        if (!jsonValue) {
             corto_seterr("invalid JSON '%s'", s);
             goto error;
         }
 
-        if (json_deserType(o, corto_typeof(o), jsonValue)) {
-            goto error;
+        if (corto_typeof(o)->kind == CORTO_PRIMITIVE) {
+            JSON_Object* jsonObj = json_value_get_object(jsonValue);
+            if (!jsonObj) {
+                corto_seterr("invalid JSON for primitive value '%s'", json);
+                goto error;
+            }
+
+            size_t count = json_object_get_count(jsonObj);
+            if (count == 1) {
+                value = json_object_get_value(jsonObj, "value");
+            } else {
+                corto_seterr("invalid JSON for primitive value '%s'", json);
+                goto error;
+            }
         }
 
+        if (json_deserType(o, corto_typeof(o), value)) {
+            goto error;
+        }
     } else {
         corto_seterr("no object provided to JSON deserializer");
         goto error;
     }
 
+    if (json != s) {
+        corto_dealloc(json);
+    }
+
     return 0;
 error:
+    if (json != s) {
+        corto_dealloc(json);
+    }
+
     if (jsonValue) {
         json_value_free(jsonValue);
     }
