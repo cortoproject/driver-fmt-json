@@ -391,11 +391,17 @@ static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* use
         if (corto_serializeValue(s, v, userData)) {
             goto error;
         }
+     } else {
+        if (!corto_ser_appendstr(userData, "{}")) {
+            goto finished;
+        }
      }
 
     return 0;
 error:
     return -1;
+finished:
+    return 1;
 }
 
 struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_serializerTraceKind trace) {
