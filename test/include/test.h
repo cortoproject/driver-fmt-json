@@ -12,6 +12,9 @@
 #include "_meta.h"
 #include "_interface.h"
 
+#include "corto/fmt/json/json.h"
+#include "corto/test/test.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,8 +24,6 @@ extern "C" {
 #include "Point3D.h"
 #include "ReferenceType.h"
 #include "Serializer.h"
-#include "corto/fmt/json/json.h"
-#include "corto/test/test.h"
 
 #ifdef __cplusplus
 }
