@@ -5,66 +5,6 @@
 
 #include "corto/fmt/json/json.h"
 
-/* agreed not to change anything except the first argument of the signature */
-static corto_bool corto_ser_appendstrbuff(json_ser_t* data, char* str) {
-    if (!data->ptr) {
-        data->ptr = data->buffer;
-    }
-    if (!data->ptr) {
-        data->buffer = corto_strdup(str);
-        data->ptr = data->buffer;
-    } else {
-        corto_uint32 length, bufferLength;
-
-        if (!data->length) {
-            data->buffer = corto_realloc(data->buffer, strlen(data->buffer) + strlen(str) + 1);
-            data->ptr = data->buffer;
-        }
-
-        length = strlen(str);
-        bufferLength = strlen(data->buffer);
-
-        if (data->maxlength && ((bufferLength + length) >= data->maxlength)) {
-            strncat(data->ptr, str, data->maxlength - bufferLength);
-            goto maxreached;
-        } else {
-            strcat(data->ptr, str);
-        }
-    }
-
-    return TRUE;
-maxreached:
-    return FALSE;
-}
-
-/* agreed not to change anything except the first argument of the signature */
-/* Append string to serializer-result */
-static corto_bool corto_ser_appendstr(json_ser_t* data, corto_string fmt, ...) {
-    char alloc[1024];
-    char *buff = alloc;
-    va_list args;
-    corto_uint32 memRequired;
-    corto_uint32 result = TRUE;
-
-    if (data) {
-        va_list argcpy;
-        va_copy(argcpy, args);
-        va_start(args, fmt);
-        memRequired = vsnprintf(buff, 1024, fmt, args);
-        if (memRequired >= 1024) {
-            buff = corto_alloc(memRequired + 1);
-            vsprintf(buff, fmt, argcpy);
-        }
-        va_end(args);
-        result = corto_ser_appendstrbuff(data, buff);
-        if (buff != alloc) {
-            corto_dealloc(buff);
-        }
-    }
-
-    return result;
-}
-
 corto_int16 serializeNumber(
     corto_value *value,
     corto_string *out,
@@ -90,15 +30,16 @@ corto_int16 serializeNumber(
     return result;
 }
 
-static corto_int16 serializeNumericWithPrefix(
+static corto_int16 serializeConstant(
     corto_value *value,
     corto_string *out,
-    const char *prefix,
     json_ser_t *data)
 {
     corto_string raw;
     corto_void *v = corto_valueValue(value);
     corto_type t = corto_valueType(value);
+
+    CORTO_UNUSED(data);
 
     if (corto_convert(
         corto_primitive(t),
@@ -109,12 +50,7 @@ static corto_int16 serializeNumericWithPrefix(
         goto error;
     }
 
-    if (data->serializePrefix) {
-        corto_asprintf(out, "\"%s %s\"", prefix, raw);
-    } else {
-        corto_asprintf(out, "\"%s\"", raw);
-    }
-
+    corto_asprintf(out, "\"%s\"", raw);
     corto_dealloc(raw);
 
     return 0;
@@ -136,7 +72,7 @@ corto_int16 serializeBitmask(
     corto_string *out,
     json_ser_t *data)
 {
-    return serializeNumericWithPrefix(value, out, "@M", data);
+    return serializeConstant(value, out, data);
 }
 
 corto_int16 serializeEnum(
@@ -144,7 +80,7 @@ corto_int16 serializeEnum(
     corto_string *out,
     json_ser_t *data)
 {
-    return serializeNumericWithPrefix(value, out, "@E", data);
+    return serializeConstant(value, out, data);
 }
 
 corto_int16 serializeBoolean(
@@ -240,7 +176,7 @@ static corto_int16 serializePrimitive(corto_serializer s, corto_value *v, void *
     if (result) {
         goto error;
     }
-    if (!corto_ser_appendstr(data, "%s", valueString)) {
+    if (!corto_buffer_append(&data->buffer, "%s", valueString)) {
         goto finished;
     }
     corto_dealloc(valueString);
@@ -272,16 +208,10 @@ static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *
             /* Escape value */
             corto_string escapedValue = corto_alloc((length = stresc(NULL, 0, id)) + 1);
             stresc(escapedValue, length + 1, id);
-            if (data->serializePrefix) {
-                if (!corto_ser_appendstr(data, "\"@R %s\"", escapedValue)) {
-                    corto_dealloc(escapedValue);
-                    goto finished;
-                }
-            } else {
-                if (!corto_ser_appendstr(data, "\"%s\"", escapedValue)) {
-                    corto_dealloc(escapedValue);
-                    goto finished;
-                }
+
+            if (!corto_buffer_append(&data->buffer, "\"%s\"", escapedValue)) {
+                corto_dealloc(escapedValue);
+                goto finished;
             }
 
             corto_dealloc(escapedValue);
@@ -291,7 +221,7 @@ static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *
             }
         }
     } else {
-        if (!corto_ser_appendstrbuff(data, "null")) {
+        if (!corto_buffer_append(&data->buffer, "null")) {
             goto finished;
         }
     }
@@ -305,13 +235,13 @@ error:
 static corto_int16 serializeItem(corto_serializer s, corto_value *info, void *userData) {
     json_ser_t *data = userData;
 
-    if (data->itemCount && !corto_ser_appendstr(data, ",")) {
+    if (data->itemCount && !corto_buffer_append(&data->buffer, ",")) {
         goto finished;
     }
     if (info->kind == CORTO_MEMBER) {
         corto_member member = info->is.member.t;
         corto_string name = corto_nameof(member);
-        if (!corto_ser_appendstr(data, "\"%s\":", name)) {
+        if (!corto_buffer_append(&data->buffer, "\"%s\":", name)) {
             goto finished;
         }
     }
@@ -339,7 +269,7 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
         useCurlyBraces = FALSE;
     }
 
-    if (!corto_ser_appendstr(&data, (useCurlyBraces ? "{" : "["))) {
+    if (!corto_buffer_append(&data.buffer, (useCurlyBraces ? "{" : "["))) {
         goto finished;
     }
     if (type->kind == CORTO_COMPOSITE) {
@@ -354,12 +284,11 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
         goto error;
     }
 
-    if (!corto_ser_appendstr(&data, (useCurlyBraces ? "}" : "]"))) {
+    if (!corto_buffer_append(&data.buffer, (useCurlyBraces ? "}" : "]"))) {
         goto finished;
     }
 
     ((json_ser_t*)userData)->buffer = data.buffer;
-    ((json_ser_t*)userData)->ptr = data.ptr;
 
     return 0;
 error:
@@ -371,7 +300,7 @@ finished:
 static corto_int16 serializeBase(corto_serializer s, corto_value* v, void* userData) {
     json_ser_t *data = userData;
 
-    if (!corto_ser_appendstr(data, "\"super\":")) {
+    if (!corto_buffer_append(&data->buffer, "\"super\":")) {
         goto finished;
     }
     if (corto_serializeValue(s, v, userData)) {
@@ -386,13 +315,13 @@ finished:
 }
 
 static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* userData) {
-
+    json_ser_t *data = userData;
     if (corto_valueType(v)->kind != CORTO_VOID) {
         if (corto_serializeValue(s, v, userData)) {
             goto error;
         }
      } else {
-        if (!corto_ser_appendstr(userData, "{}")) {
+        if (!corto_buffer_append(&data->buffer, "{}")) {
             goto finished;
         }
      }
@@ -424,11 +353,13 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
 }
 
 corto_string json_serialize(corto_object o) {
-    struct corto_serializer_s serializer = corto_json_ser(CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER);
+    struct corto_serializer_s serializer = corto_json_ser(
+      CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER
+    );
     serializer.aliasAction = CORTO_SERIALIZER_ALIAS_IGNORE;
-    json_ser_t jsonData = {NULL, NULL, 0, 0, 0, FALSE, TRUE, FALSE, FALSE, FALSE};
+    json_ser_t jsonData = {{NULL, 0, 0}, NULL, 0, FALSE, TRUE, FALSE, FALSE, FALSE};
     corto_serialize(&serializer, o, &jsonData);
-    return jsonData.buffer;
+    return jsonData.buffer.str;
 }
 
 corto_string json_fromCorto(corto_object o) {

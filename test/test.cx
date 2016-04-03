@@ -1,0 +1,115 @@
+#package /test
+
+octet binary: 10
+
+bool boolTrue: true
+bool boolFalse: false
+
+char char: 'a'
+char charNull: '\0'
+char charEscape: '\\'
+
+int8 int8: 10
+int8 int8Minus: -10
+int16 int16: 10
+int16 int16Minus: -10
+int32 int32: 10
+int32 int32Minus: -10
+int64 int64: 10
+int64 int64Minus: -10
+
+uint8 uint8: 10
+uint16 uint16: 10
+uint32 uint32: 10
+uint64 uint64: 10
+
+string string: "Hello World"
+string stringEscape: "\\"
+string stringWhitespace: " "
+string stringEmpty: "\0"
+string stringNull: null
+
+enum Color:: Red, Yellow, Green, Blue
+bitmask Sandwich:: Chicken, Pork, Beef, Cheese, Lettuce, Tomato, Pickle, Pepper, Onion
+
+Color enum: Yellow
+Sandwich bitmask: Beef | Cheese | Lettuce | Tomato
+
+struct Point::
+    x, y: int32
+
+struct Line::
+    start, stop: Point
+
+struct Point3D: Point::
+    z: int32
+
+Point p: 10, 20
+Point3D p3d: 10, 20, 30
+Line l: {10, 20}, {30, 40}
+
+struct ReferenceType::
+    r: object
+
+ReferenceType reference: core/package
+ReferenceType referenceNull: null
+ReferenceType referenceFromLang: type
+ReferenceType referenceAnonymous: Point{10, 20}
+
+array{int32, 3} array: 10, 20, 30
+array{Point, 3} arrayComplex: {10, 20}, {30, 40}, {50, 60}
+sequence{int32} sequence: 10, 20, 30
+sequence{Point} sequenceComplex: {10, 20}, {30, 40}, {50, 60}
+list{int32} list: 10, 20, 30
+list{Point} listComplex: {10, 20}, {30, 40}, {50, 60}
+
+test/suite Serializer::
+    void tc_serBinary()
+    void tc_serBoolTrue()
+    void tc_serBoolFalse()
+
+    void tc_serChar()
+    void tc_serCharNull()
+    void tc_serCharEscape()
+
+    void tc_serInt8()
+    void tc_serInt8Minus()
+
+    void tc_serInt16()
+    void tc_serInt16Minus()
+
+    void tc_serInt32()
+    void tc_serInt32Minus()
+
+    void tc_serInt64()
+    void tc_serInt64Minus()
+
+    void tc_serUint8()
+    void tc_serUint16()
+    void tc_serUint32()
+    void tc_serUint64()
+
+    void tc_serString()
+    void tc_serStringEscape()
+    void tc_serStringWhitespace()
+    void tc_serStringNull()
+    void tc_serStringEmpty()
+
+    void tc_serEnum()
+    void tc_serBitmask()
+
+    void tc_serComposite()
+    void tc_serInheritance()
+    void tc_serCompositeNested()
+
+    void tc_serArray()
+    void tc_serArrayComplex()
+    void tc_serSequence()
+    void tc_serSequenceComplex()
+    void tc_serList()
+    void tc_serListComplex()
+
+    void tc_serReference()
+    void tc_serReferenceNull()
+    void tc_serReferenceFromLang()
+    void tc_serReferenceAnonymous()
