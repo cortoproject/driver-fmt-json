@@ -95,7 +95,7 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v) {
     }
 
     if (!corto_instanceof(t, o)) {
-        corto_error("%s is not an instance of %s", reference, corto_nameof(t));
+        corto_error("%s is not an instance of %s", reference, corto_idof(t));
     }
 
     corto_setref(p, o);

@@ -240,7 +240,7 @@ static corto_int16 serializeItem(corto_serializer s, corto_value *info, void *us
     }
     if (info->kind == CORTO_MEMBER) {
         corto_member member = info->is.member.t;
-        corto_string name = corto_nameof(member);
+        corto_string name = corto_idof(member);
         if (!corto_buffer_append(&data->buffer, "\"%s\":", name)) {
             goto finished;
         }
