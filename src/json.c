@@ -259,36 +259,38 @@ finished:
 }
 
 static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* userData) {
-    json_ser_t data = *(json_ser_t*)userData;
+    json_ser_t privateData, *data = userData;
     corto_type type = corto_valueType(v);
     corto_bool useCurlyBraces = TRUE;
-
-    data.itemCount = 0;
 
     if (type->kind == CORTO_COLLECTION && corto_collection(type)->kind != CORTO_MAP) {
         useCurlyBraces = FALSE;
     }
 
-    if (!corto_buffer_append(&data.buffer, (useCurlyBraces ? "{" : "["))) {
+    privateData.buffer = CORTO_BUFFER_INIT;
+    privateData.itemCount = 0;
+
+    if (!corto_buffer_append(&privateData.buffer, (useCurlyBraces ? "{" : "["))) {
         goto finished;
     }
     if (type->kind == CORTO_COMPOSITE) {
-        if (corto_serializeMembers(s, v, &data)) {
+        if (corto_serializeMembers(s, v, &privateData)) {
             goto error;
         }
     } else if (type->kind == CORTO_COLLECTION) {
-        if (corto_serializeElements(s, v, &data)) {
+        if (corto_serializeElements(s, v, &privateData)) {
             goto error;
         }
     } else {
         goto error;
     }
 
-    if (!corto_buffer_append(&data.buffer, (useCurlyBraces ? "}" : "]"))) {
+    if (!corto_buffer_append(&privateData.buffer, (useCurlyBraces ? "}" : "]"))) {
         goto finished;
     }
 
-    ((json_ser_t*)userData)->buffer = data.buffer;
+    corto_string str = corto_buffer_str(&privateData.buffer);
+    corto_buffer_append(&data->buffer, str);
 
     return 0;
 error:
@@ -307,6 +309,7 @@ static corto_int16 serializeBase(corto_serializer s, corto_value* v, void* userD
         goto error;
     }
     data->itemCount += 1;
+
     return 0;
 error:
     return -1;
@@ -316,6 +319,7 @@ finished:
 
 static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* userData) {
     json_ser_t *data = userData;
+
     if (corto_valueType(v)->kind != CORTO_VOID) {
         if (corto_serializeValue(s, v, userData)) {
             goto error;
@@ -357,9 +361,9 @@ corto_string json_serialize(corto_object o) {
       CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER
     );
     serializer.aliasAction = CORTO_SERIALIZER_ALIAS_IGNORE;
-    json_ser_t jsonData = {{NULL, 0, 0}, NULL, 0, FALSE, TRUE, FALSE, FALSE, FALSE};
+    json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
     corto_serialize(&serializer, o, &jsonData);
-    return jsonData.buffer.str;
+    return corto_buffer_str(&jsonData.buffer);
 }
 
 corto_string json_fromCorto(corto_object o) {

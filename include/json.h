@@ -20,15 +20,8 @@ extern "C" {
 
 /* JSON serializer data */
 typedef struct json_ser_t {
-    /* Public */
     corto_buffer buffer;
-    corto_string ptr;
     unsigned int itemCount;
-    corto_bool serializeMeta;
-    corto_bool serializeValue;
-    corto_bool serializeScope;
-    corto_bool alwaysIncludeHeaders;
-    corto_bool serializePrefix;
 } json_ser_t;
 
 struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_serializerTraceKind trace);
