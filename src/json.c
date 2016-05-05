@@ -12,14 +12,14 @@ corto_int16 serializeNumber(
 {
     CORTO_UNUSED(data);
 
-    corto_type t = corto_valueType(value);
+    corto_type t = corto_value_getType(value);
 
     /* JSON doesn't support hex notation, so convert to integer */
     if (corto_primitive(t)->kind == CORTO_BINARY) {
         t = corto_type(corto_uint64_o);
     }
 
-    corto_void  *v = corto_valueValue(value);
+    corto_void  *v = corto_value_getPtr(value);
 
     corto_int16 result = corto_convert(
         corto_primitive(t),
@@ -36,8 +36,8 @@ static corto_int16 serializeConstant(
     json_ser_t *data)
 {
     corto_string raw;
-    corto_void *v = corto_valueValue(value);
-    corto_type t = corto_valueType(value);
+    corto_void *v = corto_value_getPtr(value);
+    corto_type t = corto_value_getType(value);
 
     CORTO_UNUSED(data);
 
@@ -90,7 +90,7 @@ corto_int16 serializeBoolean(
 {
     CORTO_UNUSED(data);
 
-    corto_bool b = *(corto_bool *)corto_valueValue(value);
+    corto_bool b = *(corto_bool *)corto_value_getPtr(value);
     if (b) {
         *out = corto_strdup("true");
     } else {
@@ -106,8 +106,8 @@ corto_int16 serializeText(
     json_ser_t *data)
 {
     CORTO_UNUSED(data);
-    corto_type type = corto_valueType(value);
-    corto_void *v = corto_valueValue(value);
+    corto_type type = corto_value_getType(value);
+    corto_void *v = corto_value_getPtr(value);
     corto_primitiveKind kind = corto_primitive(type)->kind;
 
     if (kind == CORTO_CHARACTER || (kind == CORTO_TEXT && (*(corto_string *)v)))
@@ -145,7 +145,7 @@ error:
 
 static corto_int16 serializePrimitive(corto_serializer s, corto_value *v, void *userData) {
     CORTO_UNUSED(s);
-    corto_type type = corto_valueType(v);
+    corto_type type = corto_value_getType(v);
     json_ser_t *data = userData;
     corto_int16 result = 0;
     corto_string valueString;
@@ -197,11 +197,11 @@ static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *
     corto_id id;
 
     data = userData;
-    o = corto_valueValue(v);
+    o = corto_value_getPtr(v);
     object = *(corto_object*)o;
 
     if (object) {
-        if (corto_checkAttr(object, CORTO_ATTR_SCOPED) || (corto_valueObject(v) == object)) {
+        if (corto_checkAttr(object, CORTO_ATTR_SCOPED) || (corto_value_getObject(v) == object)) {
             corto_uint32 length;
             corto_fullpath(id, object);
 
@@ -260,7 +260,7 @@ finished:
 
 static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* userData) {
     json_ser_t privateData, *data = userData;
-    corto_type type = corto_valueType(v);
+    corto_type type = corto_value_getType(v);
     corto_bool useCurlyBraces = TRUE;
 
     if (type->kind == CORTO_COLLECTION && corto_collection(type)->kind != CORTO_MAP) {
@@ -320,7 +320,7 @@ finished:
 static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* userData) {
     json_ser_t *data = userData;
 
-    if (corto_valueType(v)->kind != CORTO_VOID) {
+    if (corto_value_getType(v)->kind != CORTO_VOID) {
         if (corto_serializeValue(s, v, userData)) {
             goto error;
         }
