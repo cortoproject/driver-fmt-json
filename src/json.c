@@ -361,6 +361,7 @@ corto_string json_serialize(corto_object o) {
       CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER
     );
     serializer.aliasAction = CORTO_SERIALIZER_ALIAS_IGNORE;
+    serializer.optionalAction = CORTO_SERIALIZER_OPTIONAL_IF_SET;
     json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
     corto_serialize(&serializer, o, &jsonData);
     return corto_buffer_str(&jsonData.buffer);

@@ -8,12 +8,12 @@
 
 #include <corto/corto.h>
 #include <_interface.h>
+#include <corto/fmt/json/json.h>
+#include <corto/test/test.h>
+
 #include <_type.h>
 #include <_api.h>
 #include <_meta.h>
-
-#include <corto/fmt/json/json.h>
-#include <corto/test/test.h>
 
 #ifdef __cplusplus
 extern "C" {

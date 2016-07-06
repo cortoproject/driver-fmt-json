@@ -8,10 +8,6 @@
 
 #include <corto/corto.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* $header() */
 #include "corto/fmt/json/parson.h"
 
@@ -35,6 +31,10 @@ corto_int16 json_toCorto(corto_object o, corto_string json);
 void json_release(corto_string json);
 
 /* $end */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifdef __cplusplus
 }

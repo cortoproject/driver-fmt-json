@@ -139,24 +139,38 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v) {
     for (i = 0; i < count; i++) {
         const char* memberName = json_object_get_name(o, i);
         corto_member member_o;
-        JSON_Value* value;
 
-        member_o = corto_interface_resolveMember(t, (char*)memberName);
+        if (!strcmp(memberName, "super")) {
+            JSON_Value* value = json_object_get_value(o, memberName);
+            if (json_deserItem(p, corto_type(corto_interface(t)->base), value)) {
+                goto error;
+            }
+        } else {
+            member_o = corto_interface_resolveMember(t, (char*)memberName);
 
-        /* Ensure that we're not resolving members from a base type */
-        if (!member_o || (corto_parentof(member_o) != t)) {
-            corto_seterr(
-                "cannot find member '%s' in type '%s'",
-                memberName,
-                corto_fullpath(NULL, t));
-            goto error;
-        }
+            /* Ensure that we're not resolving members from a base type */
+            if (!member_o || (corto_parentof(member_o) != t)) {
+                corto_seterr(
+                    "cannot find member '%s' in type '%s'",
+                    memberName,
+                    corto_fullpath(NULL, t));
+                goto error;
+            }
 
-        value = json_object_get_value(o, memberName);
-
-        void *offset = CORTO_OFFSET(p, member_o->offset);
-        if (json_deserItem(offset, member_o->type, value)) {
-            goto error;
+            JSON_Value* value = json_object_get_value(o, memberName);
+            void *offset = CORTO_OFFSET(p, member_o->offset);
+            if (member_o->modifiers & CORTO_OPTIONAL) {
+                if (*(void**)offset) {
+                    corto_deinitp(*(void**)offset, member_o->type);
+                    memset(*(void**)offset, 0, member_o->type->size);
+                } else {
+                    *(void**)offset = corto_calloc(member_o->type->size);
+                }
+                offset = *(void**)offset;
+            }
+            if (json_deserItem(offset, member_o->type, value)) {
+                goto error;
+            }
         }
     }
 
