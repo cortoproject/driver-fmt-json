@@ -141,6 +141,54 @@ corto_void _test_Serializer_tc_serCompositeNested(
 /* $end */
 }
 
+corto_void _test_Serializer_tc_serCompositeOptionalNotSet(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeOptionalNotSet) */
+    test_OptionalTypeCreate_auto(o, 10, 20, NotSet);
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"x\":10,\"y\":20}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serCompositeOptionalSet(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeOptionalSet) */
+    test_OptionalTypeCreate_auto(o, 10, 20, Set(30));
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":30}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serCompositeUnion(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeUnion) */
+    test_UnionTypeCreate_flt_auto(o, 1, 10.5);
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"_d\":1,\"flt\":10.500000}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serCompositeUnionDefault(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeUnionDefault) */
+    test_UnionTypeCreate_other_auto(o, 4, 10);
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"_d\":4,\"other\":10}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
 corto_void _test_Serializer_tc_serEnum(
     test_Serializer this)
 {

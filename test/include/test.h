@@ -20,10 +20,12 @@ extern "C" {
 #endif
 
 #include <Line.h>
+#include <OptionalType.h>
 #include <Point.h>
 #include <Point3D.h>
 #include <ReferenceType.h>
 #include <Serializer.h>
+#include <UnionType.h>
 
 #ifdef __cplusplus
 }

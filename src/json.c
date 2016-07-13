@@ -274,6 +274,11 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
         goto finished;
     }
     if (type->kind == CORTO_COMPOSITE) {
+        if (corto_interface(type)->kind == CORTO_UNION) {
+            corto_int32 *d = corto_value_getPtr(v);
+            corto_buffer_append(&privateData.buffer, "\"_d\":%d", *d);
+            privateData.itemCount = 1;
+        }
         if (corto_serializeMembers(s, v, &privateData)) {
             goto error;
         }
