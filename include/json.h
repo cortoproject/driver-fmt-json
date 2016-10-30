@@ -32,6 +32,7 @@ corto_string json_typedescriptor(corto_type t);
 corto_string json_fromCorto(corto_object o);
 corto_int16 json_toCorto(corto_object o, corto_string json);
 void json_release(corto_string json);
+corto_string json_copy(corto_string json);
 
 #ifdef __cplusplus
 }
@@ -46,4 +47,3 @@ extern "C" {
 }
 #endif
 #endif
-

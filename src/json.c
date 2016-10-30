@@ -380,6 +380,10 @@ corto_int16 json_toCorto(corto_object o, corto_string json) {
     return json_deserialize(o, json);
 }
 
+corto_string json_copy(corto_string json) {
+    return corto_strdup(json);
+}
+
 void json_release(corto_string json) {
     corto_dealloc(json);
 }
