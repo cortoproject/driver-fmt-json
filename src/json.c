@@ -216,8 +216,15 @@ static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *
 
             corto_dealloc(escapedValue);
         } else {
+            corto_id type;
+            if (!corto_buffer_append(&data->buffer, "{\"type\":\"%s\",\"value\":", corto_fullpath(type, corto_typeof(object)))) {
+                goto finished;
+            }
             if (corto_serialize(s, object, data)) {
                 goto error;
+            }
+            if (!corto_buffer_appendstr(&data->buffer, "}")) {
+                goto finished;
             }
         }
     } else {

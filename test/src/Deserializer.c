@@ -8,6 +8,25 @@
 
 #include <test.h>
 
+corto_void _test_Deserializer_tc_deserComposite(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserComposite) */
+    test_Point *p = corto_create(test_Point_o);
+    test_assert(p != NULL);
+    test_assert(corto_typeof(p) == corto_type(test_Point_o));
+
+    corto_int16 ret = json_toCorto(p, "{\"x\":10, \"y\":20}");
+    test_assert(ret == 0);
+
+    test_assertint(p->x, 10);
+    test_assertint(p->y, 20);
+
+    corto_delete(p);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserCompositeList(
     test_Deserializer this)
 {
@@ -33,6 +52,47 @@ corto_void _test_Deserializer_tc_deserCompositeList(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserCompositeNested(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCompositeNested) */
+    test_Line *l = corto_create(test_Line_o);
+    test_assert(l != NULL);
+    test_assert(corto_typeof(l) == corto_type(test_Line_o));
+
+    corto_int16 ret = json_toCorto(l, "{\"start\":{\"x\":10, \"y\":20}, \"stop\":{\"x\":30, \"y\":40}}");
+    test_assert(ret == 0);
+
+    test_assertint(l->start.x, 10);
+    test_assertint(l->start.y, 20);
+    test_assertint(l->stop.x, 30);
+    test_assertint(l->stop.y, 40);
+
+    corto_delete(l);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInheritance(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInheritance) */
+    test_Point3D *p = corto_create(test_Point3D_o);
+    test_assert(p != NULL);
+    test_assert(corto_typeof(p) == corto_type(test_Point3D_o));
+
+    corto_int16 ret = json_toCorto(p, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
+    test_assert(ret == 0);
+
+    test_assertint(p->_parent.x, 10);
+    test_assertint(p->_parent.y, 20);
+    test_assertint(p->z, 30);
+
+    corto_delete(p);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserList(
     test_Deserializer this)
 {
@@ -49,6 +109,102 @@ corto_void _test_Deserializer_tc_deserList(
     test_assertint((corto_int32)(corto_word)corto_llGet(*l, 2), 30);
 
     corto_delete(l);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserReference(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReference) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+    corto_int16 ret = json_toCorto(o, "{\"r\":\"/corto/core/package\"}");
+    test_assert(ret == 0);
+    test_assert(o->r == corto_package_o);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserReferenceAnonymous(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReferenceAnonymous) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+    corto_int16 ret = json_toCorto(o, "{\"r\":{\"type\":\"int32\",\"value\":10}}");
+    test_assert(ret == 0);
+    test_assert(o->r != NULL);
+
+    test_assert(corto_typeof(o->r) == corto_type(corto_int32_o));
+    test_assertint(*(corto_int32*)o->r, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserReferenceAnonymousCollection(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReferenceAnonymousCollection) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+    corto_int16 ret = json_toCorto(o, "{\"r\":{\"type\":\"/test/myList\",\"value\":[10,20,30]}}");
+    test_assert(ret == 0);
+    test_assert(o->r != NULL);
+
+    test_assert(corto_typeof(o->r) == corto_type(test_myList_o));
+    test_assertint(corto_llSize(*(corto_ll*)o->r), 3);
+
+    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 0), 10);
+    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 1), 20);
+    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 2), 30);
+
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserReferenceAnonymousComplex(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReferenceAnonymousComplex) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+    corto_int16 ret = json_toCorto(o, "{\"r\":{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}}");
+    test_assert(ret == 0);
+    test_assert(o->r != NULL);
+
+    test_assert(corto_typeof(o->r) == corto_type(test_Point_o));
+    test_assertint(test_Point(o->r)->x, 10);
+    test_assertint(test_Point(o->r)->y, 20);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserReferenceFromLang(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReferenceFromLang) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+    corto_int16 ret = json_toCorto(o, "{\"r\":\"/corto/core/package\"}");
+    test_assert(ret == 0);
+    test_assert(o->r == corto_package_o);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserReferenceNull(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReferenceNull) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+    corto_int16 ret = json_toCorto(o, "{\"r\":\"/corto/core/package\"}");
+    test_assert(ret == 0);
+    test_assert(o->r == corto_package_o);
+
+    ret = json_toCorto(o, "{\"r\":null}");
+    test_assert(o->r == NULL);
+    corto_delete(o);
 
 /* $end */
 }

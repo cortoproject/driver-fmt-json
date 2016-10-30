@@ -348,7 +348,7 @@ corto_void _test_Serializer_tc_serReferenceAnonymous(
 /* $begin(test/Serializer/tc_serReferenceAnonymous) */
 
     corto_string s = json_fromCorto(test_referenceAnonymous_o);
-    test_assertstr(s, "{\"r\":{\"x\":10,\"y\":20}}");
+    test_assertstr(s, "{\"r\":{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}}");
     corto_dealloc(s);
 
 /* $end */

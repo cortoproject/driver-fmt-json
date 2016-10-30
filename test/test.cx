@@ -74,9 +74,22 @@ sequence{Point} sequenceComplex: {10, 20}, {30, 40}, {50, 60}
 list{int32} list: 10, 20, 30
 list{Point} listComplex: {10, 20}, {30, 40}, {50, 60}
 
+list myList: int32
+
 test/suite Deserializer::
+    void tc_deserComposite()
+    void tc_deserInheritance()
+    void tc_deserCompositeNested()
+
     void tc_deserList()
     void tc_deserCompositeList()
+
+    void tc_deserReference()
+    void tc_deserReferenceNull()
+    void tc_deserReferenceFromLang()
+    void tc_deserReferenceAnonymous()
+    void tc_deserReferenceAnonymousComplex()
+    void tc_deserReferenceAnonymousCollection()
 
 test/suite Serializer::
     void tc_serBinary()

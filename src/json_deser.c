@@ -101,24 +101,58 @@ error:
 }
 
 corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v) {
-    const char* reference = json_value_get_string(v);
-    if (json_value_get_type(v) != JSONString) {
-        corto_seterr("expected string (reference), got %s", json_valueTypeToString(v));
-        goto error;
-    }
+    switch(json_value_get_type(v)) {
+    case JSONString: {
+        const char* reference = json_value_get_string(v);
+        corto_object o = corto_resolve(NULL, (corto_string)reference);
+        if (!o) {
+            corto_error("unresolved reference \"%s\"", reference);
+            goto error;
+        }
 
-    corto_object o = corto_resolve(NULL, (corto_string)reference);
-    if (!o) {
-        corto_error("unresolved reference \"%s\"", reference);
-        goto error;
-    }
+        if (!corto_instanceof(t, o)) {
+            corto_error("%s is not an instance of %s", reference, corto_idof(t));
+        }
 
-    if (!corto_instanceof(t, o)) {
-        corto_error("%s is not an instance of %s", reference, corto_idof(t));
+        corto_setref(p, o);
+        corto_release(o);
+        break;
     }
+    case JSONObject: {
+        JSON_Object* obj = json_value_get_object(v);
 
-    corto_setref(p, o);
-    corto_release(o);
+        JSON_Value* type = json_object_get_value(obj, "type");
+        if (json_value_get_type(type) != JSONString) {
+            corto_seterr("type parameter of anonymous object must be a string");
+            goto error;
+        }
+        corto_type cortoType = corto_resolve(NULL, (char*)json_value_get_string(type));
+        if (!cortoType) {
+            corto_seterr("type '%s' not found for anonymous object", json_value_get_string(type));
+            goto error;
+        }
+
+        corto_object cortoObj = *(corto_object*)p;
+        if (!cortoObj || (corto_typeof(cortoObj) != cortoType)) {
+            cortoObj = corto_create(cortoType);
+            corto_setref(p, cortoObj);
+            corto_release(cortoObj);
+        }
+        corto_release(cortoType);
+
+        JSON_Value* value = json_object_get_value(obj, "value");
+        if (json_deserType(cortoObj, cortoType, value)) {
+            goto error;
+        }
+        break;
+    }
+    case JSONNull:
+        corto_setref(p, NULL);
+        break;
+    default:
+        corto_seterr("expected string, null or object (reference), got %s", json_valueTypeToString(v));
+        break;
+    }
 
     return 0;
 error:
