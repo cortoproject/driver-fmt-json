@@ -74,6 +74,10 @@ sequence{Point} sequenceComplex: {10, 20}, {30, 40}, {50, 60}
 list{int32} list: 10, 20, 30
 list{Point} listComplex: {10, 20}, {30, 40}, {50, 60}
 
+test/suite Deserializer::
+    void tc_deserList()
+    void tc_deserCompositeList()
+
 test/suite Serializer::
     void tc_serBinary()
     void tc_serBoolTrue()

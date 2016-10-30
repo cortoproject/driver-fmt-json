@@ -19,6 +19,7 @@
 extern "C" {
 #endif
 
+#include <Deserializer.h>
 #include <Line.h>
 #include <OptionalType.h>
 #include <Point.h>
