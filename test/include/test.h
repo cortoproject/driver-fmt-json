@@ -8,8 +8,8 @@
 
 #include <corto/corto.h>
 #include <_interface.h>
-#include <corto/fmt/json/json.h>
 #include <corto/test/test.h>
+#include <corto/fmt/json/json.h>
 
 #include <_type.h>
 #include <_api.h>

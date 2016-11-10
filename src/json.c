@@ -143,7 +143,8 @@ error:
     return -1;
 }
 
-static corto_int16 serializePrimitive(corto_serializer s, corto_value *v, void *userData) {
+static corto_int16 serializePrimitive(corto_serializer s, corto_value *v, void *userData)
+{
     CORTO_UNUSED(s);
     corto_type type = corto_value_getType(v);
     json_ser_t *data = userData;
@@ -188,7 +189,8 @@ error:
     return -1;
 }
 
-static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *userData) {
+static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *userData)
+{
     CORTO_UNUSED(s);
 
     json_ser_t *data;
@@ -239,7 +241,8 @@ error:
     return -1;
 }
 
-static corto_int16 serializeItem(corto_serializer s, corto_value *info, void *userData) {
+static corto_int16 serializeItem(corto_serializer s, corto_value *info, void *userData)
+{
     json_ser_t *data = userData;
 
     if (data->itemCount && !corto_buffer_append(&data->buffer, ",")) {
@@ -265,7 +268,8 @@ finished:
     return 1;
 }
 
-static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* userData) {
+static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* userData)
+{
     json_ser_t privateData, *data = userData;
     corto_type type = corto_value_getType(v);
     corto_bool useCurlyBraces = TRUE;
@@ -311,7 +315,8 @@ finished:
     return 1;
 }
 
-static corto_int16 serializeBase(corto_serializer s, corto_value* v, void* userData) {
+static corto_int16 serializeBase(corto_serializer s, corto_value* v, void* userData)
+{
     json_ser_t *data = userData;
 
     if (!corto_buffer_append(&data->buffer, "\"super\":")) {
@@ -329,7 +334,8 @@ finished:
     return 1;
 }
 
-static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* userData) {
+static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* userData)
+{
     json_ser_t *data = userData;
 
     if (corto_value_getType(v)->kind != CORTO_VOID) {
@@ -349,7 +355,8 @@ finished:
     return 1;
 }
 
-struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_serializerTraceKind trace) {
+struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_serializerTraceKind trace)
+{
     struct corto_serializer_s s;
 
     corto_serializerInit(&s);
@@ -368,7 +375,8 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
     return s;
 }
 
-corto_string json_serialize(corto_object o) {
+corto_string json_serialize(corto_object o)
+{
     struct corto_serializer_s serializer = corto_json_ser(
       CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER
     );
@@ -379,23 +387,28 @@ corto_string json_serialize(corto_object o) {
     return corto_buffer_str(&jsonData.buffer);
 }
 
-corto_string json_fromCorto(corto_object o) {
+corto_string json_fromCorto(corto_object o)
+{
     return json_serialize(o);
 }
 
-corto_int16 json_toCorto(corto_object o, corto_string json) {
+corto_int16 json_toCorto(corto_object o, corto_string json)
+{
     return json_deserialize(o, json);
 }
 
-corto_string json_copy(corto_string json) {
+corto_string json_copy(corto_string json)
+{
     return corto_strdup(json);
 }
 
-void json_release(corto_string json) {
+void json_release(corto_string json)
+{
     corto_dealloc(json);
 }
 
-int jsonMain(int argc, char* argv[]) {
+int cortomain(int argc, char* argv[])
+{
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);
     return 0;

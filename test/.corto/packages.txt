@@ -1,2 +1,2 @@
-/corto/fmt/json
 /corto/test
+/corto/fmt/json

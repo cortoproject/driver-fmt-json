@@ -221,6 +221,71 @@ corto_void _test_Deserializer_tc_deserList(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserObject(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserObject) */
+    corto_object o = NULL;
+    corto_int16 r = json_toObject(&o, "{\"id\": \"a\", \"type\": \"int8\", \"value\": 8}");
+    test_assertint(r, 0);
+    test_assert(o != NULL);
+    test_assert(corto_fullpath(NULL, o) != NULL);
+    test_assertstr(corto_fullpath(NULL, o), "/a");
+    test_assert(corto_typeof(o) == (corto_type)corto_int8_o);
+    test_assertint(*(corto_int8*)o, 8);
+    corto_delete(o);
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserObjectErrorParsing(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserObjectErrorParsing) */
+    corto_object o = NULL;
+    corto_int16 r = json_toObject(&o, "{\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}");
+    test_assert(r != 0);
+    char* lasterr = corto_lasterr();
+    test_assertstr(lasterr, "Error parsing {\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}");
+    corto_seterr(NULL);
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserObjectNonFullyScopedName(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserObjectNonFullyScopedName) */
+corto_object a = corto_createChild(root_o, "a", corto_int8_o);
+corto_object b = corto_createChild(a, "b", corto_int8_o);
+test_assert(a != NULL);
+test_assert(b != NULL);
+corto_object c = NULL;
+corto_int16 r = json_toObject(&c, "{\"id\": \"a/b/c\", \"value\": 9, \"type\": \"int16\"}");
+test_assert(r == 0);
+test_assert(corto_fullpath(NULL, c) != NULL);
+test_assertstr(corto_fullpath(NULL, c), "/a/b/c");
+test_assert(corto_typeof(c) == (corto_type)corto_int16_o);
+test_assert(*(corto_int16*)c == 9);
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserObjectScoped(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserObjectScoped) */
+    corto_object a = corto_createChild(root_o, "a", corto_int8_o);
+    corto_object b = corto_createChild(a, "b", corto_int8_o);
+    test_assert(a != NULL);
+    test_assert(b != NULL);
+    corto_object c = NULL;
+    corto_int16 r = json_toObject(&c, "{\"id\": \"/a/b/c\", \"value\": 9, \"type\": \"int16\"}");
+    test_assert(r == 0);
+    test_assert(corto_fullpath(NULL, c) != NULL);
+    test_assertstr(corto_fullpath(NULL, c), "/a/b/c");
+    test_assert(corto_typeof(c) == (corto_type)corto_int16_o);
+    test_assert(*(corto_int16*)c == 9);
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserReference(
     test_Deserializer this)
 {
