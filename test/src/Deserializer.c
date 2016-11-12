@@ -73,6 +73,114 @@ corto_void _test_Deserializer_tc_deserCompositeNested(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserCompositeObservable(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCompositeObservable) */
+    test_ObservableType *o = corto_create(test_ObservableType_o);
+    test_assert(o != NULL);
+    test_assert(corto_typeof(o) == corto_type(test_ObservableType_o));
+
+    corto_int16 ret = json_toCorto(o, "{\"x\":10, \"y\":20, \"z\":30}");
+    test_assert(ret == 0);
+
+    test_assertint(o->x, 10);
+    test_assertint(o->y, 20);
+    test_assertint(*o->z, 30);
+
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserCompositeOptional(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCompositeOptional) */
+    test_OptionalType *o = corto_create(test_OptionalType_o);
+    test_assert(o != NULL);
+    test_assert(corto_typeof(o) == corto_type(test_OptionalType_o));
+
+    corto_int16 ret = json_toCorto(o, "{\"x\":10, \"y\":20, \"z\":30}");
+    test_assert(ret == 0);
+
+    test_assertint(o->x, 10);
+    test_assertint(o->y, 20);
+    test_assertint(*o->z, 30);
+
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserCompositeOptionalNotset(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCompositeOptionalNotset) */
+    test_OptionalType *o = corto_create(test_OptionalType_o);
+    test_assert(o != NULL);
+    test_assert(corto_typeof(o) == corto_type(test_OptionalType_o));
+
+    corto_int16 ret = json_toCorto(o, "{\"x\":10, \"y\":20}");
+    test_assert(ret == 0);
+
+    test_assertint(o->x, 10);
+    test_assertint(o->y, 20);
+    test_assert(o->z == NULL);
+
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserCompositeTarget(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCompositeTarget) */
+    test_TargetType *o = corto_create(test_TargetType_o);
+    test_assert(o != NULL);
+    test_assert(corto_typeof(o) == corto_type(test_TargetType_o));
+
+    corto_int16 ret = json_toCorto(o, "{\"x\":10, \"y\":20, \"z\":{\"target\":30, \"actual\":40}}");
+    test_assert(ret == 0);
+
+    test_assertint(o->x, 10);
+    test_assertint(o->y, 20);
+    test_assert(o->z->target == 0);
+    test_assert(o->z->actual == 40);
+
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserCompositeTargetNotOwned(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCompositeTargetNotOwned) */
+    test_TargetType *o = corto_create(test_TargetType_o);
+    test_assert(o != NULL);
+    test_assert(corto_typeof(o) == corto_type(test_TargetType_o));
+
+    corto_mount m = corto_create(corto_mount_o);
+    test_assert(m != NULL);
+    corto_setOwner(m);
+
+    corto_int16 ret = json_toCorto(o, "{\"x\":10, \"y\":20, \"z\":{\"target\":30, \"actual\":40}}");
+    test_assert(ret == 0);
+
+    corto_setOwner(NULL);
+
+    test_assertint(o->x, 10);
+    test_assertint(o->y, 20);
+    test_assert(o->z->target == 30);
+    test_assert(o->z->actual == 0);
+
+    corto_delete(o);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserInheritance(
     test_Deserializer this)
 {

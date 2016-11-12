@@ -21,11 +21,13 @@ extern "C" {
 
 #include <Deserializer.h>
 #include <Line.h>
+#include <ObservableType.h>
 #include <OptionalType.h>
 #include <Point.h>
 #include <Point3D.h>
 #include <ReferenceType.h>
 #include <Serializer.h>
+#include <TargetType.h>
 #include <UnionType.h>
 
 #ifdef __cplusplus

@@ -60,6 +60,14 @@ struct OptionalType::
     x, y: int32
     z: int32, optional
 
+struct ObservableType::
+    x, y: int32
+    z: int32, observable
+
+struct TargetType::
+    x, y: int32
+    z: target{int32}
+
 union UnionType: int32::
     num: {0}, int64
     flt: {1}, float64
@@ -80,6 +88,11 @@ test/suite Deserializer::
     void tc_deserComposite()
     void tc_deserInheritance()
     void tc_deserCompositeNested()
+    void tc_deserCompositeOptional()
+    void tc_deserCompositeOptionalNotset()
+    void tc_deserCompositeObservable()
+    void tc_deserCompositeTarget()
+    void tc_deserCompositeTargetNotOwned()
 
     void tc_deserList()
     void tc_deserCompositeList()
@@ -131,6 +144,8 @@ test/suite Serializer::
     void tc_serCompositeNested()
     void tc_serCompositeOptionalSet()
     void tc_serCompositeOptionalNotSet()
+    void tc_serCompositeObservable()
+    void tc_serCompositeTarget()
     void tc_serCompositeUnion()
     void tc_serCompositeUnionDefault()
 

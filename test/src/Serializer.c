@@ -141,14 +141,30 @@ corto_void _test_Serializer_tc_serCompositeNested(
 /* $end */
 }
 
+corto_void _test_Serializer_tc_serCompositeObservable(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeObservable) */
+    test_ObservableTypeCreate_auto(o, 10, 20, 30);
+    test_assert(o != NULL);
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":30}");
+    corto_dealloc(s);
+    corto_delete(o);
+
+/* $end */
+}
+
 corto_void _test_Serializer_tc_serCompositeOptionalNotSet(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeOptionalNotSet) */
     test_OptionalTypeCreate_auto(o, 10, 20, NotSet);
+    test_assert(o != NULL);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"x\":10,\"y\":20}");
     corto_dealloc(s);
+    corto_delete(o);
 
 /* $end */
 }
@@ -158,9 +174,25 @@ corto_void _test_Serializer_tc_serCompositeOptionalSet(
 {
 /* $begin(test/Serializer/tc_serCompositeOptionalSet) */
     test_OptionalTypeCreate_auto(o, 10, 20, Set(30));
+    test_assert(o != NULL);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":30}");
     corto_dealloc(s);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serCompositeTarget(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeTarget) */
+    test_TargetTypeCreate_auto(o, 10, 20, 30);
+    test_assert(o != NULL);
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":{\"actual\":30,\"target\":0}}");
+    corto_dealloc(s);
+    corto_delete(o);
 
 /* $end */
 }
