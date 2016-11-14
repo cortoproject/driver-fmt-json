@@ -418,67 +418,56 @@ error:
 /*
  * This method changes the id!
  */
-static void json_splitParentAndName(char* id, char** parentName, char** name)
+static void json_splitId(char* fullpath, char** parent_out, char** id_out)
 {
-    char *ptr = strrchr(id, '/');
+    char *ptr = strrchr(fullpath, '/');
     if (ptr) {
-        *name = ptr + 1;
-        *parentName = id;
+        *id_out = ptr + 1;
+        *parent_out = fullpath;
         *ptr = '\0';
     } else {
-        *name = id;
-        *parentName = NULL;
+        *id_out = fullpath;
+        *parent_out = "/";
     }
 }
 
-static corto_object json_declareObjectByParentNameNameTypeName(const char* parentName, const char* name, const char* typeName)
+static corto_object json_declare(const char* fullpath, const char* typeId)
 {
-    corto_object package = NULL;
-    corto_object type = corto_resolve(NULL, (corto_string)typeName);
+    char* idbuf = corto_strdup(fullpath);
+    if (!idbuf) {
+        goto errorIdBuf;
+    }
+    char *id = NULL;
+    char *parentId = NULL;
+    json_splitId(idbuf, &parentId, &id);
+
+    corto_object o = NULL;
+    corto_object type = corto_resolve(NULL, (corto_string)typeId);
     if (!type) {
-        corto_seterr("Cannot find %s", typeName);
+        corto_seterr("json: cannot find '%s'", typeId);
         goto errorTypeNotFound;
     }
     if (!corto_instanceof(corto_type_o, type)) {
-        corto_seterr("%s is not a type", typeName);
+        corto_seterr("json: '%s' is not a type", typeId);
         goto errorNotType;
     }
-    if (parentName) {
-        corto_object parent = corto_resolve(root_o, (corto_string)parentName);
-        if (!parent) {
-            corto_seterr("Cannot find parent package %s", parentName);
-            goto errorNoParent;
-        }
-        package = corto_declareChild(parent, (corto_string)name, type);
-        corto_release(parent);
-    } else {
-        package = corto_declareChild(root_o, (corto_string)name, type);
+
+    corto_object parent = corto_resolve(root_o, (corto_string)parentId);
+    if (!parent) {
+        corto_seterr("json: cannot find '%s'", parentId);
+        goto errorNoParent;
     }
+    o = corto_declareChild(parent, (corto_string)id, type);
+    corto_release(parent);
     corto_release(type);
 
-    return package;
+    corto_dealloc(idbuf);
 
+    return o;
 errorNoParent:
 errorNotType:
     corto_release(type);
 errorTypeNotFound:
-    return NULL;
-}
-
-static corto_object json_declareObjectByIdAndType(const char* id, const char* type)
-{
-    char* idbuf = corto_strdup(id);
-    if (!idbuf) {
-        goto errorIdBuf;
-    }
-    char *name = NULL;
-    char *parentName = NULL;
-    json_splitParentAndName(idbuf, &parentName, &name);
-
-    corto_object o = json_declareObjectByParentNameNameTypeName(parentName, name, type);
-    corto_dealloc(idbuf);
-    return o;
-
 errorIdBuf:
     return NULL;
 }
@@ -487,42 +476,42 @@ corto_int16 json_toObject(corto_object* o, corto_string s)
 {
     JSON_Value* topValue = json_parse_string(s);
     if (!topValue) {
-        corto_seterr("Error parsing %s", s);
+        corto_seterr("json: error parsing '%s'", s);
         goto errorParsePackageJson;
     }
 
     JSON_Object* topObject = json_value_get_object(topValue);
     if (!topObject) {
-        corto_seterr("Top level value must be a JSON object");
+        corto_seterr("json: top-level value must be a JSON object");
         goto errorTopLevelValueNotObject;
     }
 
     const char* typeName = json_object_get_string(topObject, "type");
     if (!typeName) {
-        corto_seterr("No \"type\" found in top level object");
+        corto_seterr("json: no 'type' found in top-level JSON object: '%s'", s);
         goto errorNoType;
     }
 
     const char* id = json_object_get_string(topObject, "id");
     if (!id) {
-        corto_seterr("No \"id\" string field found");
+        corto_seterr("json: no 'id' string field found in top-level JSON object: '%s'", s);
         goto errorNoId;
     }
 
     JSON_Value* value = json_object_get_value(topObject, "value");
     if (!value) {
-        corto_seterr("No \"value\" found");
+        corto_seterr("json: no 'value' field found in top-level JSON object: '%s'", s);
         goto errorNoValue;
     }
 
-    corto_object o2 = json_declareObjectByIdAndType(id, typeName);
+    corto_object o2 = json_declare(id, typeName);
     if (!o2) {
         goto errorDeclare;
     }
 
     char* valueStr = json_serialize_to_string(value);
     if (!valueStr) {
-        corto_seterr("Error serializing value to string");
+        corto_seterr("json: error serializing JSON value to string");
         goto errorSerializeToString;
     }
 
