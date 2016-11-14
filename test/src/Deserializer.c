@@ -245,7 +245,7 @@ corto_void _test_Deserializer_tc_deserObjectErrorParsing(
     corto_int16 r = json_toObject(&o, "{\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}");
     test_assert(r != 0);
     char* lasterr = corto_lasterr();
-    test_assertstr(lasterr, "Error parsing {\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}");
+    test_assertstr(lasterr, "json: error parsing '{\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}'");
     corto_seterr(NULL);
 /* $end */
 }
