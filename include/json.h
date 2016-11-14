@@ -34,6 +34,11 @@ corto_int16 json_toCorto(corto_object o, corto_string json);
 void json_release(corto_string json);
 corto_string json_copy(corto_string json);
 
+/*
+ * Expects a string in the format {"id": "parent/name", "value": "..."}
+ */
+corto_int16 json_toObject(corto_object* o, corto_string s);
+
 #ifdef __cplusplus
 }
 #endif

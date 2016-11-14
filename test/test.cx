@@ -104,6 +104,11 @@ test/suite Deserializer::
     void tc_deserReferenceAnonymousComplex()
     void tc_deserReferenceAnonymousCollection()
 
+    void tc_deserObject()
+    void tc_deserObjectScoped()
+    void tc_deserObjectNonFullyScopedName()
+    void tc_deserObjectErrorParsing()
+
 test/suite Serializer::
     void tc_serBinary()
     void tc_serBoolTrue()
