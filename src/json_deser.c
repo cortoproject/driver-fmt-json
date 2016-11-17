@@ -354,8 +354,10 @@ error:
     return -1;
 }
 
-corto_int16 json_deserialize(corto_object o, corto_string s)
+corto_int16 json_deserialize(corto_value *v, corto_string s)
 {
+    corto_assert(v != NULL, "NULL passed to json_deserialize");
+
     char *json = s;
     if ((json[0] != '{') && (json[1] != '[') && (json[0] != '[')) {
         corto_asprintf(&json, "{\"value\": %s}", s);
@@ -367,35 +369,33 @@ corto_int16 json_deserialize(corto_object o, corto_string s)
         goto error;
     }
 
-    if (o) {
-        JSON_Value *value = jsonValue;
+    JSON_Value *value = jsonValue;
 
-        if (!jsonValue) {
-            corto_seterr("invalid JSON '%s'", s);
+    if (!jsonValue) {
+        corto_seterr("invalid JSON '%s'", s);
+        goto error;
+    }
+
+    corto_type type = corto_value_getType(v);
+    void *ptr = corto_value_getPtr(v);
+
+    if (type->kind == CORTO_PRIMITIVE) {
+        JSON_Object* jsonObj = json_value_get_object(jsonValue);
+        if (!jsonObj) {
+            corto_seterr("invalid JSON for primitive value '%s'", json);
             goto error;
         }
 
-        if (corto_typeof(o)->kind == CORTO_PRIMITIVE) {
-            JSON_Object* jsonObj = json_value_get_object(jsonValue);
-            if (!jsonObj) {
-                corto_seterr("invalid JSON for primitive value '%s'", json);
-                goto error;
-            }
-
-            size_t count = json_object_get_count(jsonObj);
-            if (count == 1) {
-                value = json_object_get_value(jsonObj, "value");
-            } else {
-                corto_seterr("invalid JSON for primitive value '%s'", json);
-                goto error;
-            }
-        }
-
-        if (json_deserType(o, corto_typeof(o), value)) {
+        size_t count = json_object_get_count(jsonObj);
+        if (count == 1) {
+            value = json_object_get_value(jsonObj, "value");
+        } else {
+            corto_seterr("invalid JSON for primitive value '%s'", json);
             goto error;
         }
-    } else {
-        corto_seterr("no object provided to JSON deserializer");
+    }
+
+    if (json_deserType(ptr, type, value)) {
         goto error;
     }
 
@@ -472,6 +472,10 @@ errorIdBuf:
     return NULL;
 }
 
+corto_string json_fromObject(corto_object o) {
+    return 0;
+}
+
 corto_int16 json_toObject(corto_object* o, corto_string s)
 {
     JSON_Value* topValue = json_parse_string(s);
@@ -515,7 +519,8 @@ corto_int16 json_toObject(corto_object* o, corto_string s)
         goto errorSerializeToString;
     }
 
-    if (json_toCorto(o2, valueStr)) {
+    corto_value v = corto_value_object(o2, NULL);
+    if (json_toValue(&v, valueStr)) {
         goto errorToCorto;
     }
 

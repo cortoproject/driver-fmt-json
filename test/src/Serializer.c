@@ -8,6 +8,13 @@
 
 #include <test.h>
 
+/* $header() */
+static corto_string json_fromCorto(corto_object object) {
+    corto_value v = corto_value_object(object, NULL);
+    return json_fromValue(&v);
+}
+/* $end */
+
 corto_void _test_Serializer_tc_serArray(
     test_Serializer this)
 {

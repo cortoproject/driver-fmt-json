@@ -25,19 +25,21 @@ typedef struct json_ser_t {
 
 struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_serializerTraceKind trace);
 
-corto_string json_serialize(corto_object o);
-corto_int16 json_deserialize(corto_object o, corto_string s);
+corto_string json_serialize(corto_value *v);
+corto_int16 json_deserialize(corto_value *v, corto_string s);
 
 corto_string json_typedescriptor(corto_type t);
-corto_string json_fromCorto(corto_object o);
-corto_int16 json_toCorto(corto_object o, corto_string json);
+corto_string json_fromValue(corto_value *v);
+corto_int16 json_toValue(corto_value *v, corto_string json);
+corto_int16 json_toObject(corto_object* o, corto_string s);
+corto_string json_fromObject(corto_object o);
 void json_release(corto_string json);
 corto_string json_copy(corto_string json);
 
 /*
  * Expects a string in the format {"id": "parent/name", "value": "..."}
  */
-corto_int16 json_toObject(corto_object* o, corto_string s);
+
 
 #ifdef __cplusplus
 }
@@ -52,4 +54,3 @@ extern "C" {
 }
 #endif
 #endif
-

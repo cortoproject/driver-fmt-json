@@ -375,7 +375,7 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
     return s;
 }
 
-corto_string json_serialize(corto_object o)
+corto_string json_serialize(corto_value *v)
 {
     struct corto_serializer_s serializer = corto_json_ser(
       CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER
@@ -383,18 +383,18 @@ corto_string json_serialize(corto_object o)
     serializer.aliasAction = CORTO_SERIALIZER_ALIAS_IGNORE;
     serializer.optionalAction = CORTO_SERIALIZER_OPTIONAL_IF_SET;
     json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
-    corto_serialize(&serializer, o, &jsonData);
+    corto_serializeValue(&serializer, v, &jsonData);
     return corto_buffer_str(&jsonData.buffer);
 }
 
-corto_string json_fromCorto(corto_object o)
+corto_string json_fromValue(corto_value *v)
 {
-    return json_serialize(o);
+    return json_serialize(v);
 }
 
-corto_int16 json_toCorto(corto_object o, corto_string json)
+corto_int16 json_toValue(corto_value *v, corto_string json)
 {
-    return json_deserialize(o, json);
+    return json_deserialize(v, json);
 }
 
 corto_string json_copy(corto_string json)
