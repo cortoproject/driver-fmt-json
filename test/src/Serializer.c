@@ -555,7 +555,7 @@ corto_void _test_Serializer_tc_serVoid(
 /* $begin(test/Serializer/tc_serVoid) */
 
     corto_string s = json_fromCorto(test_void_o);
-    test_assertstr(s, "");
+    test_assertstr(s, "{}");
     corto_dealloc(s);
 
 /* $end */
