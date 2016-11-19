@@ -548,3 +548,15 @@ corto_void _test_Serializer_tc_serUint8(
 
 /* $end */
 }
+
+corto_void _test_Serializer_tc_serVoid(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serVoid) */
+
+    corto_string s = json_fromCorto(test_void_o);
+    test_assertstr(s, "");
+    corto_dealloc(s);
+
+/* $end */
+}

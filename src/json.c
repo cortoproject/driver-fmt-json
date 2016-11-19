@@ -53,6 +53,7 @@ static corto_int16 serializeConstant(
     corto_asprintf(out, "\"%s\"", raw);
     corto_dealloc(raw);
 
+
     return 0;
 error:
     corto_dealloc(raw);
@@ -287,7 +288,11 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
     if (type->kind == CORTO_COMPOSITE) {
         if (corto_interface(type)->kind == CORTO_UNION) {
             corto_int32 *d = corto_value_getPtr(v);
-            corto_buffer_append(&privateData.buffer, "\"_d\":%d", *d);
+            corto_buffer_append(&privateData.buffer, "\"_d\":");
+            corto_value discriminatorValue = corto_value_value(corto_union(type)->discriminator, d);
+            if (serializePrimitive(s, &discriminatorValue, &privateData)) {
+                goto error;
+            }
             privateData.itemCount = 1;
         }
         if (corto_serializeMembers(s, v, &privateData)) {
@@ -334,6 +339,22 @@ finished:
     return 1;
 }
 
+static corto_int16 serializeVoid(corto_serializer s, corto_value* v, void* userData)
+{
+    json_ser_t *data = userData;
+
+    CORTO_UNUSED(s);
+    CORTO_UNUSED(v);
+
+    if (!corto_buffer_append(&data->buffer, "{}")) {
+        goto finished;
+    }
+
+    return 0;
+finished:
+    return 1;
+}
+
 static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* userData)
 {
     json_ser_t *data = userData;
@@ -343,7 +364,7 @@ static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* use
             goto error;
         }
      } else {
-        if (!corto_buffer_append(&data->buffer, "{}")) {
+        if (!corto_buffer_append(&data->buffer, "")) {
             goto finished;
         }
      }
@@ -363,6 +384,7 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
     s.access = access;
     s.accessKind = accessKind;
     s.traceKind = trace;
+    s.program[CORTO_VOID] = serializeVoid;
     s.program[CORTO_PRIMITIVE] = serializePrimitive;
     s.reference = serializeReference;
     s.program[CORTO_COMPOSITE] = serializeComplex;

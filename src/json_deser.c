@@ -68,6 +68,25 @@ error:
     return -1;
 }
 
+static corto_int16 json_deserConstant(void* p, corto_primitive t, JSON_Value *v)
+{
+    const char *s = json_value_get_string(v);
+    CORTO_UNUSED(t);
+
+    if (json_value_get_type(v) != JSONString) {
+        corto_seterr("expected string, got %s", json_valueTypeToString(v));
+        goto error;
+    }
+
+    if (corto_convert(corto_string_o, (corto_string*)&s, t, p)) {
+        goto error;
+    }
+
+    return 0;
+error:
+    return -1;
+}
+
 corto_bool json_deserPrimitive(void* p, corto_type t, JSON_Value *v)
 {
     corto_assert(t->kind == CORTO_PRIMITIVE, "not deserializing primitive");
@@ -95,8 +114,10 @@ corto_bool json_deserPrimitive(void* p, corto_type t, JSON_Value *v)
             goto error;
         }
     case CORTO_ENUM:
-        break;
     case CORTO_BITMASK:
+        if (json_deserConstant(p, ptype, v)) {
+            goto error;
+        }
         break;
     }
 
@@ -207,6 +228,9 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
     JSON_Object* o = json_value_get_object(v);
     size_t count = json_object_get_count(o);
     size_t i;
+    corto_bool isUnion = corto_interface(t)->kind == CORTO_UNION;
+    corto_int32 discriminator = 0;
+    corto_member unionMember = NULL;
 
     for (i = 0; i < count; i++) {
         const char* memberName = json_object_get_name(o, i);
@@ -217,6 +241,16 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
             if (json_deserItem(p, corto_type(corto_interface(t)->base), value)) {
                 goto error;
             }
+        } else if (!strcmp(memberName, "_d") && isUnion) {
+            JSON_Value* value = json_object_get_value(o, memberName);
+            if (json_deserPrimitive(&discriminator, corto_union(t)->discriminator, value)) {
+                goto error;
+            }
+            unionMember = corto_union_findCase(t, discriminator);
+            if (!unionMember) {
+                corto_seterr("discriminator '%d' invalid for union '%s'",
+                    discriminator, corto_fullpath(NULL, t));
+            }
         } else {
             member_o = corto_interface_resolveMember(t, (char*)memberName);
 
@@ -226,6 +260,15 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                     "cannot find member '%s' in type '%s'",
                     memberName,
                     corto_fullpath(NULL, t));
+                goto error;
+            }
+
+            if (isUnion && (unionMember != member_o)) {
+                corto_seterr(
+                    "member '%s' does not match discriminator '%d' (expected member '%s')",
+                    memberName,
+                    discriminator,
+                    corto_idof(unionMember));
                 goto error;
             }
 
