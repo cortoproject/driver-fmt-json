@@ -216,13 +216,26 @@ corto_void _test_Serializer_tc_serCompositeUnion(
 /* $end */
 }
 
+corto_void _test_Serializer_tc_serCompositeUnionComplex(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeUnionComplex) */
+    test_Point p = {10, 20};
+    test_UnionTypeCreate_pt_auto(o, 4, &p);
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"_d\":4,\"pt\":{\"x\":10,\"y\":20}}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
 corto_void _test_Serializer_tc_serCompositeUnionDefault(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeUnionDefault) */
-    test_UnionTypeCreate_other_auto(o, 4, 10);
+    test_UnionTypeCreate_other_auto(o, 5, 10);
     corto_string s = json_fromCorto(o);
-    test_assertstr(s, "{\"_d\":4,\"other\":10}");
+    test_assertstr(s, "{\"_d\":5,\"other\":10}");
     corto_dealloc(s);
 
 /* $end */
@@ -387,6 +400,42 @@ corto_void _test_Serializer_tc_serReferenceAnonymous(
 /* $begin(test/Serializer/tc_serReferenceAnonymous) */
 
     corto_string s = json_fromCorto(test_referenceAnonymous_o);
+    test_assertstr(s, "{\"r\":{\"type\":\"int32\",\"value\":10}}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serReferenceAnonymousCollection(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serReferenceAnonymousCollection) */
+
+    corto_string s = json_fromCorto(test_referenceAnonymousCollection_o);
+    test_assertstr(s, "{\"r\":{\"type\":\"/test/myList\",\"value\":[10,20]}}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serReferenceAnonymousCollectionAnonymousType(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serReferenceAnonymousCollectionAnonymousType) */
+
+    corto_string s = json_fromCorto(test_referenceAnonymousCollectionAnonymousType_o);
+    test_assertstr(s, "{\"r\":{\"type\":\"array{int32,2}\",\"value\":[10,20]}}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serReferenceAnonymousComplex(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serReferenceAnonymousComplex) */
+
+    corto_string s = json_fromCorto(test_referenceAnonymousComplex_o);
     test_assertstr(s, "{\"r\":{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}}");
     corto_dealloc(s);
 

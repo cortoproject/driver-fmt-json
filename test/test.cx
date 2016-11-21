@@ -53,10 +53,15 @@ Line l: {10, 20}, {30, 40}
 struct ReferenceType::
     r: object
 
+list myList: int32
+
 ReferenceType reference: core/package
 ReferenceType referenceNull: null
 ReferenceType referenceFromLang: type
-ReferenceType referenceAnonymous: Point{10, 20}
+ReferenceType referenceAnonymous: int32{10}
+ReferenceType referenceAnonymousComplex: Point{10, 20}
+ReferenceType referenceAnonymousCollection: myList{10, 20}
+ReferenceType referenceAnonymousCollectionAnonymousType: array{int32, 2}{10, 20}
 
 struct OptionalType::
     x, y: int32
@@ -74,6 +79,7 @@ union UnionType: int32::
     num: {0}, int64
     flt: {1}, float64
     str: {2, 3}, string
+    pt: {4}, Point
     default other: word
     int16 init()
 
@@ -83,8 +89,6 @@ sequence{int32} sequence: 10, 20, 30
 sequence{Point} sequenceComplex: {10, 20}, {30, 40}, {50, 60}
 list{int32} list: 10, 20, 30
 list{Point} listComplex: {10, 20}, {30, 40}, {50, 60}
-
-list myList: int32
 
 test/suite Deserializer::
     void tc_deserComposite()
@@ -96,6 +100,11 @@ test/suite Deserializer::
     void tc_deserCompositeTarget()
     void tc_deserCompositeTargetNotOwned()
 
+    void tc_deserUnion()
+    void tc_deserUnionChangeDiscriminator()
+    void tc_deserUnionComplex()
+    void tc_deserUnionDefault()
+
     void tc_deserList()
     void tc_deserCompositeList()
 
@@ -105,6 +114,7 @@ test/suite Deserializer::
     void tc_deserReferenceAnonymous()
     void tc_deserReferenceAnonymousComplex()
     void tc_deserReferenceAnonymousCollection()
+    void tc_deserReferenceAnonymousCollectionAnonymousType()
 
     void tc_deserObject()
     void tc_deserObjectScoped()
@@ -157,6 +167,7 @@ test/suite Serializer::
     void tc_serCompositeTarget()
     void tc_serCompositeUnion()
     void tc_serCompositeUnionDefault()
+    void tc_serCompositeUnionComplex()
 
     void tc_serArray()
     void tc_serArrayComplex()
@@ -169,3 +180,6 @@ test/suite Serializer::
     void tc_serReferenceNull()
     void tc_serReferenceFromLang()
     void tc_serReferenceAnonymous()
+    void tc_serReferenceAnonymousComplex()
+    void tc_serReferenceAnonymousCollection()
+    void tc_serReferenceAnonymousCollectionAnonymousType()

@@ -353,6 +353,32 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousCollection(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReferenceAnonymousCollectionAnonymousType) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"list{int32}\",\"value\":[10,20,30]}}");
+    test_assert(ret == 0);
+    test_assert(o->r != NULL);
+
+    corto_type t = corto_typeof(o->r);
+    test_assert(t->kind == CORTO_COLLECTION);
+    test_assert(corto_collection(t)->kind == CORTO_LIST);
+    test_assert(corto_collection(t)->elementType == corto_type(corto_int32_o));
+    test_assertint(corto_llSize(*(corto_ll*)o->r), 3);
+
+    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 0), 10);
+    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 1), 20);
+    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 2), 30);
+
+    corto_delete(o);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserReferenceAnonymousComplex(
     test_Deserializer this)
 {
@@ -400,6 +426,101 @@ corto_void _test_Deserializer_tc_deserReferenceNull(
 
     ret = json_toValue(&v, "{\"r\":null}");
     test_assert(o->r == NULL);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserUnion(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserUnion) */
+    test_UnionType *o = corto_create(test_UnionType_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"_d\":1,\"flt\":10.5}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 1);
+    test_assertflt(o->is.flt, 10.5);
+
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserUnionChangeDiscriminator(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserUnionChangeDiscriminator) */
+    test_UnionType *o = corto_create(test_UnionType_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"_d\":1,\"flt\":10.5}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 1);
+    test_assertflt(o->is.flt, 10.5);
+
+    ret = json_toValue(&v, "{\"_d\":2,\"str\":\"foo\"}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 2);
+    test_assertstr(o->is.str, "foo");
+
+    ret = json_toValue(&v, "{\"_d\":0,\"num\":20}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 0);
+    test_assertint(o->is.num, 20);
+
+    ret = json_toValue(&v, "{\"_d\":4,\"pt\":{\"x\":10,\"y\":20}}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 4);
+    test_assertint(o->is.pt.x, 10);
+    test_assertint(o->is.pt.y, 20);
+
+    ret = json_toValue(&v, "{\"_d\":3,\"str\":\"bar\"}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 3);
+    test_assertstr(o->is.str, "bar");
+
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserUnionComplex(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserUnionComplex) */
+    test_UnionType *o = corto_create(test_UnionType_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"_d\":4,\"pt\":{\"x\":10,\"y\":20}}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 4);
+    test_assertflt(o->is.pt.x, 10);
+    test_assertflt(o->is.pt.y, 20);
+
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserUnionDefault(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserUnionDefault) */
+    test_UnionType *o = corto_create(test_UnionType_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"_d\":5,\"other\":30}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 5);
+    test_assertflt(o->is.other, 30);
+
+    ret = json_toValue(&v, "{\"_d\":6,\"other\":40}");
+    test_assert(ret == 0);
+    test_assertint(o->d, 6);
+    test_assertflt(o->is.other, 40);
+
     corto_delete(o);
 
 /* $end */
