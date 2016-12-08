@@ -197,7 +197,7 @@ corto_void _test_Serializer_tc_serCompositeTarget(
     test_TargetTypeCreate_auto(o, 10, 20, 30);
     test_assert(o != NULL);
     corto_string s = json_fromCorto(o);
-    test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":{\"actual\":30,\"target\":0}}");
+    test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":{\"actual\":30,\"target\":0,\"objective\":0}}");
     corto_dealloc(s);
     corto_delete(o);
 
