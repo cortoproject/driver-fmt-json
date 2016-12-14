@@ -53,6 +53,10 @@ Line l: {10, 20}, {30, 40}
 struct ReferenceType::
     r: object
 
+struct StringType::
+    s1: string
+    s2: string
+
 list myList: int32
 
 ReferenceType reference: core/package
@@ -60,6 +64,8 @@ ReferenceType referenceNull: null
 ReferenceType referenceFromLang: type
 ReferenceType referenceAnonymous: int32{10}
 ReferenceType referenceAnonymousComplex: Point{10, 20}
+ReferenceType referenceAnonymousComplexString: StringType{"Hello", "World"}
+ReferenceType referenceAnonymousComplexStringEsc: StringType{"\"Hello\"", "\"World\""}
 ReferenceType referenceAnonymousCollection: myList{10, 20}
 ReferenceType referenceAnonymousCollectionAnonymousType: array{int32, 2}{10, 20}
 
@@ -113,6 +119,8 @@ test/suite Deserializer::
     void tc_deserReferenceFromLang()
     void tc_deserReferenceAnonymous()
     void tc_deserReferenceAnonymousComplex()
+    void tc_deserReferenceAnonymousComplexWithString()
+    void tc_deserReferenceAnonymousComplexWithStringEsc()
     void tc_deserReferenceAnonymousCollection()
     void tc_deserReferenceAnonymousCollectionAnonymousType()
 
@@ -181,5 +189,7 @@ test/suite Serializer::
     void tc_serReferenceFromLang()
     void tc_serReferenceAnonymous()
     void tc_serReferenceAnonymousComplex()
+    void tc_serReferenceAnonymousComplexWithString()
+    void tc_serReferenceAnonymousComplexWithStringEsc()
     void tc_serReferenceAnonymousCollection()
     void tc_serReferenceAnonymousCollectionAnonymousType()

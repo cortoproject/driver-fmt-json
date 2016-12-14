@@ -442,6 +442,30 @@ corto_void _test_Serializer_tc_serReferenceAnonymousComplex(
 /* $end */
 }
 
+corto_void _test_Serializer_tc_serReferenceAnonymousComplexWithString(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serReferenceAnonymousComplexWithString) */
+
+    corto_string s = json_fromCorto(test_referenceAnonymousComplexString_o);
+    test_assertstr(s, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"Hello\",\"s2\":\"World\"}}}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serReferenceAnonymousComplexWithStringEsc(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serReferenceAnonymousComplexWithStringEsc) */
+
+    corto_string s = json_fromCorto(test_referenceAnonymousComplexStringEsc_o);
+    test_assertstr(s, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"\\\"Hello\\\"\",\"s2\":\"\\\"World\\\"\"}}}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
 corto_void _test_Serializer_tc_serReferenceFromLang(
     test_Serializer this)
 {

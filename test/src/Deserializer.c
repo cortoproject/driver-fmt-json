@@ -398,6 +398,44 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousComplex(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserReferenceAnonymousComplexWithString(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReferenceAnonymousComplexWithString) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"Hello\",\"s2\":\"World\"}}}");
+    test_assert(ret == 0);
+    test_assert(o->r != NULL);
+
+    test_assert(corto_typeof(o->r) == corto_type(test_StringType_o));
+    test_assertstr(test_StringType(o->r)->s1, "Hello");
+    test_assertstr(test_StringType(o->r)->s2, "World");
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserReferenceAnonymousComplexWithStringEsc(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserReferenceAnonymousComplexWithStringEsc) */
+    test_ReferenceType *o = corto_create(test_ReferenceType_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"\\\"Hello\\\"\",\"s2\":\"\\\"World\\\"\"}}}");
+    test_assert(ret == 0);
+    test_assert(o->r != NULL);
+
+    test_assert(corto_typeof(o->r) == corto_type(test_StringType_o));
+    test_assertstr(test_StringType(o->r)->s1, "\"Hello\"");
+    test_assertstr(test_StringType(o->r)->s2, "\"World\"");
+    corto_delete(o);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserReferenceFromLang(
     test_Deserializer this)
 {

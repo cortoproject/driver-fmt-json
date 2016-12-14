@@ -31,6 +31,7 @@ extern "C" {
 #include <Point3D.h>
 #include <ReferenceType.h>
 #include <Serializer.h>
+#include <StringType.h>
 #include <TargetType.h>
 #include <UnionType.h>
 
