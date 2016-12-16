@@ -27,6 +27,7 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
 
 corto_string json_serialize(corto_value *v);
 corto_int16 json_deserialize(corto_value *v, corto_string s);
+corto_int16 json_deserialize_from_JSON_Value(corto_value *v, JSON_Value *value);
 
 corto_string json_typedescriptor(corto_type t);
 corto_string json_fromValue(corto_value *v);
