@@ -450,6 +450,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     }
 
     if (json_deserialize_from_JSON_Value(v, jsonValue)) {
+        corto_seterr("json: '%s': %s", json, corto_lasterr());
         goto error;
     }
 
