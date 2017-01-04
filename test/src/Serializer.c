@@ -148,6 +148,21 @@ corto_void _test_Serializer_tc_serCompositeNested(
 /* $end */
 }
 
+corto_void _test_Serializer_tc_serCompositeNestedRef(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeNestedRef) */
+
+    corto_string s = json_fromCorto(test_l_ref_o);
+    test_assertstr(
+      s,
+      "{\"start\":{\"type\":\"/test/PointRef\",\"value\":{\"x\":10,\"y\":20}},\"stop\":{\"type\":\"/test/PointRef\",\"value\":{\"x\":30,\"y\":40}}}"
+    );
+    corto_dealloc(s);
+
+/* $end */
+}
+
 corto_void _test_Serializer_tc_serCompositeObservable(
     test_Serializer this)
 {
@@ -186,6 +201,18 @@ corto_void _test_Serializer_tc_serCompositeOptionalSet(
     test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":30}");
     corto_dealloc(s);
     corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serCompositeRef(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serCompositeRef) */
+
+    corto_string s = json_fromCorto(test_p_ref_o);
+    test_assertstr(s, "{\"x\":10,\"y\":20}");
+    corto_dealloc(s);
 
 /* $end */
 }
@@ -259,6 +286,18 @@ corto_void _test_Serializer_tc_serInheritance(
 /* $begin(test/Serializer/tc_serInheritance) */
 
     corto_string s = json_fromCorto(test_p3d_o);
+    test_assertstr(s, "{\"super\":{\"x\":10,\"y\":20},\"z\":30}");
+    corto_dealloc(s);
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serInheritanceRef(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serInheritanceRef) */
+
+    corto_string s = json_fromCorto(test_p3d_ref_o);
     test_assertstr(s, "{\"super\":{\"x\":10,\"y\":20},\"z\":30}");
     corto_dealloc(s);
 

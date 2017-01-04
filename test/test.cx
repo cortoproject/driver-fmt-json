@@ -46,9 +46,22 @@ struct Line::
 struct Point3D: Point::
     z: int32
 
+class PointRef::
+    x, y: int32
+
+class LineRef::
+    start, stop: PointRef
+
+class Point3DRef: PointRef::
+    z: int32
+
 Point p: 10, 20
 Point3D p3d: 10, 20, 30
 Line l: {10, 20}, {30, 40}
+
+PointRef p_ref: 10, 20
+Point3DRef p3d_ref: 10, 20, 30
+LineRef l_ref: PointRef{10, 20}, PointRef{30, 40}
 
 struct ReferenceType::
     r: object
@@ -100,6 +113,9 @@ test/suite Deserializer::
     void tc_deserComposite()
     void tc_deserInheritance()
     void tc_deserCompositeNested()
+    void tc_deserCompositeRef()
+    void tc_deserInheritanceRef()
+    void tc_deserCompositeNestedRef()
     void tc_deserCompositeOptional()
     void tc_deserCompositeOptionalNotset()
     void tc_deserCompositeObservable()
@@ -169,6 +185,9 @@ test/suite Serializer::
     void tc_serComposite()
     void tc_serInheritance()
     void tc_serCompositeNested()
+    void tc_serCompositeRef()
+    void tc_serInheritanceRef()
+    void tc_serCompositeNestedRef()
     void tc_serCompositeOptionalSet()
     void tc_serCompositeOptionalNotSet()
     void tc_serCompositeObservable()

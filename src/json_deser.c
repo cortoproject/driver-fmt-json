@@ -149,8 +149,12 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
         JSON_Object* obj = json_value_get_object(v);
 
         JSON_Value* type = json_object_get_value(obj, "type");
+        if (!type) {
+            corto_seterr("type member is mandatory for anonymous object");
+            goto error;
+        }
         if (json_value_get_type(type) != JSONString) {
-            corto_seterr("type parameter of anonymous object must be a string");
+            corto_seterr("type member of anonymous object must be a string");
             goto error;
         }
         corto_type cortoType = corto_resolve(NULL, (char*)json_value_get_string(type));
@@ -238,7 +242,8 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
 
         if (!strcmp(memberName, "super")) {
             JSON_Value* value = json_object_get_value(o, memberName);
-            if (json_deserItem(p, corto_type(corto_interface(t)->base), value)) {
+            if (json_deserType(p, corto_type(corto_interface(t)->base), value)) {
+                corto_seterr("member '%s': %s", corto_idof(member_o), corto_lasterr());
                 goto error;
             }
         } else if (!strcmp(memberName, "_d") && isUnion) {
@@ -286,6 +291,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                 if (member_o->modifiers & CORTO_OBSERVABLE) {
                     offset = *(void**)offset;
                     if (json_deserType(offset, member_o->type, value)) {
+                        corto_seterr("member '%s': %s", corto_idof(member_o), corto_lasterr());
                         goto error;
                     }
                 } else {
@@ -299,6 +305,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                         offset = *(void**)offset;
                     }
                     if (json_deserItem(offset, member_o->type, value)) {
+                        corto_seterr("member '%s': %s", corto_idof(member_o), corto_lasterr());
                         goto error;
                     }
                 }
@@ -450,7 +457,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     }
 
     if (json_deserialize_from_JSON_Value(v, jsonValue)) {
-        corto_seterr("json: '%s': %s", json, corto_lasterr());
+        corto_seterr("json: %s (%s)", corto_lasterr(), json);
         goto error;
     }
 

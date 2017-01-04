@@ -76,6 +76,31 @@ corto_void _test_Deserializer_tc_deserCompositeNested(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserCompositeNestedRef(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCompositeNestedRef) */
+    test_LineRef l = corto_create(test_LineRef_o);
+    test_assert(l != NULL);
+    test_assert(corto_typeof(l) == corto_type(test_LineRef_o));
+
+    corto_value v = corto_value_object(l, NULL);
+    corto_int16 ret = json_toValue(
+      &v,
+      "{\"start\":{\"type\":\"test/PointRef\",\"value\":{\"x\":10,\"y\":20}},\"stop\":{\"type\":\"test/PointRef\",\"value\":{\"x\":30,\"y\":40}}}"
+    );
+    test_assert(ret == 0);
+
+    test_assertint(l->start->x, 10);
+    test_assertint(l->start->y, 20);
+    test_assertint(l->stop->x, 30);
+    test_assertint(l->stop->y, 40);
+
+    corto_delete(l);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserCompositeObservable(
     test_Deserializer this)
 {
@@ -139,6 +164,26 @@ corto_void _test_Deserializer_tc_deserCompositeOptionalNotset(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserCompositeRef(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCompositeRef) */
+    test_Point *p = corto_create(test_PointRef_o);
+    test_assert(p != NULL);
+    test_assert(corto_typeof(p) == corto_type(test_PointRef_o));
+
+    corto_value v = corto_value_object(p, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"x\":10, \"y\":20}");
+    test_assert(ret == 0);
+
+    test_assertint(p->x, 10);
+    test_assertint(p->y, 20);
+
+    corto_delete(p);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserCompositeTarget(
     test_Deserializer this)
 {
@@ -193,6 +238,27 @@ corto_void _test_Deserializer_tc_deserInheritance(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInheritance) */
+    test_Point3D *p = corto_create(test_Point3D_o);
+    test_assert(p != NULL);
+    test_assert(corto_typeof(p) == corto_type(test_Point3D_o));
+
+    corto_value v = corto_value_object(p, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
+    test_assert(ret == 0);
+
+    test_assertint(p->_parent.x, 10);
+    test_assertint(p->_parent.y, 20);
+    test_assertint(p->z, 30);
+
+    corto_delete(p);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInheritanceRef(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInheritanceRef) */
     test_Point3D *p = corto_create(test_Point3D_o);
     test_assert(p != NULL);
     test_assert(corto_typeof(p) == corto_type(test_Point3D_o));
