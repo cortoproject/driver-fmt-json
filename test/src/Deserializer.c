@@ -297,6 +297,21 @@ corto_void _test_Deserializer_tc_deserList(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserNaN(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserNaN) */
+    corto_float64 *o = corto_create(corto_float64_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "null");
+    test_assert(ret == 0);
+    test_assert(CORTO_ISNAN(*o));
+    corto_delete(o);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserObject(
     test_Deserializer this)
 {

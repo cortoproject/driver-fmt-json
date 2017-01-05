@@ -421,6 +421,18 @@ corto_void _test_Serializer_tc_serListComplex(
 /* $end */
 }
 
+corto_void _test_Serializer_tc_serNaN(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serNaN) */
+
+    corto_string s = json_fromCorto(test_fltNan_o);
+    test_assertstr(s, "null"); /* JSON doesn't support nan */
+    corto_dealloc(s);
+
+/* $end */
+}
+
 corto_void _test_Serializer_tc_serReference(
     test_Serializer this)
 {

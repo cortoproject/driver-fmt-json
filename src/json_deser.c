@@ -33,13 +33,19 @@ error:
 
 static corto_int16 json_deserNumber(void* o, corto_primitive t, JSON_Value *v)
 {
+    corto_float64 number;
 
-    if (json_value_get_type(v) != JSONNumber) {
-        corto_seterr("expected number, got %s", json_valueTypeToString(v));
+    if (json_value_get_type(v) == JSONNull) {
+        number = NAN;
+    } else if (json_value_get_type(v) != JSONNumber) {
+        corto_string json = json_serialize_to_string(v);
+        corto_seterr("expected number, got %s (%s)", json_valueTypeToString(v), json);
+        corto_dealloc(json);
         goto error;
+    } else {
+        number = json_value_get_number(v);
     }
 
-    corto_float64 number = json_value_get_number(v);
     corto_convert(
         corto_primitive(corto_float64_o),
         &number,
@@ -123,7 +129,7 @@ corto_bool json_deserPrimitive(void* p, corto_type t, JSON_Value *v)
 
     return 0;
 error:
-    return 0;
+    return -1;
 }
 
 corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
@@ -449,7 +455,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
             goto error;
         }
 
-        JSON_Value *jsonValue = json_object_get_value(jsonObj, "value");
+        jsonValue = json_object_get_value(jsonObj, "value");
         if (!jsonValue) {
             corto_seterr("json: missing 'value' field for primitive value '%s'", json);
             goto error;
@@ -457,7 +463,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     }
 
     if (json_deserialize_from_JSON_Value(v, jsonValue)) {
-        corto_seterr("json: %s (%s)", corto_lasterr(), json);
+        corto_seterr("json: %s for JSON string '%s'", corto_lasterr(), json);
         goto error;
     }
 

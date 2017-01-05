@@ -23,6 +23,8 @@ uint16 uint16: 10
 uint32 uint32: 10
 uint64 uint64: 10
 
+float64 fltNan: nan
+
 void void;
 
 string string: "Hello World"
@@ -145,6 +147,8 @@ test/suite Deserializer::
     void tc_deserObjectNonFullyScopedName()
     void tc_deserObjectErrorParsing()
 
+    void tc_deserNaN()
+
 test/suite Serializer::
     void tc_serVoid()
 
@@ -212,3 +216,5 @@ test/suite Serializer::
     void tc_serReferenceAnonymousComplexWithStringEsc()
     void tc_serReferenceAnonymousCollection()
     void tc_serReferenceAnonymousCollectionAnonymousType()
+
+    void tc_serNaN()
