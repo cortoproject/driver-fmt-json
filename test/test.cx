@@ -112,6 +112,41 @@ list{int32} list: 10, 20, 30
 list{Point} listComplex: {10, 20}, {30, 40}, {50, 60}
 
 test/suite Deserializer::
+    void tc_deserVoid()
+
+    void tc_deserBinary()
+    void tc_deserBoolTrue()
+    void tc_deserBoolFalse()
+
+    void tc_deserChar()
+    void tc_deserCharEscape()
+
+    void tc_deserInt8()
+    void tc_deserInt8Minus()
+
+    void tc_deserInt16()
+    void tc_deserInt16Minus()
+
+    void tc_deserInt32()
+    void tc_deserInt32Minus()
+
+    void tc_deserInt64()
+    void tc_deserInt64Minus()
+
+    void tc_deserUint8()
+    void tc_deserUint16()
+    void tc_deserUint32()
+    void tc_deserUint64()
+
+    void tc_deserString()
+    void tc_deserStringEscape()
+    void tc_deserStringWhitespace()
+    void tc_deserStringNull()
+    void tc_deserStringEmpty()
+
+    void tc_deserEnum()
+    void tc_deserBitmask()
+
     void tc_deserComposite()
     void tc_deserInheritance()
     void tc_deserCompositeNested()

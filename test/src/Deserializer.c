@@ -8,6 +8,96 @@
 
 #include <test.h>
 
+corto_void _test_Deserializer_tc_deserBinary(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserBinary) */
+    corto_word *o = corto_create(corto_word_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserBitmask(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserBitmask) */
+    corto_word *o = corto_create(test_Sandwich_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "\"Beef|Lettuce|Tomato\"");
+    test_assert(ret == 0);
+    test_assertint(*o, Test_Beef | Test_Lettuce | Test_Tomato);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserBoolFalse(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserBoolFalse) */
+    corto_bool *o = corto_create(corto_bool_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "false");
+    test_assert(ret == 0);
+    test_assertint(*o, FALSE);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserBoolTrue(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserBoolTrue) */
+    corto_bool *o = corto_create(corto_bool_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "true");
+    test_assert(ret == 0);
+    test_assertint(*o, TRUE);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserChar(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserChar) */
+    corto_char *o = corto_create(corto_char_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "\"a\"");
+    test_assert(ret == 0);
+    test_assertint(*o, 'a');
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserCharEscape(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserCharEscape) */
+    corto_char *o = corto_create(corto_char_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "\"\\n\"");
+    test_assert(ret == 0);
+    test_assertint(*o, '\n');
+    corto_delete(o);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserComposite(
     test_Deserializer this)
 {
@@ -234,6 +324,21 @@ corto_void _test_Deserializer_tc_deserCompositeTargetNotOwned(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserEnum(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserEnum) */
+    test_Color *o = corto_create(test_Color_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "\"Yellow\"");
+    test_assert(ret == 0);
+    test_assertint(*o, Test_Yellow);
+    corto_delete(o);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserInheritance(
     test_Deserializer this)
 {
@@ -272,6 +377,126 @@ corto_void _test_Deserializer_tc_deserInheritanceRef(
     test_assertint(p->z, 30);
 
     corto_delete(p);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInt16(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInt16) */
+    corto_int16 *o = corto_create(corto_int16_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInt16Minus(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInt16Minus) */
+    corto_int16 *o = corto_create(corto_int16_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "-10");
+    test_assert(ret == 0);
+    test_assertint(*o, -10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInt32(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInt32) */
+    corto_int32 *o = corto_create(corto_int32_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInt32Minus(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInt32Minus) */
+    corto_int32 *o = corto_create(corto_int32_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "-10");
+    test_assert(ret == 0);
+    test_assertint(*o, -10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInt64(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInt64) */
+    corto_int64 *o = corto_create(corto_int64_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInt64Minus(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInt64Minus) */
+    corto_int64 *o = corto_create(corto_int64_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "-10");
+    test_assert(ret == 0);
+    test_assertint(*o, -10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInt8(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInt8) */
+    corto_int8 *o = corto_create(corto_int8_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserInt8Minus(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserInt8Minus) */
+    corto_int8 *o = corto_create(corto_int8_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "-10");
+    test_assert(ret == 0);
+    test_assertint(*o, -10);
+    corto_delete(o);
 
 /* $end */
 }
@@ -550,6 +775,141 @@ corto_void _test_Deserializer_tc_deserReferenceNull(
 /* $end */
 }
 
+corto_void _test_Deserializer_tc_deserString(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserString) */
+    corto_string *o = corto_create(corto_string_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "\"Hello World\"");
+    test_assert(ret == 0);
+    test_assertstr(*o, "Hello World");
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserStringEmpty(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserStringEmpty) */
+    corto_string *o = corto_create(corto_string_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "\"\"");
+    test_assert(ret == 0);
+    test_assertstr(*o, "");
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserStringEscape(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserStringEscape) */
+    corto_string *o = corto_create(corto_string_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "\"Hello World\\n\"");
+    test_assert(ret == 0);
+    test_assertstr(*o, "Hello World\n");
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserStringNull(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserStringNull) */
+    corto_string *o = corto_create(corto_string_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "null");
+    test_assert(ret == 0);
+    test_assert(*o == NULL);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserStringWhitespace(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserStringWhitespace) */
+    corto_string *o = corto_create(corto_string_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "\"  Hello World  \"");
+    test_assert(ret == 0);
+    test_assertstr(*o, "  Hello World  ");
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserUint16(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserUint16) */
+    corto_uint16 *o = corto_create(corto_uint16_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserUint32(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserUint32) */
+    corto_uint32 *o = corto_create(corto_uint32_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserUint64(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserUint64) */
+    corto_uint64 *o = corto_create(corto_uint64_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserUint8(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserUint8) */
+    corto_uint8 *o = corto_create(corto_uint8_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "10");
+    test_assert(ret == 0);
+    test_assertint(*o, 10);
+    corto_delete(o);
+
+/* $end */
+}
+
 corto_void _test_Deserializer_tc_deserUnion(
     test_Deserializer this)
 {
@@ -640,6 +1000,20 @@ corto_void _test_Deserializer_tc_deserUnionDefault(
     test_assertint(o->d, 6);
     test_assertflt(o->is.other, 40);
 
+    corto_delete(o);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_deserVoid(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_deserVoid) */
+    corto_void *o = corto_create(corto_void_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{}");
+    test_assert(ret == 0);
     corto_delete(o);
 
 /* $end */

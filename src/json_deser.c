@@ -11,6 +11,7 @@ static char* json_valueTypeToString(JSON_Value *v)
     case JSONString: return "string";
     case JSONObject: return "object";
     case JSONArray: return "array";
+    case JSONNull: return "null";
     default: return "unknown";
     }
 }
@@ -25,6 +26,25 @@ static corto_int16 json_deserBoolean(void* o, corto_primitive t, JSON_Value *v)
     }
 
     *(corto_bool *)o = json_value_get_boolean(v);
+
+    return 0;
+error:
+    return -1;
+}
+
+static corto_int16 json_deserCharacter(void* o, corto_primitive t, JSON_Value *v)
+{
+    CORTO_UNUSED(t);
+
+    if (json_value_get_type(v) != JSONString) {
+        corto_string json = json_serialize_to_string(v);
+        corto_seterr("expected string, got %s (%s)", json_valueTypeToString(v), json);
+        corto_dealloc(json);
+        goto error;
+    } else {
+        const char *str = json_value_get_string(v);
+        *(corto_char*)o = *str;
+    }
 
     return 0;
 error:
@@ -59,15 +79,19 @@ error:
 
 static corto_int16 json_deserText(void* p, corto_primitive t, JSON_Value *v)
 {
-    const char *s = json_value_get_string(v);
     CORTO_UNUSED(t);
 
-    if (json_value_get_type(v) != JSONString) {
-        corto_seterr("expected string, got %s", json_valueTypeToString(v));
+    if (json_value_get_type(v) == JSONNull) {
+        corto_setstr(p, NULL);
+    } else if (json_value_get_type(v) != JSONString) {
+        corto_string json = json_serialize_to_string(v);
+        corto_seterr("expected string, got %s (%s)", json_valueTypeToString(v), json);
+        corto_dealloc(json);
         goto error;
+    } else {
+        const char *s = json_value_get_string(v);
+        corto_setstr(p, (corto_string)s);
     }
-
-    corto_setstr(p, (corto_string)s);
 
     return 0;
 error:
@@ -106,6 +130,9 @@ corto_bool json_deserPrimitive(void* p, corto_type t, JSON_Value *v)
         }
         break;
     case CORTO_CHARACTER:
+        if (json_deserCharacter(p, ptype, v)) {
+            goto error;
+        }
         break;
     case CORTO_INTEGER:
     case CORTO_UINTEGER:
@@ -119,6 +146,7 @@ corto_bool json_deserPrimitive(void* p, corto_type t, JSON_Value *v)
         if (json_deserText(p, ptype, v)) {
             goto error;
         }
+        break;
     case CORTO_ENUM:
     case CORTO_BITMASK:
         if (json_deserConstant(p, ptype, v)) {
