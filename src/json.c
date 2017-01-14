@@ -318,7 +318,7 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
 
     corto_string str = corto_buffer_str(&privateData.buffer);
     corto_buffer_append(&data->buffer, str);
-    corto_free(str);
+    corto_dealloc(str);
     
     return 0;
 error:
