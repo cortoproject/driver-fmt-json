@@ -413,7 +413,9 @@ corto_string json_serialize(corto_value *v)
     serializer.optionalAction = CORTO_SERIALIZER_OPTIONAL_IF_SET;
     json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
     corto_serializeValue(&serializer, v, &jsonData);
-    return corto_buffer_str(&jsonData.buffer);
+    corto_string result = corto_buffer_str(&jsonData.buffer);
+    corto_trace("json: serialized '%s'", result);
+    return result;
 }
 
 corto_string json_fromValue(corto_value *v)

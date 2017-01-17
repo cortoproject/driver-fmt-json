@@ -277,7 +277,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
         if (!strcmp(memberName, "super")) {
             JSON_Value* value = json_object_get_value(o, memberName);
             if (json_deserType(p, corto_type(corto_interface(t)->base), value)) {
-                corto_seterr("member '%s': %s", corto_idof(member_o), corto_lasterr());
+                corto_seterr("member '%s': %s", memberName, corto_lasterr());
                 goto error;
             }
         } else if (!strcmp(memberName, "_d") && isUnion) {
@@ -467,6 +467,8 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     if ((json[0] != '{') && (json[1] != '[') && (json[0] != '[')) {
         corto_asprintf(&json, "{\"value\": %s}", json);
     }
+
+    corto_trace("json: deserialize string '%s'", json);
 
     JSON_Value *jsonValue = json_parse_string(json);
     if (!jsonValue) {
