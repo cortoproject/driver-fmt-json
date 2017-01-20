@@ -15,6 +15,54 @@ static corto_string json_fromCorto(corto_object object) {
 }
 /* $end */
 
+corto_void _test_Serializer_tc_serAnyCollection(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serAnyCollection) */
+
+    corto_any *o = corto_create(corto_any_o);
+    o->type = corto_type(corto_int32List_o);
+    o->value = test_list_o;
+    o->owner = FALSE;
+
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"type\":\"list{int32,0}\",\"value\":[10,20,30]}");
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serAnyComposite(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serAnyComposite) */
+
+    corto_any *o = corto_create(corto_any_o);
+    o->type = corto_type(test_Point_o);
+    o->value = test_p_o;
+    o->owner = FALSE;
+
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}");
+
+/* $end */
+}
+
+corto_void _test_Serializer_tc_serAnyPrimitive(
+    test_Serializer this)
+{
+/* $begin(test/Serializer/tc_serAnyPrimitive) */
+
+    corto_any *o = corto_create(corto_any_o);
+    o->type = corto_type(corto_int8_o);
+    o->value = test_int8_o;
+    o->owner = FALSE;
+
+    corto_string s = json_fromCorto(o);
+    test_assertstr(s, "{\"type\":\"int8\",\"value\":10}");
+
+/* $end */
+}
+
 corto_void _test_Serializer_tc_serArray(
     test_Serializer this)
 {

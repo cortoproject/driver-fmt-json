@@ -319,7 +319,7 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
     corto_string str = corto_buffer_str(&privateData.buffer);
     corto_buffer_append(&data->buffer, str);
     corto_dealloc(str);
-    
+
     return 0;
 error:
     return -1;
@@ -362,6 +362,38 @@ finished:
     return 1;
 }
 
+static corto_int16 serializeAny(corto_serializer s, corto_value* v, void* userData)
+{
+    json_ser_t *data = userData;
+    corto_any *ptr = corto_value_getPtr(v);
+    corto_int16 result = 0;
+
+    CORTO_UNUSED(s);
+    CORTO_UNUSED(v);
+
+    if (!corto_buffer_append(
+        &data->buffer,
+        "{\"type\":\"%s\",\"value\":",
+        corto_fullpath(NULL, ptr->type)))
+    {
+        goto finished;
+    }
+
+    corto_value anyValue = corto_value_value(ptr->type, ptr->value);
+    if ((result = corto_serializeValue(s, &anyValue, userData))) {
+        goto done;
+    }
+
+    if (!corto_buffer_append( &data->buffer, "}")) {
+        goto finished;
+    }
+
+done:
+    return result;
+finished:
+    return 1;
+}
+
 static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* userData)
 {
     json_ser_t *data = userData;
@@ -392,6 +424,7 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
     s.accessKind = accessKind;
     s.traceKind = trace;
     s.program[CORTO_VOID] = serializeVoid;
+    s.program[CORTO_ANY] = serializeAny;
     s.program[CORTO_PRIMITIVE] = serializePrimitive;
     s.reference = serializeReference;
     s.program[CORTO_COMPOSITE] = serializeComplex;

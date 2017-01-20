@@ -3,6 +3,26 @@
 
 static corto_int16 json_deserType(void *p, corto_type t, JSON_Value *v);
 
+corto_type json_deserInlineType(JSON_Object *obj) {
+    JSON_Value* type = json_object_get_value(obj, "type");
+    if (!type) {
+        corto_seterr("type member is mandatory for anonymous object");
+        goto error;
+    }
+    if (json_value_get_type(type) != JSONString) {
+        corto_seterr("type member of anonymous object must be a string");
+        goto error;
+    }
+    corto_type cortoType = corto_resolve(NULL, (char*)json_value_get_string(type));
+    if (!cortoType) {
+        corto_seterr("type '%s' not found for anonymous object", json_value_get_string(type));
+        goto error;
+    }
+    return cortoType;
+error:
+    return NULL;
+}
+
 static char* json_valueTypeToString(JSON_Value *v)
 {
     switch(json_value_get_type(v)) {
@@ -182,20 +202,7 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
     case JSONObject: {
         JSON_Object* obj = json_value_get_object(v);
 
-        JSON_Value* type = json_object_get_value(obj, "type");
-        if (!type) {
-            corto_seterr("type member is mandatory for anonymous object");
-            goto error;
-        }
-        if (json_value_get_type(type) != JSONString) {
-            corto_seterr("type member of anonymous object must be a string");
-            goto error;
-        }
-        corto_type cortoType = corto_resolve(NULL, (char*)json_value_get_string(type));
-        if (!cortoType) {
-            corto_seterr("type '%s' not found for anonymous object", json_value_get_string(type));
-            goto error;
-        }
+        corto_type cortoType = json_deserInlineType(obj);
 
         corto_object cortoObj = *(corto_object*)p;
         if (!cortoObj || (corto_typeof(cortoObj) != cortoType)) {
@@ -224,9 +231,49 @@ error:
     return -1;
 }
 
+static corto_int16 json_deserAny(void* p, corto_type t, JSON_Value *v)
+{
+    CORTO_UNUSED(t);
+
+    corto_any *dst = p;
+    if (json_value_get_type(v) != JSONObject) {
+        corto_seterr("expected object for any, got %s", json_valueTypeToString(v));
+        goto error;
+    }
+
+    JSON_Object *obj = json_value_get_object(v);
+    corto_type type = json_deserInlineType(obj);
+    if (!type) {
+        goto error;
+    }
+
+    dst->type = type;
+    dst->owner = TRUE;
+
+    void *ptr;
+    if (!type->reference) {
+        ptr = corto_calloc(corto_type_sizeof(type));
+        if (corto_initp(ptr, type)) {
+            goto error;
+        }
+        dst->value = ptr;
+    } else {
+        ptr = &dst->value;
+    }
+
+    JSON_Value *value = json_object_get_value(obj, "value");
+    if (json_deserType(ptr, type, value)) {
+        goto error;
+    }
+
+    return 0;
+error:
+    return -1;
+
+}
+
 static corto_int16 json_deserItem(void *p, corto_type t, JSON_Value *v)
 {
-
     if (t->reference) {
         if (json_deserReference(p, t, v)) {
             goto error;
@@ -419,6 +466,11 @@ static corto_int16 json_deserType(void *p, corto_type t, JSON_Value *v)
     switch (t->kind) {
     case CORTO_VOID:
         /* Nothing to deserialize */
+        break;
+    case CORTO_ANY:
+        if (json_deserAny(p, t, v)) {
+            goto error;
+        }
         break;
     case CORTO_PRIMITIVE:
         if (json_deserPrimitive(p, t, v)) {

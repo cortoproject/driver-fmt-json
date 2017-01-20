@@ -113,6 +113,9 @@ list{Point} listComplex: {10, 20}, {30, 40}, {50, 60}
 
 test/suite Deserializer::
     void tc_deserVoid()
+    void tc_serAnyPrimitive()
+    void tc_serAnyComposite()
+    void tc_serAnyCollection()
 
     void tc_deserBinary()
     void tc_deserBoolTrue()
@@ -186,6 +189,9 @@ test/suite Deserializer::
 
 test/suite Serializer::
     void tc_serVoid()
+    void tc_serAnyPrimitive()
+    void tc_serAnyComposite()
+    void tc_serAnyCollection()
 
     void tc_serBinary()
     void tc_serBoolTrue()

@@ -1018,3 +1018,69 @@ corto_void _test_Deserializer_tc_deserVoid(
 
 /* $end */
 }
+
+corto_void _test_Deserializer_tc_serAnyCollection(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_serAnyCollection) */
+    corto_any *o = corto_create(corto_any_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"type\":\"list{int32}\",\"value\":[10,20,30]}");
+    test_assert(ret == 0);
+    test_assertstr(corto_fullpath(NULL, o->type), "list{int32,0}");
+    test_assert(o->value != NULL);
+    test_assert(o->owner == TRUE);
+
+    corto_ll list = *(corto_ll*)o->value;
+    test_assertint(corto_llSize(list), 3);
+    test_assertint((corto_word)corto_llGet(list, 0), 10);
+    test_assertint((corto_word)corto_llGet(list, 1), 20);
+    test_assertint((corto_word)corto_llGet(list, 2), 30);
+
+    test_assert(corto_delete(o) == 0);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_serAnyComposite(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_serAnyComposite) */
+    corto_any *o = corto_create(corto_any_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}");
+    test_assert(ret == 0);
+    test_assert(corto_type(test_Point_o) == o->type);
+    test_assert(o->value != NULL);
+    test_assert(o->owner == TRUE);
+
+    test_Point *p = o->value;
+    test_assertint(p->x, 10);
+    test_assertint(p->y, 20);
+
+    test_assert(corto_delete(o) == 0);
+
+/* $end */
+}
+
+corto_void _test_Deserializer_tc_serAnyPrimitive(
+    test_Deserializer this)
+{
+/* $begin(test/Deserializer/tc_serAnyPrimitive) */
+    corto_any *o = corto_create(corto_any_o);
+
+    corto_value v = corto_value_object(o, NULL);
+    corto_int16 ret = json_toValue(&v, "{\"type\":\"int32\",\"value\":10}");
+    test_assert(ret == 0);
+    test_assert(corto_type(corto_int32_o) == o->type);
+    test_assert(o->value != NULL);
+    test_assert(o->owner == TRUE);
+
+    test_assertint(*(corto_int32*)o->value, 10);
+
+    test_assert(corto_delete(o) == 0);
+
+/* $end */
+}
