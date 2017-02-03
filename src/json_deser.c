@@ -552,7 +552,10 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     if (json != s) {
         corto_dealloc(json);
     }
-
+    
+    if (jsonValue) {
+        json_value_free(jsonValue);
+    }
     return 0;
 error:
     if (json != s) {
