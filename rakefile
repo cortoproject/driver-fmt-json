@@ -1,4 +1,4 @@
-PACKAGE = 'corto/fmt/json'
+PACKAGE = '/corto/fmt/json'
 
 NOCORTO = true
 CFLAGS = ["-Wunused-parameter"]

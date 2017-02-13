@@ -340,8 +340,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
         } else {
             member_o = corto_interface_resolveMember(t, (char*)memberName);
 
-            /* Ensure that we're not resolving members from a base type */
-            if (!member_o || (corto_parentof(member_o) != t)) {
+            if (!member_o ) {
                 corto_seterr(
                     "cannot find member '%s' in type '%s'",
                     memberName,
