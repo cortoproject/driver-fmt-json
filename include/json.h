@@ -34,6 +34,9 @@ corto_string json_fromValue(corto_value *v);
 corto_int16 json_toValue(corto_value *v, corto_string json);
 corto_int16 json_toObject(corto_object* o, corto_string s);
 corto_string json_fromObject(corto_object o);
+corto_int16 json_toResult(corto_result *r, corto_string json);
+corto_word json_fromResult(corto_result *r);
+
 void json_release(corto_string json);
 corto_string json_copy(corto_string json);
 

@@ -185,14 +185,14 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
     switch(json_value_get_type(v)) {
     case JSONString: {
         const char* reference = json_value_get_string(v);
-        corto_object o = corto_resolve(NULL, (corto_string)reference);
+        corto_object o = corto_lookup(NULL, (corto_string)reference);
         if (!o) {
             corto_error("unresolved reference \"%s\"", reference);
             goto error;
         }
 
         if (!corto_instanceof(t, o)) {
-            corto_error("%s is not an instance of %s", reference, corto_idof(t));
+            corto_error("%s is not an instance of \"%s\"", reference, corto_fullpath(NULL, t));
         }
 
         corto_setref(p, o);
