@@ -182,7 +182,7 @@ static corto_int16 serializePrimitive(corto_serializer s, corto_value *v, void *
     if (result) {
         goto error;
     }
-    if (!corto_buffer_append(&data->buffer, "%s", valueString)) {
+    if (!corto_buffer_appendstr(&data->buffer, valueString)) {
         goto finished;
     }
     corto_dealloc(valueString);
@@ -237,7 +237,7 @@ static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *
             }
         }
     } else {
-        if (!corto_buffer_append(&data->buffer, "null")) {
+        if (!corto_buffer_appendstr(&data->buffer, "null")) {
             goto finished;
         }
     }
@@ -252,7 +252,7 @@ static corto_int16 serializeItem(corto_serializer s, corto_value *info, void *us
 {
     json_ser_t *data = userData;
 
-    if (data->itemCount && !corto_buffer_append(&data->buffer, ",")) {
+    if (data->itemCount && !corto_buffer_appendstr(&data->buffer, ",")) {
         goto finished;
     }
     if (info->kind == CORTO_MEMBER) {
@@ -288,7 +288,7 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
     privateData.buffer = CORTO_BUFFER_INIT;
     privateData.itemCount = 0;
 
-    if (!corto_buffer_append(&privateData.buffer, (useCurlyBraces ? "{" : "["))) {
+    if (!corto_buffer_appendstr(&privateData.buffer, (useCurlyBraces ? "{" : "["))) {
         goto finished;
     }
     if (type->kind == CORTO_COMPOSITE) {
@@ -312,12 +312,12 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
         goto error;
     }
 
-    if (!corto_buffer_append(&privateData.buffer, (useCurlyBraces ? "}" : "]"))) {
+    if (!corto_buffer_appendstr(&privateData.buffer, (useCurlyBraces ? "}" : "]"))) {
         goto finished;
     }
 
     corto_string str = corto_buffer_str(&privateData.buffer);
-    corto_buffer_append(&data->buffer, str);
+    corto_buffer_appendstr(&data->buffer, str);
     corto_dealloc(str);
 
     return 0;
@@ -353,7 +353,7 @@ static corto_int16 serializeVoid(corto_serializer s, corto_value* v, void* userD
     CORTO_UNUSED(s);
     CORTO_UNUSED(v);
 
-    if (!corto_buffer_append(&data->buffer, "{}")) {
+    if (!corto_buffer_appendstr(&data->buffer, "{}")) {
         goto finished;
     }
 
@@ -384,7 +384,7 @@ static corto_int16 serializeAny(corto_serializer s, corto_value* v, void* userDa
         goto done;
     }
 
-    if (!corto_buffer_append( &data->buffer, "}")) {
+    if (!corto_buffer_appendstr( &data->buffer, "}")) {
         goto finished;
     }
 
@@ -403,7 +403,7 @@ static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* use
             goto error;
         }
      } else {
-        if (!corto_buffer_append(&data->buffer, "")) {
+        if (!corto_buffer_appendstr(&data->buffer, "")) {
             goto finished;
         }
      }
