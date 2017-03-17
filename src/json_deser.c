@@ -519,7 +519,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
         corto_asprintf(&json, "{\"value\": %s}", json);
     }
 
-    corto_trace("json: deserialize string '%s'", json);
+    corto_trace("json: deserialize string %s", json);
 
     JSON_Value *jsonValue = json_parse_string(json);
     if (!jsonValue) {

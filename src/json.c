@@ -447,7 +447,7 @@ corto_string json_serialize(corto_value *v)
     json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
     corto_serializeValue(&serializer, v, &jsonData);
     corto_string result = corto_buffer_str(&jsonData.buffer);
-    corto_trace("json: serialized '%s'", result);
+    corto_trace("json: serialized %s", result);
     return result;
 }
 
