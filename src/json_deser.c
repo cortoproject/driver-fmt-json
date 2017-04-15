@@ -187,12 +187,13 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
         const char* reference = json_value_get_string(v);
         corto_object o = corto_lookup(NULL, (corto_string)reference);
         if (!o) {
-            corto_error("unresolved reference \"%s\"", reference);
+            corto_seterr("unresolved reference \"%s\"", reference);
             goto error;
         }
 
         if (!corto_instanceof(t, o)) {
-            corto_error("%s is not an instance of \"%s\"", reference, corto_fullpath(NULL, t));
+            corto_seterr("%s is not an instance of \"%s\"", reference, corto_fullpath(NULL, t));
+            goto error;
         }
 
         corto_setref(p, o);
@@ -519,7 +520,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
         corto_asprintf(&json, "{\"value\": %s}", json);
     }
 
-    corto_trace("json: deserialize string %s", json);
+    corto_debug("json: deserialize string %s", json);
 
     JSON_Value *jsonValue = json_parse_string(json);
     if (!jsonValue) {

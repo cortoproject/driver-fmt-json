@@ -117,9 +117,8 @@ corto_int16 serializeText(
 
     if (kind == CORTO_CHARACTER || (kind == CORTO_TEXT && (*(corto_string *)v)))
     {
-        corto_string raw;
+        corto_string raw = NULL;
         size_t length;
-        int needEscape = 0;
         if (corto_convert(
             corto_primitive(type),
             v,
@@ -127,16 +126,19 @@ corto_int16 serializeText(
         {
             goto error;
         }
-        if (*raw == '@') {
-            needEscape = 1;
+        if (type != corto_type(corto_verbatim_o) || strcmp(corto_verbatim(type)->contentType, "text/json")) {
+            length = stresc(NULL, 0, raw);
+            *out = corto_alloc(length + 3);
+            stresc(*out + 1, length, raw);
+        } else {
+            /* If string is a verbatim JSON string, copy string as-is */
+            length = strlen(raw);
+            *out = corto_alloc(length + 3);
+            strcpy(*out + 1, raw);
         }
-        length = stresc(NULL, 0, raw);
-        *out = corto_alloc(length + 3 + needEscape);
         (*out)[0] = '"';
-        (*out)[1] = '@';
-        stresc(*out + 1 + needEscape, length, raw);
-        (*out)[length + needEscape + 1] = '"';
-        (*out)[length + needEscape + 2] = '\0';
+        (*out)[length + 1] = '"';
+        (*out)[length + 2] = '\0';
         corto_dealloc(raw);
     } else {
         *out = corto_alloc(sizeof("null"));
@@ -447,7 +449,7 @@ corto_string json_serialize(corto_value *v)
     json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
     corto_serializeValue(&serializer, v, &jsonData);
     corto_string result = corto_buffer_str(&jsonData.buffer);
-    corto_trace("json: serialized %s", result);
+    corto_debug("json: serialized %s", result);
     return result;
 }
 
@@ -500,14 +502,20 @@ static corto_object json_declare(corto_result *r)
         goto errorNotType;
     }
 
-    corto_object parent = corto_lookup(root_o, r->parent);
-    if (!parent) {
-        corto_seterr("json: cannot find '%s'", r->parent);
-        goto errorNoParent;
+    if (r->id && r->parent) {
+        corto_object parent = corto_lookup(root_o, r->parent);
+        if (!parent) {
+            corto_seterr("json: cannot find '%s'", r->parent);
+            goto errorNoParent;
+        }
+
+        o = corto_declareChild(parent, r->id, type);
+        corto_release(parent);
+        corto_release(type);
+    } else {
+        o = corto_declare(type);
+        corto_release(type);
     }
-    o = corto_declareChild(parent, r->id, type);
-    corto_release(parent);
-    corto_release(type);
 
     return o;
 errorNoParent:
@@ -537,10 +545,8 @@ static corto_int16 json_toResultMeta(corto_result *r, JSON_Value **topValue, JSO
     }
 
     const char* fullId = json_object_get_string(topObject, "id");
-    if (!fullId) {
-        corto_seterr("json: missing 'id' field in '%s'", json);
-        goto error;
-    }
+    
+    /* Id is optional */
 
     *jsonValue = json_object_get_value(topObject, "value");
     if (!*jsonValue) {
@@ -548,14 +554,17 @@ static corto_int16 json_toResultMeta(corto_result *r, JSON_Value **topValue, JSO
         goto error;
     }
 
-    char *parent, *id, *fullIdCpy;
-    fullIdCpy = corto_strdup(fullId);
-    json_splitId(fullIdCpy, &parent, &id);
+    char *parent = NULL, *id = NULL, *fullIdCpy = NULL;
+    if (fullId) {
+        fullIdCpy = corto_strdup(fullId);
+        json_splitId(fullIdCpy, &parent, &id);
+    }
 
-    r->id = corto_strdup(id);
-    r->parent = corto_strdup(parent);
+    r->id = id ? corto_strdup(id) : NULL;
+    r->parent = parent ? corto_strdup(parent) : NULL;
     r->type = (char*)type;
-    corto_dealloc(fullIdCpy);
+
+    if (fullIdCpy) corto_dealloc(fullIdCpy);
 
     return 0;
 error:
@@ -651,8 +660,25 @@ error_toResultMeta:
 }
 
 corto_string json_fromObject(corto_object o) {
-    CORTO_UNUSED(o);
-    return 0;
+    corto_buffer buff = CORTO_BUFFER_INIT;
+    corto_buffer_appendstr(&buff, "{");
+
+    corto_buffer_append(&buff, "\"type\":\"%s\"", corto_fullpath(NULL, corto_typeof(o)));
+
+    if (corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
+        corto_buffer_append(&buff, ",\"id\":\"%s\"", corto_idof(o));
+        corto_buffer_append(&buff, ",\"parent\":\"%s\"", corto_fullpath(NULL, corto_parentof(o)));
+    }
+
+    if (corto_typeof(o)->kind != CORTO_VOID) {
+        corto_value v = corto_value_object(o, NULL);
+        corto_string json = json_serialize(&v);
+        corto_buffer_append(&buff, ",\"value\":%s", json);
+    }
+
+    corto_buffer_appendstr(&buff, "}");
+
+    return corto_buffer_str(&buff);
 }
 
 int cortomain(int argc, char* argv[])
