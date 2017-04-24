@@ -114,6 +114,7 @@ corto_int16 serializeText(
     corto_type type = corto_value_getType(value);
     corto_void *v = corto_value_getPtr(value);
     corto_primitiveKind kind = corto_primitive(type)->kind;
+    corto_bool quotes = TRUE;
 
     if (kind == CORTO_CHARACTER || (kind == CORTO_TEXT && (*(corto_string *)v)))
     {
@@ -126,7 +127,7 @@ corto_int16 serializeText(
         {
             goto error;
         }
-        if (type != corto_type(corto_verbatim_o) || strcmp(corto_verbatim(type)->contentType, "text/json")) {
+        if (corto_typeof(type) != corto_type(corto_verbatim_o) || strcmp(corto_verbatim(type)->contentType, "text/json")) {
             length = stresc(NULL, 0, raw);
             *out = corto_alloc(length + 3);
             stresc(*out + 1, length, raw);
@@ -134,11 +135,14 @@ corto_int16 serializeText(
             /* If string is a verbatim JSON string, copy string as-is */
             length = strlen(raw);
             *out = corto_alloc(length + 3);
-            strcpy(*out + 1, raw);
+            strcpy(*out, raw);
+            quotes = FALSE;
         }
-        (*out)[0] = '"';
-        (*out)[length + 1] = '"';
-        (*out)[length + 2] = '\0';
+        if (quotes) {
+            (*out)[0] = '"';
+            (*out)[length + 1] = '"';
+            (*out)[length + 2] = '\0';
+        }
         corto_dealloc(raw);
     } else {
         *out = corto_alloc(sizeof("null"));
@@ -674,6 +678,7 @@ corto_string json_fromObject(corto_object o) {
         corto_value v = corto_value_object(o, NULL);
         corto_string json = json_serialize(&v);
         corto_buffer_append(&buff, ",\"value\":%s", json);
+        corto_dealloc(json);
     }
 
     corto_buffer_appendstr(&buff, "}");
