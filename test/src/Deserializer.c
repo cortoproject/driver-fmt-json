@@ -351,8 +351,8 @@ corto_void _test_Deserializer_tc_deserInheritance(
     corto_int16 ret = json_toValue(&v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
     test_assert(ret == 0);
 
-    test_assertint(p->_parent.x, 10);
-    test_assertint(p->_parent.y, 20);
+    test_assertint(p->super.x, 10);
+    test_assertint(p->super.y, 20);
     test_assertint(p->z, 30);
 
     corto_delete(p);
@@ -372,8 +372,8 @@ corto_void _test_Deserializer_tc_deserInheritanceRef(
     corto_int16 ret = json_toValue(&v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
     test_assert(ret == 0);
 
-    test_assertint(p->_parent.x, 10);
-    test_assertint(p->_parent.y, 20);
+    test_assertint(p->super.x, 10);
+    test_assertint(p->super.y, 20);
     test_assertint(p->z, 30);
 
     corto_delete(p);
