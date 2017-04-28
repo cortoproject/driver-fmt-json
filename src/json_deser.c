@@ -86,7 +86,7 @@ static corto_int16 json_deserNumber(void* o, corto_primitive t, JSON_Value *v)
         number = json_value_get_number(v);
     }
 
-    corto_convert(
+    corto_ptr_cast(
         corto_primitive(corto_float64_o),
         &number,
         t,
@@ -128,7 +128,7 @@ static corto_int16 json_deserConstant(void* p, corto_primitive t, JSON_Value *v)
         goto error;
     }
 
-    if (corto_convert(corto_string_o, (corto_string*)&s, t, p)) {
+    if (corto_ptr_cast(corto_string_o, (corto_string*)&s, t, p)) {
         goto error;
     }
 

@@ -21,7 +21,7 @@ corto_int16 serializeNumber(
 
     corto_void  *v = corto_value_ptrof(value);
 
-    corto_int16 result = corto_convert(
+    corto_int16 result = corto_ptr_cast(
         corto_primitive(t),
         v,
         corto_primitive(corto_string_o),
@@ -45,7 +45,7 @@ static corto_int16 serializeConstant(
 
     CORTO_UNUSED(data);
 
-    if (corto_convert(
+    if (corto_ptr_cast(
         corto_primitive(t),
         v,
         corto_primitive(corto_string_o),
@@ -120,7 +120,7 @@ corto_int16 serializeText(
     {
         corto_string raw = NULL;
         size_t length;
-        if (corto_convert(
+        if (corto_ptr_cast(
             corto_primitive(type),
             v,
             corto_primitive(corto_string_o), &raw))
@@ -154,7 +154,7 @@ error:
     return -1;
 }
 
-static corto_int16 serializePrimitive(corto_serializer s, corto_value *v, void *userData)
+static corto_int16 serializePrimitive(corto_walk_opt* s, corto_value *v, void *userData)
 {
     CORTO_UNUSED(s);
     corto_type type = corto_value_typeof(v);
@@ -200,7 +200,7 @@ error:
     return -1;
 }
 
-static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *userData)
+static corto_int16 serializeReference(corto_walk_opt* s, corto_value *v, void *userData)
 {
     CORTO_UNUSED(s);
 
@@ -235,7 +235,7 @@ static corto_int16 serializeReference(corto_serializer s, corto_value *v, void *
             if (!corto_buffer_append(&data->buffer, "{\"type\":\"%s\",\"value\":", type)) {
                 goto finished;
             }
-            if (corto_serialize(s, object, data)) {
+            if (corto_walk(s, object, data)) {
                 goto error;
             }
             if (!corto_buffer_appendstr(&data->buffer, "}")) {
@@ -254,7 +254,7 @@ error:
     return -1;
 }
 
-static corto_int16 serializeItem(corto_serializer s, corto_value *info, void *userData)
+static corto_int16 serializeItem(corto_walk_opt* s, corto_value *info, void *userData)
 {
     json_ser_t *data = userData;
 
@@ -268,7 +268,7 @@ static corto_int16 serializeItem(corto_serializer s, corto_value *info, void *us
             goto finished;
         }
     }
-    if (corto_serializeValue(s, info, userData)) {
+    if (corto_value_walk(s, info, userData)) {
         goto error;
     }
 
@@ -281,7 +281,7 @@ finished:
     return 1;
 }
 
-static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* userData)
+static corto_int16 serializeComplex(corto_walk_opt* s, corto_value* v, void* userData)
 {
     json_ser_t privateData, *data = userData;
     corto_type type = corto_value_typeof(v);
@@ -307,11 +307,11 @@ static corto_int16 serializeComplex(corto_serializer s, corto_value* v, void* us
             }
             privateData.itemCount = 1;
         }
-        if (corto_serializeMembers(s, v, &privateData)) {
+        if (corto_walk_members(s, v, &privateData)) {
             goto error;
         }
     } else if (type->kind == CORTO_COLLECTION) {
-        if (corto_serializeElements(s, v, &privateData)) {
+        if (corto_walk_elements(s, v, &privateData)) {
             goto error;
         }
     } else {
@@ -333,14 +333,14 @@ finished:
     return 1;
 }
 
-static corto_int16 serializeBase(corto_serializer s, corto_value* v, void* userData)
+static corto_int16 serializeBase(corto_walk_opt* s, corto_value* v, void* userData)
 {
     json_ser_t *data = userData;
 
     if (!corto_buffer_append(&data->buffer, "\"super\":")) {
         goto finished;
     }
-    if (corto_serializeValue(s, v, userData)) {
+    if (corto_value_walk(s, v, userData)) {
         goto error;
     }
     data->itemCount += 1;
@@ -352,7 +352,7 @@ finished:
     return 1;
 }
 
-static corto_int16 serializeVoid(corto_serializer s, corto_value* v, void* userData)
+static corto_int16 serializeVoid(corto_walk_opt* s, corto_value* v, void* userData)
 {
     json_ser_t *data = userData;
 
@@ -368,7 +368,7 @@ finished:
     return 1;
 }
 
-static corto_int16 serializeAny(corto_serializer s, corto_value* v, void* userData)
+static corto_int16 serializeAny(corto_walk_opt* s, corto_value* v, void* userData)
 {
     json_ser_t *data = userData;
     corto_any *ptr = corto_value_ptrof(v);
@@ -386,7 +386,7 @@ static corto_int16 serializeAny(corto_serializer s, corto_value* v, void* userDa
     }
 
     corto_value anyValue = corto_value_value(ptr->value, ptr->type);
-    if ((result = corto_serializeValue(s, &anyValue, userData))) {
+    if ((result = corto_value_walk(s, &anyValue, userData))) {
         goto done;
     }
 
@@ -400,12 +400,12 @@ finished:
     return 1;
 }
 
-static corto_int16 serializeObject(corto_serializer s, corto_value* v, void* userData)
+static corto_int16 serializeObject(corto_walk_opt* s, corto_value* v, void* userData)
 {
     json_ser_t *data = userData;
 
     if (corto_value_typeof(v)->kind != CORTO_VOID) {
-        if (corto_serializeValue(s, v, userData)) {
+        if (corto_value_walk(s, v, userData)) {
             goto error;
         }
      } else {
@@ -421,11 +421,11 @@ finished:
     return 1;
 }
 
-struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_serializerTraceKind trace)
+corto_walk_opt corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_walk_traceKind trace)
 {
-    struct corto_serializer_s s;
+    corto_walk_opt s;
 
-    corto_serializerInit(&s);
+    corto_walk_init(&s);
     s.access = access;
     s.accessKind = accessKind;
     s.traceKind = trace;
@@ -445,13 +445,13 @@ struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKi
 
 corto_string json_serialize(corto_value *v)
 {
-    struct corto_serializer_s serializer = corto_json_ser(
-      CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER
+    corto_walk_opt serializer = corto_json_ser(
+      CORTO_PRIVATE, CORTO_NOT, CORTO_WALK_TRACE_NEVER
     );
-    serializer.aliasAction = CORTO_SERIALIZER_ALIAS_IGNORE;
-    serializer.optionalAction = CORTO_SERIALIZER_OPTIONAL_IF_SET;
+    serializer.aliasAction = CORTO_WALK_ALIAS_IGNORE;
+    serializer.optionalAction = CORTO_WALK_OPTIONAL_IF_SET;
     json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
-    corto_serializeValue(&serializer, v, &jsonData);
+    corto_value_walk(&serializer, v, &jsonData);
     corto_string result = corto_buffer_str(&jsonData.buffer);
     corto_debug("json: serialized %s", result);
     return result;
