@@ -499,8 +499,8 @@ error:
 }
 
 corto_int16 json_deserialize_from_JSON_Value(corto_value *v, JSON_Value *jsonValue) {
-    void *ptr = corto_value_getPtr(v);
-    corto_type type = corto_value_getType(v);
+    void *ptr = corto_value_ptrof(v);
+    corto_type type = corto_value_typeof(v);
 
     if (json_deserType(ptr, type, jsonValue)) {
         goto error;
@@ -528,7 +528,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
         goto error;
     }
 
-    corto_type type = corto_value_getType(v);
+    corto_type type = corto_value_typeof(v);
 
     if (type->kind == CORTO_PRIMITIVE) {
         JSON_Object* jsonObj = json_value_get_object(jsonValue);
