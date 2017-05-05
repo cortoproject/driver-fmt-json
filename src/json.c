@@ -507,14 +507,16 @@ static corto_object json_declare(corto_result *r)
     }
 
     if (r->id && r->parent) {
-        corto_object parent = corto_lookup(root_o, r->parent);
-        if (!parent) {
-            corto_seterr("json: cannot find '%s'", r->parent);
-            goto errorNoParent;
+        corto_id fullId;
+        if (strcmp(r->parent, "/")) {
+            sprintf(fullId, "%s/%s", r->parent, r->id);
+        } else {
+            strcpy(fullId, r->id);
         }
-
-        o = corto_declareChild(parent, r->id, type);
-        corto_release(parent);
+        o = corto_declareChild(NULL, fullId, type);
+        if (!o) {
+            corto_seterr("json: failed to create '%s': %s", corto_lasterr());
+        }
         corto_release(type);
     } else {
         o = corto_declare(type);
@@ -522,7 +524,6 @@ static corto_object json_declare(corto_result *r)
     }
 
     return o;
-errorNoParent:
 errorNotType:
     corto_release(type);
 errorTypeNotFound:

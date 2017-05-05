@@ -254,7 +254,7 @@ static corto_int16 json_deserAny(void* p, corto_type t, JSON_Value *v)
     void *ptr;
     if (!type->reference) {
         ptr = corto_calloc(corto_type_sizeof(type));
-        if (corto_initp(ptr, type)) {
+        if (corto_ptr_init(ptr, type)) {
             goto error;
         }
         dst->value = ptr;
@@ -360,7 +360,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                 corto_int32 prev = *(corto_int32*)p;
                 if (prev != discriminator) {
                     corto_member prevMember = corto_union_findCase(t, prev);
-                    corto_deinitp(CORTO_OFFSET(p, prevMember->offset), prevMember->type);
+                    corto_ptr_deinit(CORTO_OFFSET(p, prevMember->offset), prevMember->type);
                     memset(CORTO_OFFSET(p, member_o->offset), 0, member_o->type->size);
                 }
                 *(corto_int32*)p = discriminator;
@@ -378,7 +378,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                 } else {
                     if (member_o->modifiers & CORTO_OPTIONAL) {
                         if (*(void**)offset) {
-                            corto_deinitp(*(void**)offset, member_o->type);
+                            corto_ptr_deinit(*(void**)offset, member_o->type);
                             memset(*(void**)offset, 0, member_o->type->size);
                         } else {
                             *(void**)offset = corto_calloc(member_o->type->size);
