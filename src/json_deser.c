@@ -419,10 +419,10 @@ void* json_deser_allocElem(void *ptr, corto_collection t, corto_int32 i)
         corto_ll list = *(corto_ll*)ptr;
         if (corto_collection_requiresAlloc(t->elementType)) {
             result = corto_calloc(size);
-            corto_llAppend(list, result);
+            corto_ll_append(list, result);
         } else {
-            corto_llAppend(list, NULL);
-            result = corto_llGetPtr(list, corto_llSize(list) - 1);
+            corto_ll_append(list, NULL);
+            result = corto_ll_getPtr(list, corto_ll_size(list) - 1);
         }
         break;
     default:
