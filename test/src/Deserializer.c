@@ -129,13 +129,13 @@ corto_void _test_Deserializer_tc_deserCompositeList(
     corto_value v = corto_value_object(l, NULL);
     corto_int16 ret = json_toValue(&v, "[{\"x\":10, \"y\":20}, {\"x\":30, \"y\":40}]");
     test_assert(ret == 0);
-    test_assertint(corto_llSize(*l), 2);
+    test_assertint(corto_ll_size(*l), 2);
 
-    test_Point *p = corto_llGet(*l, 0);
+    test_Point *p = corto_ll_get(*l, 0);
     test_assertint(p->x, 10);
     test_assertint(p->y, 20);
 
-    p = corto_llGet(*l, 1);
+    p = corto_ll_get(*l, 1);
     test_assertint(p->x, 30);
     test_assertint(p->y, 40);
 
@@ -351,8 +351,8 @@ corto_void _test_Deserializer_tc_deserInheritance(
     corto_int16 ret = json_toValue(&v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
     test_assert(ret == 0);
 
-    test_assertint(p->_parent.x, 10);
-    test_assertint(p->_parent.y, 20);
+    test_assertint(p->super.x, 10);
+    test_assertint(p->super.y, 20);
     test_assertint(p->z, 30);
 
     corto_delete(p);
@@ -372,8 +372,8 @@ corto_void _test_Deserializer_tc_deserInheritanceRef(
     corto_int16 ret = json_toValue(&v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
     test_assert(ret == 0);
 
-    test_assertint(p->_parent.x, 10);
-    test_assertint(p->_parent.y, 20);
+    test_assertint(p->super.x, 10);
+    test_assertint(p->super.y, 20);
     test_assertint(p->z, 30);
 
     corto_delete(p);
@@ -512,10 +512,10 @@ corto_void _test_Deserializer_tc_deserList(
     corto_value v = corto_value_object(l, NULL);
     corto_int16 ret = json_toValue(&v, "[10, 20, 30]");
     test_assert(ret == 0);
-    test_assertint(corto_llSize(*l), 3);
-    test_assertint((corto_int32)(corto_word)corto_llGet(*l, 0), 10);
-    test_assertint((corto_int32)(corto_word)corto_llGet(*l, 1), 20);
-    test_assertint((corto_int32)(corto_word)corto_llGet(*l, 2), 30);
+    test_assertint(corto_ll_size(*l), 3);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 0), 10);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 1), 20);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 2), 30);
 
     corto_delete(l);
 
@@ -648,11 +648,11 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousCollection(
     test_assert(o->r != NULL);
 
     test_assert(corto_typeof(o->r) == corto_type(test_myList_o));
-    test_assertint(corto_llSize(*(corto_ll*)o->r), 3);
+    test_assertint(corto_ll_size(*(corto_ll*)o->r), 3);
 
-    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 0), 10);
-    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 1), 20);
-    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 2), 30);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*(corto_ll*)o->r, 0), 10);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*(corto_ll*)o->r, 1), 20);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*(corto_ll*)o->r, 2), 30);
 
     corto_delete(o);
 
@@ -674,11 +674,11 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
     test_assert(t->kind == CORTO_COLLECTION);
     test_assert(corto_collection(t)->kind == CORTO_LIST);
     test_assert(corto_collection(t)->elementType == corto_type(corto_int32_o));
-    test_assertint(corto_llSize(*(corto_ll*)o->r), 3);
+    test_assertint(corto_ll_size(*(corto_ll*)o->r), 3);
 
-    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 0), 10);
-    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 1), 20);
-    test_assertint((corto_int32)(corto_word)corto_llGet(*(corto_ll*)o->r, 2), 30);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*(corto_ll*)o->r, 0), 10);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*(corto_ll*)o->r, 1), 20);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*(corto_ll*)o->r, 2), 30);
 
     corto_delete(o);
 
@@ -1033,10 +1033,10 @@ corto_void _test_Deserializer_tc_serAnyCollection(
     test_assert(o->owner == TRUE);
 
     corto_ll list = *(corto_ll*)o->value;
-    test_assertint(corto_llSize(list), 3);
-    test_assertint((corto_word)corto_llGet(list, 0), 10);
-    test_assertint((corto_word)corto_llGet(list, 1), 20);
-    test_assertint((corto_word)corto_llGet(list, 2), 30);
+    test_assertint(corto_ll_size(list), 3);
+    test_assertint((corto_word)corto_ll_get(list, 0), 10);
+    test_assertint((corto_word)corto_ll_get(list, 1), 20);
+    test_assertint((corto_word)corto_ll_get(list, 2), 30);
 
     test_assert(corto_delete(o) == 0);
 

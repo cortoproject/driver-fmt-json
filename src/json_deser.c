@@ -86,7 +86,7 @@ static corto_int16 json_deserNumber(void* o, corto_primitive t, JSON_Value *v)
         number = json_value_get_number(v);
     }
 
-    corto_convert(
+    corto_ptr_cast(
         corto_primitive(corto_float64_o),
         &number,
         t,
@@ -102,7 +102,7 @@ static corto_int16 json_deserText(void* p, corto_primitive t, JSON_Value *v)
     CORTO_UNUSED(t);
 
     if (json_value_get_type(v) == JSONNull) {
-        corto_setstr(p, NULL);
+        corto_ptr_setstr(p, NULL);
     } else if (json_value_get_type(v) != JSONString) {
         corto_string json = json_serialize_to_string(v);
         corto_seterr("expected string, got %s (%s)", json_valueTypeToString(v), json);
@@ -110,7 +110,7 @@ static corto_int16 json_deserText(void* p, corto_primitive t, JSON_Value *v)
         goto error;
     } else {
         const char *s = json_value_get_string(v);
-        corto_setstr(p, (corto_string)s);
+        corto_ptr_setstr(p, (corto_string)s);
     }
 
     return 0;
@@ -128,7 +128,7 @@ static corto_int16 json_deserConstant(void* p, corto_primitive t, JSON_Value *v)
         goto error;
     }
 
-    if (corto_convert(corto_string_o, (corto_string*)&s, t, p)) {
+    if (corto_ptr_cast(corto_string_o, (corto_string*)&s, t, p)) {
         goto error;
     }
 
@@ -187,15 +187,16 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
         const char* reference = json_value_get_string(v);
         corto_object o = corto_lookup(NULL, (corto_string)reference);
         if (!o) {
-            corto_error("unresolved reference \"%s\"", reference);
+            corto_seterr("unresolved reference \"%s\"", reference);
             goto error;
         }
 
         if (!corto_instanceof(t, o)) {
-            corto_error("%s is not an instance of \"%s\"", reference, corto_fullpath(NULL, t));
+            corto_seterr("%s is not an instance of \"%s\"", reference, corto_fullpath(NULL, t));
+            goto error;
         }
 
-        corto_setref(p, o);
+        corto_ptr_setref(p, o);
         corto_release(o);
         break;
     }
@@ -207,7 +208,7 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
         corto_object cortoObj = *(corto_object*)p;
         if (!cortoObj || (corto_typeof(cortoObj) != cortoType)) {
             cortoObj = corto_create(cortoType);
-            corto_setref(p, cortoObj);
+            corto_ptr_setref(p, cortoObj);
             corto_release(cortoObj);
         }
         corto_release(cortoType);
@@ -219,7 +220,7 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
         break;
     }
     case JSONNull:
-        corto_setref(p, NULL);
+        corto_ptr_setref(p, NULL);
         break;
     default:
         corto_seterr("expected string, null or object (reference), got %s", json_valueTypeToString(v));
@@ -253,7 +254,7 @@ static corto_int16 json_deserAny(void* p, corto_type t, JSON_Value *v)
     void *ptr;
     if (!type->reference) {
         ptr = corto_calloc(corto_type_sizeof(type));
-        if (corto_initp(ptr, type)) {
+        if (corto_ptr_init(ptr, type)) {
             goto error;
         }
         dst->value = ptr;
@@ -359,7 +360,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                 corto_int32 prev = *(corto_int32*)p;
                 if (prev != discriminator) {
                     corto_member prevMember = corto_union_findCase(t, prev);
-                    corto_deinitp(CORTO_OFFSET(p, prevMember->offset), prevMember->type);
+                    corto_ptr_deinit(CORTO_OFFSET(p, prevMember->offset), prevMember->type);
                     memset(CORTO_OFFSET(p, member_o->offset), 0, member_o->type->size);
                 }
                 *(corto_int32*)p = discriminator;
@@ -377,7 +378,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                 } else {
                     if (member_o->modifiers & CORTO_OPTIONAL) {
                         if (*(void**)offset) {
-                            corto_deinitp(*(void**)offset, member_o->type);
+                            corto_ptr_deinit(*(void**)offset, member_o->type);
                             memset(*(void**)offset, 0, member_o->type->size);
                         } else {
                             *(void**)offset = corto_calloc(member_o->type->size);
@@ -418,10 +419,10 @@ void* json_deser_allocElem(void *ptr, corto_collection t, corto_int32 i)
         corto_ll list = *(corto_ll*)ptr;
         if (corto_collection_requiresAlloc(t->elementType)) {
             result = corto_calloc(size);
-            corto_llAppend(list, result);
+            corto_ll_append(list, result);
         } else {
-            corto_llAppend(list, NULL);
-            result = corto_llGetPtr(list, corto_llSize(list) - 1);
+            corto_ll_append(list, NULL);
+            result = corto_ll_getPtr(list, corto_ll_size(list) - 1);
         }
         break;
     default:
@@ -498,8 +499,8 @@ error:
 }
 
 corto_int16 json_deserialize_from_JSON_Value(corto_value *v, JSON_Value *jsonValue) {
-    void *ptr = corto_value_getPtr(v);
-    corto_type type = corto_value_getType(v);
+    void *ptr = corto_value_ptrof(v);
+    corto_type type = corto_value_typeof(v);
 
     if (json_deserType(ptr, type, jsonValue)) {
         goto error;
@@ -519,7 +520,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
         corto_asprintf(&json, "{\"value\": %s}", json);
     }
 
-    corto_trace("json: deserialize string %s", json);
+    corto_debug("json: deserialize string %s", json);
 
     JSON_Value *jsonValue = json_parse_string(json);
     if (!jsonValue) {
@@ -527,7 +528,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
         goto error;
     }
 
-    corto_type type = corto_value_getType(v);
+    corto_type type = corto_value_typeof(v);
 
     if (type->kind == CORTO_PRIMITIVE) {
         JSON_Object* jsonObj = json_value_get_object(jsonValue);

@@ -23,7 +23,7 @@ typedef struct json_ser_t {
     unsigned int itemCount;
 } json_ser_t;
 
-struct corto_serializer_s corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_serializerTraceKind trace);
+corto_walk_opt corto_json_ser(corto_modifier access, corto_operatorKind accessKind, corto_walk_traceKind trace);
 
 corto_string json_serialize(corto_value *v);
 corto_int16 json_deserialize(corto_value *v, corto_string s);
