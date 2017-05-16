@@ -214,7 +214,7 @@ static corto_int16 serializeReference(corto_walk_opt* s, corto_value *v, void *u
     object = *(corto_object*)o;
 
     if (object) {
-        if (corto_checkAttr(object, CORTO_ATTR_SCOPED) || (corto_value_objectof(v) == object)) {
+        if (corto_checkAttr(object, CORTO_ATTR_NAMED) || (corto_value_objectof(v) == object)) {
             corto_uint32 length;
             corto_fullpath(id, object);
 
@@ -268,7 +268,7 @@ static corto_int16 serializeItem(corto_walk_opt* s, corto_value *info, void *use
             goto finished;
         }
     }
-    if (corto_value_walk(s, info, userData)) {
+    if (corto_walk_value(s, info, userData)) {
         goto error;
     }
 
@@ -340,7 +340,7 @@ static corto_int16 serializeBase(corto_walk_opt* s, corto_value* v, void* userDa
     if (!corto_buffer_append(&data->buffer, "\"super\":")) {
         goto finished;
     }
-    if (corto_value_walk(s, v, userData)) {
+    if (corto_walk_value(s, v, userData)) {
         goto error;
     }
     data->itemCount += 1;
@@ -386,7 +386,7 @@ static corto_int16 serializeAny(corto_walk_opt* s, corto_value* v, void* userDat
     }
 
     corto_value anyValue = corto_value_value(ptr->value, ptr->type);
-    if ((result = corto_value_walk(s, &anyValue, userData))) {
+    if ((result = corto_walk_value(s, &anyValue, userData))) {
         goto done;
     }
 
@@ -405,7 +405,7 @@ static corto_int16 serializeObject(corto_walk_opt* s, corto_value* v, void* user
     json_ser_t *data = userData;
 
     if (corto_value_typeof(v)->kind != CORTO_VOID) {
-        if (corto_value_walk(s, v, userData)) {
+        if (corto_walk_value(s, v, userData)) {
             goto error;
         }
      } else {
@@ -451,7 +451,7 @@ corto_string json_serialize(corto_value *v)
     serializer.aliasAction = CORTO_WALK_ALIAS_IGNORE;
     serializer.optionalAction = CORTO_WALK_OPTIONAL_IF_SET;
     json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
-    corto_value_walk(&serializer, v, &jsonData);
+    corto_walk_value(&serializer, v, &jsonData);
     corto_string result = corto_buffer_str(&jsonData.buffer);
     corto_debug("json: serialized %s", result);
     return result;
@@ -670,7 +670,7 @@ corto_string json_fromObject(corto_object o) {
 
     corto_buffer_append(&buff, "\"type\":\"%s\"", corto_fullpath(NULL, corto_typeof(o)));
 
-    if (corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
+    if (corto_checkAttr(o, CORTO_ATTR_NAMED)) {
         corto_buffer_append(&buff, ",\"id\":\"%s\"", corto_idof(o));
         corto_buffer_append(&buff, ",\"parent\":\"%s\"", corto_fullpath(NULL, corto_parentof(o)));
     }
