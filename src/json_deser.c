@@ -538,13 +538,9 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
         }
 
         jsonValue = json_object_get_value(jsonObj, "value");
-        if (!jsonValue) {
-            corto_seterr("json: missing 'value' field for primitive value '%s'", json);
-            goto error;
-        }
     }
 
-    if (json_deserialize_from_JSON_Value(v, jsonValue)) {
+    if (jsonValue && json_deserialize_from_JSON_Value(v, jsonValue)) {
         corto_seterr("json: %s for JSON string '%s'", corto_lasterr(), json);
         goto error;
     }

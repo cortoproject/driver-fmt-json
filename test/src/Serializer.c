@@ -15,7 +15,7 @@ static corto_string json_fromCorto(corto_object object) {
 }
 /* $end */
 
-corto_void _test_Serializer_tc_serAnyCollection(
+void _test_Serializer_tc_serAnyCollection(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serAnyCollection) */
@@ -31,7 +31,7 @@ corto_void _test_Serializer_tc_serAnyCollection(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serAnyComposite(
+void _test_Serializer_tc_serAnyComposite(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serAnyComposite) */
@@ -47,7 +47,7 @@ corto_void _test_Serializer_tc_serAnyComposite(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serAnyPrimitive(
+void _test_Serializer_tc_serAnyPrimitive(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serAnyPrimitive) */
@@ -63,7 +63,7 @@ corto_void _test_Serializer_tc_serAnyPrimitive(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serArray(
+void _test_Serializer_tc_serArray(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serArray) */
@@ -75,7 +75,7 @@ corto_void _test_Serializer_tc_serArray(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serArrayComplex(
+void _test_Serializer_tc_serArrayComplex(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serArrayComplex) */
@@ -87,7 +87,7 @@ corto_void _test_Serializer_tc_serArrayComplex(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serBinary(
+void _test_Serializer_tc_serBinary(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serBinary) */
@@ -99,7 +99,7 @@ corto_void _test_Serializer_tc_serBinary(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serBitmask(
+void _test_Serializer_tc_serBitmask(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serBitmask) */
@@ -111,7 +111,7 @@ corto_void _test_Serializer_tc_serBitmask(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serBoolFalse(
+void _test_Serializer_tc_serBoolFalse(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serBoolFalse) */
@@ -123,7 +123,7 @@ corto_void _test_Serializer_tc_serBoolFalse(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serBoolTrue(
+void _test_Serializer_tc_serBoolTrue(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serBoolTrue) */
@@ -135,7 +135,7 @@ corto_void _test_Serializer_tc_serBoolTrue(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serChar(
+void _test_Serializer_tc_serChar(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serChar) */
@@ -147,7 +147,7 @@ corto_void _test_Serializer_tc_serChar(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCharEscape(
+void _test_Serializer_tc_serCharEscape(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCharEscape) */
@@ -159,7 +159,7 @@ corto_void _test_Serializer_tc_serCharEscape(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCharNull(
+void _test_Serializer_tc_serCharNull(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCharNull) */
@@ -172,7 +172,7 @@ corto_void _test_Serializer_tc_serCharNull(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serComposite(
+void _test_Serializer_tc_serComposite(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serComposite) */
@@ -184,7 +184,7 @@ corto_void _test_Serializer_tc_serComposite(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeNested(
+void _test_Serializer_tc_serCompositeNested(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeNested) */
@@ -196,7 +196,7 @@ corto_void _test_Serializer_tc_serCompositeNested(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeNestedRef(
+void _test_Serializer_tc_serCompositeNestedRef(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeNestedRef) */
@@ -211,7 +211,7 @@ corto_void _test_Serializer_tc_serCompositeNestedRef(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeObservable(
+void _test_Serializer_tc_serCompositeObservable(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeObservable) */
@@ -225,7 +225,7 @@ corto_void _test_Serializer_tc_serCompositeObservable(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeOptionalNotSet(
+void _test_Serializer_tc_serCompositeOptionalNotSet(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeOptionalNotSet) */
@@ -239,7 +239,7 @@ corto_void _test_Serializer_tc_serCompositeOptionalNotSet(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeOptionalSet(
+void _test_Serializer_tc_serCompositeOptionalSet(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeOptionalSet) */
@@ -253,7 +253,7 @@ corto_void _test_Serializer_tc_serCompositeOptionalSet(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeRef(
+void _test_Serializer_tc_serCompositeRef(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeRef) */
@@ -265,7 +265,7 @@ corto_void _test_Serializer_tc_serCompositeRef(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeTarget(
+void _test_Serializer_tc_serCompositeTarget(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeTarget) */
@@ -279,7 +279,7 @@ corto_void _test_Serializer_tc_serCompositeTarget(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeUnion(
+void _test_Serializer_tc_serCompositeUnion(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeUnion) */
@@ -291,7 +291,7 @@ corto_void _test_Serializer_tc_serCompositeUnion(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeUnionComplex(
+void _test_Serializer_tc_serCompositeUnionComplex(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeUnionComplex) */
@@ -304,7 +304,7 @@ corto_void _test_Serializer_tc_serCompositeUnionComplex(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serCompositeUnionDefault(
+void _test_Serializer_tc_serCompositeUnionDefault(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serCompositeUnionDefault) */
@@ -316,7 +316,7 @@ corto_void _test_Serializer_tc_serCompositeUnionDefault(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serEnum(
+void _test_Serializer_tc_serEnum(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serEnum) */
@@ -328,7 +328,7 @@ corto_void _test_Serializer_tc_serEnum(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInheritance(
+void _test_Serializer_tc_serInheritance(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInheritance) */
@@ -340,7 +340,7 @@ corto_void _test_Serializer_tc_serInheritance(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInheritanceRef(
+void _test_Serializer_tc_serInheritanceRef(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInheritanceRef) */
@@ -352,7 +352,7 @@ corto_void _test_Serializer_tc_serInheritanceRef(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInt16(
+void _test_Serializer_tc_serInt16(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInt16) */
@@ -364,7 +364,7 @@ corto_void _test_Serializer_tc_serInt16(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInt16Minus(
+void _test_Serializer_tc_serInt16Minus(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInt16Minus) */
@@ -375,7 +375,7 @@ corto_void _test_Serializer_tc_serInt16Minus(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInt32(
+void _test_Serializer_tc_serInt32(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInt32) */
@@ -387,7 +387,7 @@ corto_void _test_Serializer_tc_serInt32(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInt32Minus(
+void _test_Serializer_tc_serInt32Minus(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInt32Minus) */
@@ -398,7 +398,7 @@ corto_void _test_Serializer_tc_serInt32Minus(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInt64(
+void _test_Serializer_tc_serInt64(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInt64) */
@@ -409,7 +409,7 @@ corto_void _test_Serializer_tc_serInt64(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInt64Minus(
+void _test_Serializer_tc_serInt64Minus(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInt64Minus) */
@@ -421,7 +421,7 @@ corto_void _test_Serializer_tc_serInt64Minus(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInt8(
+void _test_Serializer_tc_serInt8(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInt8) */
@@ -433,7 +433,7 @@ corto_void _test_Serializer_tc_serInt8(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serInt8Minus(
+void _test_Serializer_tc_serInt8Minus(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serInt8Minus) */
@@ -445,7 +445,7 @@ corto_void _test_Serializer_tc_serInt8Minus(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serList(
+void _test_Serializer_tc_serList(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serList) */
@@ -457,7 +457,7 @@ corto_void _test_Serializer_tc_serList(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serListComplex(
+void _test_Serializer_tc_serListComplex(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serListComplex) */
@@ -469,7 +469,7 @@ corto_void _test_Serializer_tc_serListComplex(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serNaN(
+void _test_Serializer_tc_serNaN(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serNaN) */
@@ -481,7 +481,7 @@ corto_void _test_Serializer_tc_serNaN(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReference(
+void _test_Serializer_tc_serReference(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReference) */
@@ -493,7 +493,7 @@ corto_void _test_Serializer_tc_serReference(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReferenceAnonymous(
+void _test_Serializer_tc_serReferenceAnonymous(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReferenceAnonymous) */
@@ -505,7 +505,7 @@ corto_void _test_Serializer_tc_serReferenceAnonymous(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReferenceAnonymousCollection(
+void _test_Serializer_tc_serReferenceAnonymousCollection(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReferenceAnonymousCollection) */
@@ -517,7 +517,7 @@ corto_void _test_Serializer_tc_serReferenceAnonymousCollection(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReferenceAnonymousCollectionAnonymousType(
+void _test_Serializer_tc_serReferenceAnonymousCollectionAnonymousType(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReferenceAnonymousCollectionAnonymousType) */
@@ -529,7 +529,7 @@ corto_void _test_Serializer_tc_serReferenceAnonymousCollectionAnonymousType(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReferenceAnonymousComplex(
+void _test_Serializer_tc_serReferenceAnonymousComplex(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReferenceAnonymousComplex) */
@@ -541,7 +541,7 @@ corto_void _test_Serializer_tc_serReferenceAnonymousComplex(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReferenceAnonymousComplexWithString(
+void _test_Serializer_tc_serReferenceAnonymousComplexWithString(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReferenceAnonymousComplexWithString) */
@@ -553,7 +553,7 @@ corto_void _test_Serializer_tc_serReferenceAnonymousComplexWithString(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReferenceAnonymousComplexWithStringEsc(
+void _test_Serializer_tc_serReferenceAnonymousComplexWithStringEsc(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReferenceAnonymousComplexWithStringEsc) */
@@ -565,7 +565,7 @@ corto_void _test_Serializer_tc_serReferenceAnonymousComplexWithStringEsc(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReferenceFromLang(
+void _test_Serializer_tc_serReferenceFromLang(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReferenceFromLang) */
@@ -577,7 +577,7 @@ corto_void _test_Serializer_tc_serReferenceFromLang(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serReferenceNull(
+void _test_Serializer_tc_serReferenceNull(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serReferenceNull) */
@@ -589,7 +589,7 @@ corto_void _test_Serializer_tc_serReferenceNull(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serSequence(
+void _test_Serializer_tc_serSequence(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serSequence) */
@@ -601,7 +601,7 @@ corto_void _test_Serializer_tc_serSequence(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serSequenceComplex(
+void _test_Serializer_tc_serSequenceComplex(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serSequenceComplex) */
@@ -613,7 +613,7 @@ corto_void _test_Serializer_tc_serSequenceComplex(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serString(
+void _test_Serializer_tc_serString(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serString) */
@@ -625,7 +625,7 @@ corto_void _test_Serializer_tc_serString(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serStringEmpty(
+void _test_Serializer_tc_serStringEmpty(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serStringEmpty) */
@@ -637,7 +637,7 @@ corto_void _test_Serializer_tc_serStringEmpty(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serStringEscape(
+void _test_Serializer_tc_serStringEscape(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serStringEscape) */
@@ -649,7 +649,7 @@ corto_void _test_Serializer_tc_serStringEscape(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serStringNull(
+void _test_Serializer_tc_serStringNull(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serStringNull) */
@@ -661,7 +661,7 @@ corto_void _test_Serializer_tc_serStringNull(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serStringWhitespace(
+void _test_Serializer_tc_serStringWhitespace(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serStringWhitespace) */
@@ -673,7 +673,7 @@ corto_void _test_Serializer_tc_serStringWhitespace(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serUint16(
+void _test_Serializer_tc_serUint16(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serUint16) */
@@ -685,7 +685,7 @@ corto_void _test_Serializer_tc_serUint16(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serUint32(
+void _test_Serializer_tc_serUint32(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serUint32) */
@@ -697,7 +697,7 @@ corto_void _test_Serializer_tc_serUint32(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serUint64(
+void _test_Serializer_tc_serUint64(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serUint64) */
@@ -709,7 +709,7 @@ corto_void _test_Serializer_tc_serUint64(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serUint8(
+void _test_Serializer_tc_serUint8(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serUint8) */
@@ -721,7 +721,7 @@ corto_void _test_Serializer_tc_serUint8(
 /* $end */
 }
 
-corto_void _test_Serializer_tc_serVoid(
+void _test_Serializer_tc_serVoid(
     test_Serializer this)
 {
 /* $begin(test/Serializer/tc_serVoid) */

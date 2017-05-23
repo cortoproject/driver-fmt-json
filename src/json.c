@@ -531,6 +531,7 @@ errorTypeNotFound:
 }
 
 static corto_int16 json_toResultMeta(corto_result *r, JSON_Value **topValue, JSON_Value **jsonValue, corto_string json) {
+    *jsonValue = NULL;
     *topValue = json_parse_string(json);
     if (!*topValue) {
         corto_seterr("json: error parsing '%s'", json);
@@ -554,10 +555,8 @@ static corto_int16 json_toResultMeta(corto_result *r, JSON_Value **topValue, JSO
     /* Id is optional */
 
     *jsonValue = json_object_get_value(topObject, "value");
-    if (!*jsonValue) {
-        corto_seterr("json: missing 'value' field in '%s'", json);
-        goto error;
-    }
+
+    /* value is optional */
 
     char *parent = NULL, *id = NULL, *fullIdCpy = NULL;
     if (fullId) {
@@ -634,9 +633,11 @@ corto_int16 json_toObject(corto_object *o, corto_string json)
         }
     }
 
-    corto_value cortoValue = corto_value_object(*o, NULL);
-    if (json_deserialize_from_JSON_Value(&cortoValue, jsonValue)) {
-        goto errorDeserialize;
+    if (jsonValue) {
+        corto_value cortoValue = corto_value_object(*o, NULL);
+        if (json_deserialize_from_JSON_Value(&cortoValue, jsonValue)) {
+            goto errorDeserialize;
+        }
     }
 
     if (newObject) {
