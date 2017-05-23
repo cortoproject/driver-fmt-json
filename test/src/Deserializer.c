@@ -8,7 +8,7 @@
 
 #include <include/test.h>
 
-corto_void _test_Deserializer_tc_deserBinary(
+void _test_Deserializer_tc_deserBinary(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserBinary) */
@@ -23,7 +23,7 @@ corto_void _test_Deserializer_tc_deserBinary(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserBitmask(
+void _test_Deserializer_tc_deserBitmask(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserBitmask) */
@@ -38,7 +38,7 @@ corto_void _test_Deserializer_tc_deserBitmask(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserBoolFalse(
+void _test_Deserializer_tc_deserBoolFalse(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserBoolFalse) */
@@ -53,7 +53,7 @@ corto_void _test_Deserializer_tc_deserBoolFalse(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserBoolTrue(
+void _test_Deserializer_tc_deserBoolTrue(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserBoolTrue) */
@@ -68,7 +68,7 @@ corto_void _test_Deserializer_tc_deserBoolTrue(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserChar(
+void _test_Deserializer_tc_deserChar(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserChar) */
@@ -83,7 +83,7 @@ corto_void _test_Deserializer_tc_deserChar(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCharEscape(
+void _test_Deserializer_tc_deserCharEscape(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCharEscape) */
@@ -98,7 +98,7 @@ corto_void _test_Deserializer_tc_deserCharEscape(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserComposite(
+void _test_Deserializer_tc_deserComposite(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserComposite) */
@@ -118,7 +118,7 @@ corto_void _test_Deserializer_tc_deserComposite(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeList(
+void _test_Deserializer_tc_deserCompositeList(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeList) */
@@ -144,7 +144,7 @@ corto_void _test_Deserializer_tc_deserCompositeList(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeNested(
+void _test_Deserializer_tc_deserCompositeNested(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeNested) */
@@ -166,7 +166,7 @@ corto_void _test_Deserializer_tc_deserCompositeNested(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeNestedRef(
+void _test_Deserializer_tc_deserCompositeNestedRef(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeNestedRef) */
@@ -191,7 +191,7 @@ corto_void _test_Deserializer_tc_deserCompositeNestedRef(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeObservable(
+void _test_Deserializer_tc_deserCompositeObservable(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeObservable) */
@@ -212,7 +212,7 @@ corto_void _test_Deserializer_tc_deserCompositeObservable(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeOptional(
+void _test_Deserializer_tc_deserCompositeOptional(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeOptional) */
@@ -233,7 +233,7 @@ corto_void _test_Deserializer_tc_deserCompositeOptional(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeOptionalNotset(
+void _test_Deserializer_tc_deserCompositeOptionalNotset(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeOptionalNotset) */
@@ -254,7 +254,7 @@ corto_void _test_Deserializer_tc_deserCompositeOptionalNotset(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeRef(
+void _test_Deserializer_tc_deserCompositeRef(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeRef) */
@@ -274,7 +274,7 @@ corto_void _test_Deserializer_tc_deserCompositeRef(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeTarget(
+void _test_Deserializer_tc_deserCompositeTarget(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeTarget) */
@@ -296,7 +296,7 @@ corto_void _test_Deserializer_tc_deserCompositeTarget(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserCompositeTargetNotOwned(
+void _test_Deserializer_tc_deserCompositeTargetNotOwned(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserCompositeTargetNotOwned) */
@@ -324,7 +324,7 @@ corto_void _test_Deserializer_tc_deserCompositeTargetNotOwned(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserEnum(
+void _test_Deserializer_tc_deserEnum(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserEnum) */
@@ -339,7 +339,7 @@ corto_void _test_Deserializer_tc_deserEnum(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInheritance(
+void _test_Deserializer_tc_deserInheritance(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInheritance) */
@@ -360,7 +360,7 @@ corto_void _test_Deserializer_tc_deserInheritance(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInheritanceRef(
+void _test_Deserializer_tc_deserInheritanceRef(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInheritanceRef) */
@@ -381,7 +381,7 @@ corto_void _test_Deserializer_tc_deserInheritanceRef(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInt16(
+void _test_Deserializer_tc_deserInt16(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInt16) */
@@ -396,7 +396,7 @@ corto_void _test_Deserializer_tc_deserInt16(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInt16Minus(
+void _test_Deserializer_tc_deserInt16Minus(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInt16Minus) */
@@ -411,7 +411,7 @@ corto_void _test_Deserializer_tc_deserInt16Minus(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInt32(
+void _test_Deserializer_tc_deserInt32(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInt32) */
@@ -426,7 +426,7 @@ corto_void _test_Deserializer_tc_deserInt32(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInt32Minus(
+void _test_Deserializer_tc_deserInt32Minus(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInt32Minus) */
@@ -441,7 +441,7 @@ corto_void _test_Deserializer_tc_deserInt32Minus(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInt64(
+void _test_Deserializer_tc_deserInt64(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInt64) */
@@ -456,7 +456,7 @@ corto_void _test_Deserializer_tc_deserInt64(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInt64Minus(
+void _test_Deserializer_tc_deserInt64Minus(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInt64Minus) */
@@ -471,7 +471,7 @@ corto_void _test_Deserializer_tc_deserInt64Minus(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInt8(
+void _test_Deserializer_tc_deserInt8(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInt8) */
@@ -486,7 +486,7 @@ corto_void _test_Deserializer_tc_deserInt8(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserInt8Minus(
+void _test_Deserializer_tc_deserInt8Minus(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserInt8Minus) */
@@ -501,7 +501,7 @@ corto_void _test_Deserializer_tc_deserInt8Minus(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserList(
+void _test_Deserializer_tc_deserList(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserList) */
@@ -522,7 +522,7 @@ corto_void _test_Deserializer_tc_deserList(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserNaN(
+void _test_Deserializer_tc_deserNaN(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserNaN) */
@@ -537,7 +537,7 @@ corto_void _test_Deserializer_tc_deserNaN(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserObject(
+void _test_Deserializer_tc_deserObject(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserObject) */
@@ -554,7 +554,7 @@ corto_void _test_Deserializer_tc_deserObject(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserObjectErrorParsing(
+void _test_Deserializer_tc_deserObjectErrorParsing(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserObjectErrorParsing) */
@@ -567,7 +567,7 @@ corto_void _test_Deserializer_tc_deserObjectErrorParsing(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserObjectNonFullyScopedName(
+void _test_Deserializer_tc_deserObjectNonFullyScopedName(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserObjectNonFullyScopedName) */
@@ -585,7 +585,7 @@ test_assert(*(corto_int16*)c == 9);
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserObjectScoped(
+void _test_Deserializer_tc_deserObjectScoped(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserObjectScoped) */
@@ -603,7 +603,7 @@ corto_void _test_Deserializer_tc_deserObjectScoped(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReference(
+void _test_Deserializer_tc_deserReference(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReference) */
@@ -618,7 +618,7 @@ corto_void _test_Deserializer_tc_deserReference(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReferenceAnonymous(
+void _test_Deserializer_tc_deserReferenceAnonymous(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReferenceAnonymous) */
@@ -636,7 +636,7 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymous(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReferenceAnonymousCollection(
+void _test_Deserializer_tc_deserReferenceAnonymousCollection(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReferenceAnonymousCollection) */
@@ -659,7 +659,7 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousCollection(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
+void _test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReferenceAnonymousCollectionAnonymousType) */
@@ -685,7 +685,7 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReferenceAnonymousComplex(
+void _test_Deserializer_tc_deserReferenceAnonymousComplex(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReferenceAnonymousComplex) */
@@ -704,7 +704,7 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousComplex(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReferenceAnonymousComplexWithString(
+void _test_Deserializer_tc_deserReferenceAnonymousComplexWithString(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReferenceAnonymousComplexWithString) */
@@ -723,7 +723,7 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousComplexWithString(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReferenceAnonymousComplexWithStringEsc(
+void _test_Deserializer_tc_deserReferenceAnonymousComplexWithStringEsc(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReferenceAnonymousComplexWithStringEsc) */
@@ -742,7 +742,7 @@ corto_void _test_Deserializer_tc_deserReferenceAnonymousComplexWithStringEsc(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReferenceFromLang(
+void _test_Deserializer_tc_deserReferenceFromLang(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReferenceFromLang) */
@@ -757,7 +757,7 @@ corto_void _test_Deserializer_tc_deserReferenceFromLang(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserReferenceNull(
+void _test_Deserializer_tc_deserReferenceNull(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserReferenceNull) */
@@ -775,7 +775,7 @@ corto_void _test_Deserializer_tc_deserReferenceNull(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserString(
+void _test_Deserializer_tc_deserString(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserString) */
@@ -790,7 +790,7 @@ corto_void _test_Deserializer_tc_deserString(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserStringEmpty(
+void _test_Deserializer_tc_deserStringEmpty(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserStringEmpty) */
@@ -805,7 +805,7 @@ corto_void _test_Deserializer_tc_deserStringEmpty(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserStringEscape(
+void _test_Deserializer_tc_deserStringEscape(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserStringEscape) */
@@ -820,7 +820,7 @@ corto_void _test_Deserializer_tc_deserStringEscape(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserStringNull(
+void _test_Deserializer_tc_deserStringNull(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserStringNull) */
@@ -835,7 +835,7 @@ corto_void _test_Deserializer_tc_deserStringNull(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserStringWhitespace(
+void _test_Deserializer_tc_deserStringWhitespace(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserStringWhitespace) */
@@ -850,7 +850,7 @@ corto_void _test_Deserializer_tc_deserStringWhitespace(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserUint16(
+void _test_Deserializer_tc_deserUint16(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserUint16) */
@@ -865,7 +865,7 @@ corto_void _test_Deserializer_tc_deserUint16(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserUint32(
+void _test_Deserializer_tc_deserUint32(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserUint32) */
@@ -880,7 +880,7 @@ corto_void _test_Deserializer_tc_deserUint32(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserUint64(
+void _test_Deserializer_tc_deserUint64(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserUint64) */
@@ -895,7 +895,7 @@ corto_void _test_Deserializer_tc_deserUint64(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserUint8(
+void _test_Deserializer_tc_deserUint8(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserUint8) */
@@ -910,7 +910,7 @@ corto_void _test_Deserializer_tc_deserUint8(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserUnion(
+void _test_Deserializer_tc_deserUnion(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserUnion) */
@@ -927,7 +927,7 @@ corto_void _test_Deserializer_tc_deserUnion(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserUnionChangeDiscriminator(
+void _test_Deserializer_tc_deserUnionChangeDiscriminator(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserUnionChangeDiscriminator) */
@@ -965,7 +965,7 @@ corto_void _test_Deserializer_tc_deserUnionChangeDiscriminator(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserUnionComplex(
+void _test_Deserializer_tc_deserUnionComplex(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserUnionComplex) */
@@ -983,7 +983,7 @@ corto_void _test_Deserializer_tc_deserUnionComplex(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserUnionDefault(
+void _test_Deserializer_tc_deserUnionDefault(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserUnionDefault) */
@@ -1005,7 +1005,7 @@ corto_void _test_Deserializer_tc_deserUnionDefault(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_deserVoid(
+void _test_Deserializer_tc_deserVoid(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_deserVoid) */
@@ -1019,7 +1019,7 @@ corto_void _test_Deserializer_tc_deserVoid(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_serAnyCollection(
+void _test_Deserializer_tc_serAnyCollection(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_serAnyCollection) */
@@ -1043,7 +1043,7 @@ corto_void _test_Deserializer_tc_serAnyCollection(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_serAnyComposite(
+void _test_Deserializer_tc_serAnyComposite(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_serAnyComposite) */
@@ -1065,7 +1065,7 @@ corto_void _test_Deserializer_tc_serAnyComposite(
 /* $end */
 }
 
-corto_void _test_Deserializer_tc_serAnyPrimitive(
+void _test_Deserializer_tc_serAnyPrimitive(
     test_Deserializer this)
 {
 /* $begin(test/Deserializer/tc_serAnyPrimitive) */
