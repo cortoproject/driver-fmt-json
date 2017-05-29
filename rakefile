@@ -1,7 +1,7 @@
-PACKAGE = '/corto/fmt/json'
 
-NOCORTO = true
-CFLAGS = ["-Wunused-parameter"]
-USE_PACKAGE = ["corto"]
+COMPONENTS = %w(
+    fmt
+    ext
+)
 
-require "#{ENV['CORTO_BUILD']}/package"
+require "#{ENV['CORTO_BUILD']}/forward"

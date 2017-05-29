@@ -1,0 +1,9 @@
+PACKAGE = 'corto/ext/json'
+
+NOAPI = true
+NOCORTO = true
+USE_PACKAGE = [
+    "corto",
+    "corto/fmt/json",
+]
+require "#{ENV['CORTO_BUILD']}/package"

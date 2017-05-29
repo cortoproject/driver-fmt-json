@@ -604,15 +604,16 @@ corto_int16 json_toObject(corto_object *o, corto_string json)
     corto_bool newObject = FALSE;
     corto_result r;
     JSON_Value *topValue = NULL, *jsonValue = NULL;
+    corto_object result = NULL;
 
     memset(&r, 0, sizeof(corto_result));
     if (json_toResultMeta(&r, &topValue, &jsonValue, json)) {
         goto error_toResultMeta;
     }
 
-    if (!*o) {
-        *o = json_declare(&r);
-        if (!*o) {
+    if (!o || !*o) {
+        result = json_declare(&r);
+        if (!result) {
             goto errorDeclare;
         }
         newObject = TRUE;
@@ -634,14 +635,14 @@ corto_int16 json_toObject(corto_object *o, corto_string json)
     }
 
     if (jsonValue) {
-        corto_value cortoValue = corto_value_object(*o, NULL);
+        corto_value cortoValue = corto_value_object(result, NULL);
         if (json_deserialize_from_JSON_Value(&cortoValue, jsonValue)) {
             goto errorDeserialize;
         }
     }
 
     if (newObject) {
-        if (corto_define(*o)) {
+        if (corto_define(result)) {
             goto errorDefine;
         }
     }
@@ -650,11 +651,15 @@ corto_int16 json_toObject(corto_object *o, corto_string json)
     corto_dealloc(r.parent);
     json_value_free(topValue);
 
+    if (o) {
+        *o = result;
+    }
+
     return 0;
 errorDeserialize:
 errorDefine:
     if (newObject) {
-        corto_delete(*o);
+        corto_delete(result);
     }
     *o = NULL;
 errorDeclare:
