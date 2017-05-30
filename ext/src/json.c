@@ -9,7 +9,7 @@
 #include <corto/ext/json/json.h>
 
 /* $header() */
-static int json_loadFile(corto_string file, int argc, char* argv[], void* udata) {
+static int json_loadFile(corto_string file, int argc, char* argv[], void* ctx) {
     char *json = corto_fileLoad(file);
     if (!json) {
         corto_seterr("json: cannot find file '%s'", file);

@@ -530,15 +530,14 @@ errorTypeNotFound:
     return NULL;
 }
 
-static corto_int16 json_toResultMeta(corto_result *r, JSON_Value **topValue, JSON_Value **jsonValue, corto_string json) {
-    *jsonValue = NULL;
-    *topValue = json_parse_string(json);
-    if (!*topValue) {
+static corto_int16 json_toResultMeta(corto_result *r, JSON_Value *topValue, corto_string json) {
+
+    if (!topValue) {
         corto_seterr("json: error parsing '%s'", json);
         goto error;
     }
 
-    JSON_Object* topObject = json_value_get_object(*topValue);
+    JSON_Object* topObject = json_value_get_object(topValue);
     if (!topObject) {
         corto_seterr("json: '%s' is not a JSON object", json);
         goto error;
@@ -553,10 +552,6 @@ static corto_int16 json_toResultMeta(corto_result *r, JSON_Value **topValue, JSO
     const char* fullId = json_object_get_string(topObject, "id");
 
     /* Id is optional */
-
-    *jsonValue = json_object_get_value(topObject, "value");
-
-    /* value is optional */
 
     char *parent = NULL, *id = NULL, *fullIdCpy = NULL;
     if (fullId) {
@@ -576,10 +571,10 @@ error:
 }
 
 corto_int16 json_toResult(corto_result *r, corto_string json) {
-    JSON_Value *topValue = NULL, *jsonValue = NULL;
+    JSON_Value* topValue = json_parse_string(json);
 
     memset(r, 0, sizeof(corto_result));
-    if (json_toResultMeta(r, &topValue, &jsonValue, json)) {
+    if (json_toResultMeta(r, topValue, json)) {
         goto error_toResultMeta;
     }
 
@@ -599,15 +594,15 @@ corto_word json_fromResult(corto_result *r) {
     return 0;
 }
 
-corto_int16 json_toObject(corto_object *o, corto_string json)
-{
-    corto_bool newObject = FALSE;
+static corto_int16 json_toObject_fromJsonObject(corto_object *o, JSON_Value *topValue, char *json) {
     corto_result r;
-    JSON_Value *topValue = NULL, *jsonValue = NULL;
     corto_object result = NULL;
+    corto_bool newObject = FALSE;
+
+    JSON_Object* topObject = json_value_get_object(topValue);
 
     memset(&r, 0, sizeof(corto_result));
-    if (json_toResultMeta(&r, &topValue, &jsonValue, json)) {
+    if (json_toResultMeta(&r, topValue, json)) {
         goto error_toResultMeta;
     }
 
@@ -634,6 +629,7 @@ corto_int16 json_toObject(corto_object *o, corto_string json)
         }
     }
 
+    JSON_Value* jsonValue = json_object_get_value(topObject, "value");
     if (jsonValue) {
         corto_value cortoValue = corto_value_object(result, NULL);
         if (json_deserialize_from_JSON_Value(&cortoValue, jsonValue)) {
@@ -649,7 +645,6 @@ corto_int16 json_toObject(corto_object *o, corto_string json)
 
     corto_dealloc(r.id);
     corto_dealloc(r.parent);
-    json_value_free(topValue);
 
     if (o) {
         *o = result;
@@ -665,6 +660,41 @@ errorDefine:
 errorDeclare:
     corto_dealloc(r.id);
     corto_dealloc(r.parent);
+error_toResultMeta:
+    return -1;
+}
+
+corto_int16 json_toObject(corto_object *o, corto_string json)
+{
+    JSON_Value* topValue = json_parse_string(json);
+
+    if (json_value_get_type(topValue) == JSONArray) {
+        JSON_Array *array = json_value_get_array(topValue);
+        size_t count = json_array_get_count(array);
+        size_t i;
+
+        for (i = 0; i < count; i++) {
+            JSON_Value *elem = json_array_get_value(array, i);
+
+            if (json_value_get_type(elem) != JSONObject) {
+                corto_seterr("invalid element in JSON array, expected object");
+                goto error;
+            }
+
+            if (json_toObject_fromJsonObject(o, elem, json)) {
+                goto error;
+            }
+        }
+    } else if (json_value_get_type(topValue) == JSONObject) {
+        if (json_toObject_fromJsonObject(o, topValue, json)) {
+            goto error_toResultMeta;
+        }
+    }
+
+    json_value_free(topValue);
+
+    return 0;
+error:
 error_toResultMeta:
     if (topValue) json_value_free(topValue);
     return -1;

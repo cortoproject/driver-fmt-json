@@ -1,4 +1,4 @@
-/* xml.h
+/* json.h
  *
  * This file contains generated code. Do not modify!
  */
@@ -7,6 +7,8 @@
 #define CORTO_EXT_JSON_H
 
 #include <corto/corto.h>
+#include <corto/ext/json/_project.h>
+#include <corto/fmt/json/json.h>
 
 /* $header() */
 #include <corto/fmt/json/json.h>
