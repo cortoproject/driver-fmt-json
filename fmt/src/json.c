@@ -571,7 +571,6 @@ error:
 }
 
 corto_int16 json_toResult(corto_result *r, corto_string json) {
-    printf("Parse JSON\n");
     JSON_Value* topValue = json_parse_string(json);
     if (!topValue) {
         corto_seterr("error parsing JSON %s", json);
