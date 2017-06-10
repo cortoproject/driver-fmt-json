@@ -571,7 +571,12 @@ error:
 }
 
 corto_int16 json_toResult(corto_result *r, corto_string json) {
+    printf("Parse JSON\n");
     JSON_Value* topValue = json_parse_string(json);
+    if (!topValue) {
+        corto_seterr("error parsing JSON %s", json);
+        goto error;
+    }
 
     memset(r, 0, sizeof(corto_result));
     if (json_toResultMeta(r, topValue, json)) {
@@ -584,6 +589,7 @@ corto_int16 json_toResult(corto_result *r, corto_string json) {
     json_value_free(topValue);
     return 0;
 
+error:
 error_toResultMeta:
     json_value_free(topValue);
     return -1;
@@ -667,6 +673,10 @@ error_toResultMeta:
 corto_int16 json_toObject(corto_object *o, corto_string json)
 {
     JSON_Value* topValue = json_parse_string(json);
+    if (!topValue) {
+        corto_seterr("json: failed to parse %s", json);
+        goto error;
+    }
 
     if (json_value_get_type(topValue) == JSONArray) {
         JSON_Array *array = json_value_get_array(topValue);
