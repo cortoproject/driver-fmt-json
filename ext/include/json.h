@@ -11,7 +11,7 @@
 #include <corto/fmt/json/json.h>
 
 /* $header() */
-#include <corto/fmt/json/json.h>
+/* Enter additional code here. */
 /* $end */
 
 /* $body() */

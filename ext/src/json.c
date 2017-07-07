@@ -8,7 +8,6 @@
 
 #include <corto/ext/json/json.h>
 
-/* $header() */
 static int json_loadFile(corto_string file, int argc, char* argv[], void* ctx) {
     char *json = corto_fileLoad(file);
     if (!json) {
@@ -21,13 +20,10 @@ static int json_loadFile(corto_string file, int argc, char* argv[], void* ctx) {
 error:
     return -1;
 }
-/* $end */
 
 int jsonMain(int argc, char *argv[]) {
-/* $begin(main) */
 
     corto_loaderRegister("json", json_loadFile, NULL);
 
     return 0;
-/* $end */
 }
