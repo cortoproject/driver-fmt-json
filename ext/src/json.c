@@ -23,7 +23,7 @@ error:
 
 int jsonMain(int argc, char *argv[]) {
 
-    corto_loaderRegister("json", json_loadFile, NULL);
+    corto_load_register("json", json_loadFile, NULL);
 
     return 0;
 }
