@@ -118,6 +118,18 @@ error:
     return -1;
 }
 
+/* If deserializing verbatim, serialize JSON to string */
+static corto_int16 json_deserVerbatim(void* p, corto_primitive t, JSON_Value *v)
+{
+    CORTO_UNUSED(t);
+
+    char *str = json_serialize_to_string((const JSON_Value*)v);
+    corto_ptr_setstr(p, str);
+
+    return 0;
+}
+
+
 static corto_int16 json_deserConstant(void* p, corto_primitive t, JSON_Value *v)
 {
     const char *s = json_value_get_string(v);
@@ -163,8 +175,14 @@ corto_bool json_deserPrimitive(void* p, corto_type t, JSON_Value *v)
         }
         break;
     case CORTO_TEXT:
-        if (json_deserText(p, ptype, v)) {
-            goto error;
+        if (corto_typeof(ptype) != corto_type(corto_verbatim_o) || strcmp(corto_verbatim(ptype)->contentType, "text/json")) {
+            if (json_deserText(p, ptype, v)) {
+                goto error;
+            }
+        } else {
+            if (json_deserVerbatim(p, ptype, v)) {
+                goto error;
+            }
         }
         break;
     case CORTO_ENUM:
