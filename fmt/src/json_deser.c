@@ -340,13 +340,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
         const char* memberName = json_object_get_name(o, i);
         corto_member member_o;
 
-        if (!strcmp(memberName, "super")) {
-            JSON_Value* value = json_object_get_value(o, memberName);
-            if (json_deserType(p, corto_type(corto_interface(t)->base), value)) {
-                corto_seterr("member '%s': %s", memberName, corto_lasterr());
-                goto error;
-            }
-        } else if (!strcmp(memberName, "_d") && isUnion) {
+        if (!strcmp(memberName, "_d") && isUnion) {
             JSON_Value* value = json_object_get_value(o, memberName);
             if (json_deserPrimitive(&discriminator, corto_union(t)->discriminator, value)) {
                 goto error;
@@ -357,14 +351,14 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                     discriminator, corto_fullpath(NULL, t));
             }
         } else {
-            member_o = corto_interface_resolveMember(t, (char*)memberName);
-
-            if (!member_o ) {
-                corto_seterr(
-                    "cannot find member '%s' in type '%s'",
-                    memberName,
-                    corto_fullpath(NULL, t));
+            corto_value mbr, v = corto_value_mem(p, t);
+            if (corto_value_memberExpr(&v, (char*)memberName, &mbr)) {
                 goto error;
+            }
+
+            member_o = NULL;
+            if (mbr.kind == CORTO_MEMBER) {
+                member_o = mbr.is.member.t;
             }
 
             if (isUnion && (unionMember != member_o)) {
@@ -384,26 +378,28 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                 *(corto_int32*)p = discriminator;
             }
 
-            if (!json_deserMustSkip(member_o, p)) {
+            if (!member_o || !json_deserMustSkip(member_o, p)) {
                 JSON_Value* value = json_object_get_value(o, memberName);
-                void *offset = CORTO_OFFSET(p, member_o->offset);
-                if (member_o->modifiers & CORTO_OBSERVABLE) {
+                void *offset = corto_value_ptrof(&mbr);
+                corto_type memberType = corto_value_typeof(&mbr);
+
+                if (member_o && member_o->modifiers & CORTO_OBSERVABLE) {
                     offset = *(void**)offset;
-                    if (json_deserType(offset, member_o->type, value)) {
+                    if (json_deserType(offset, memberType, value)) {
                         corto_seterr("member '%s': %s", corto_idof(member_o), corto_lasterr());
                         goto error;
                     }
                 } else {
-                    if (member_o->modifiers & CORTO_OPTIONAL) {
+                    if (member_o && member_o->modifiers & CORTO_OPTIONAL) {
                         if (*(void**)offset) {
-                            corto_ptr_deinit(*(void**)offset, member_o->type);
-                            memset(*(void**)offset, 0, member_o->type->size);
+                            corto_ptr_deinit(*(void**)offset, memberType);
+                            memset(*(void**)offset, 0, memberType->size);
                         } else {
-                            *(void**)offset = corto_calloc(member_o->type->size);
+                            *(void**)offset = corto_calloc(memberType->size);
                         }
                         offset = *(void**)offset;
                     }
-                    if (json_deserItem(offset, member_o->type, value)) {
+                    if (json_deserItem(offset, memberType, value)) {
                         corto_seterr("member '%s': %s", corto_idof(member_o), corto_lasterr());
                         goto error;
                     }
