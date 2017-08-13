@@ -399,8 +399,18 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                         }
                         offset = *(void**)offset;
                     }
-                    if (json_deserItem(offset, memberType, value)) {
-                        corto_seterr("member '%s': %s", corto_idof(member_o), corto_lasterr());
+                    if (mbr.kind == CORTO_MEMBER) {
+                        if (json_deserItem(offset, memberType, value)) {
+                            corto_seterr("member '%s': %s", corto_idof(member_o), corto_lasterr());
+                            goto error;
+                        }
+                    } else if (mbr.kind == CORTO_BASE) {
+                        if (json_deserType(offset, memberType, value)) {
+                            corto_seterr("super: %s", corto_lasterr());
+                            goto error;
+                        }                        
+                    } else {
+                        corto_error("unexpected value kind '%d'", mbr.kind);
                         goto error;
                     }
                 }
