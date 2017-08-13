@@ -583,7 +583,10 @@ corto_int16 json_toResult(corto_result *r, corto_string json) {
     }
 
     r->type = corto_strdup(r->type);
-    r->value = (corto_word)json_serialize_to_string(topValue);
+
+    JSON_Object *object = json_value_get_object(topValue);
+    JSON_Value *value = json_object_get_value(object, "value");
+    r->value = (corto_word)json_serialize_to_string(value);
 
     json_value_free(topValue);
     return 0;
