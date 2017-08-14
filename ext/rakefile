@@ -1,9 +1,9 @@
-PACKAGE = 'corto/ext/json'
+PACKAGE = 'driver/ext/json'
 
 NOAPI = true
 
 USE_PACKAGE = [
-    "corto/fmt/json",
+    "driver/fmt/json",
 ]
 
 require "#{ENV['CORTO_BUILD']}/package"

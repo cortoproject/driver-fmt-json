@@ -1,4 +1,4 @@
-PACKAGE = '/corto/fmt/json'
+PACKAGE = '/driver/fmt/json'
 
 NOCORTO = true
 CFLAGS = ["-Wunused-parameter"]

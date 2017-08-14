@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include <corto/ext/json/json.h>
+#include <driver/ext/json/json.h>
 
 static int json_loadFile(corto_string file, int argc, char* argv[], void* ctx) {
     char *json = corto_fileLoad(file);
