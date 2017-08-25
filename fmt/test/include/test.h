@@ -1,6 +1,7 @@
 /* test.h
  *
- * This file contains generated code. Do not modify!
+ * This is the main package file. Include this file in other projects.
+ * Only modify inside the header-end and body-end sections.
  */
 
 #ifndef TEST_H
@@ -9,7 +10,7 @@
 #include <corto/corto.h>
 #include <corto/corto.h>
 #include <include/_project.h>
-#include <corto/fmt/json/json.h>
+#include <driver/fmt/json/json.h>
 #include <corto/test/test.h>
 #include <corto/c/c.h>
 

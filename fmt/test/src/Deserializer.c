@@ -1,17 +1,10 @@
-/* $CORTO_GENERATED
- *
- * Deserializer.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <include/test.h>
 
-void _test_Deserializer_tc_deserBinary(
+void test_Deserializer_tc_deserBinary(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserBinary) */
     corto_word *o = corto_create(corto_word_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -20,13 +13,11 @@ void _test_Deserializer_tc_deserBinary(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserBitmask(
+void test_Deserializer_tc_deserBitmask(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserBitmask) */
     corto_word *o = corto_create(test_Sandwich_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -35,13 +26,11 @@ void _test_Deserializer_tc_deserBitmask(
     test_assertint(*o, Test_Beef | Test_Lettuce | Test_Tomato);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserBoolFalse(
+void test_Deserializer_tc_deserBoolFalse(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserBoolFalse) */
     corto_bool *o = corto_create(corto_bool_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -50,13 +39,11 @@ void _test_Deserializer_tc_deserBoolFalse(
     test_assertint(*o, FALSE);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserBoolTrue(
+void test_Deserializer_tc_deserBoolTrue(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserBoolTrue) */
     corto_bool *o = corto_create(corto_bool_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -65,13 +52,11 @@ void _test_Deserializer_tc_deserBoolTrue(
     test_assertint(*o, TRUE);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserChar(
+void test_Deserializer_tc_deserChar(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserChar) */
     corto_char *o = corto_create(corto_char_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -80,13 +65,11 @@ void _test_Deserializer_tc_deserChar(
     test_assertint(*o, 'a');
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCharEscape(
+void test_Deserializer_tc_deserCharEscape(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCharEscape) */
     corto_char *o = corto_create(corto_char_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -95,13 +78,11 @@ void _test_Deserializer_tc_deserCharEscape(
     test_assertint(*o, '\n');
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserComposite(
+void test_Deserializer_tc_deserComposite(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserComposite) */
     test_Point *p = corto_create(test_Point_o);
     test_assert(p != NULL);
     test_assert(corto_typeof(p) == corto_type(test_Point_o));
@@ -115,13 +96,11 @@ void _test_Deserializer_tc_deserComposite(
 
     corto_delete(p);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeList(
+void test_Deserializer_tc_deserCompositeList(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeList) */
     test_PointList *l = corto_create(test_PointList_o);
     test_assert(l != NULL);
     test_assert(corto_typeof(l) == corto_type(test_PointList_o));
@@ -141,13 +120,11 @@ void _test_Deserializer_tc_deserCompositeList(
 
     corto_delete(l);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeNested(
+void test_Deserializer_tc_deserCompositeNested(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeNested) */
     test_Line *l = corto_create(test_Line_o);
     test_assert(l != NULL);
     test_assert(corto_typeof(l) == corto_type(test_Line_o));
@@ -163,13 +140,11 @@ void _test_Deserializer_tc_deserCompositeNested(
 
     corto_delete(l);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeNestedRef(
+void test_Deserializer_tc_deserCompositeNestedRef(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeNestedRef) */
     test_LineRef l = corto_create(test_LineRef_o);
     test_assert(l != NULL);
     test_assert(corto_typeof(l) == corto_type(test_LineRef_o));
@@ -188,13 +163,11 @@ void _test_Deserializer_tc_deserCompositeNestedRef(
 
     corto_delete(l);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeObservable(
+void test_Deserializer_tc_deserCompositeObservable(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeObservable) */
     test_ObservableType *o = corto_create(test_ObservableType_o);
     test_assert(o != NULL);
     test_assert(corto_typeof(o) == corto_type(test_ObservableType_o));
@@ -209,13 +182,11 @@ void _test_Deserializer_tc_deserCompositeObservable(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeOptional(
+void test_Deserializer_tc_deserCompositeOptional(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeOptional) */
     test_OptionalType *o = corto_create(test_OptionalType_o);
     test_assert(o != NULL);
     test_assert(corto_typeof(o) == corto_type(test_OptionalType_o));
@@ -230,13 +201,11 @@ void _test_Deserializer_tc_deserCompositeOptional(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeOptionalNotset(
+void test_Deserializer_tc_deserCompositeOptionalNotset(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeOptionalNotset) */
     test_OptionalType *o = corto_create(test_OptionalType_o);
     test_assert(o != NULL);
     test_assert(corto_typeof(o) == corto_type(test_OptionalType_o));
@@ -251,13 +220,11 @@ void _test_Deserializer_tc_deserCompositeOptionalNotset(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeRef(
+void test_Deserializer_tc_deserCompositeRef(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeRef) */
     test_Point *p = corto_create(test_PointRef_o);
     test_assert(p != NULL);
     test_assert(corto_typeof(p) == corto_type(test_PointRef_o));
@@ -271,13 +238,11 @@ void _test_Deserializer_tc_deserCompositeRef(
 
     corto_delete(p);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeTarget(
+void test_Deserializer_tc_deserCompositeTarget(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeTarget) */
     test_TargetType *o = corto_create(test_TargetType_o);
     test_assert(o != NULL);
     test_assert(corto_typeof(o) == corto_type(test_TargetType_o));
@@ -293,13 +258,11 @@ void _test_Deserializer_tc_deserCompositeTarget(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserCompositeTargetNotOwned(
+void test_Deserializer_tc_deserCompositeTargetNotOwned(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserCompositeTargetNotOwned) */
     test_TargetType *o = corto_create(test_TargetType_o);
     test_assert(o != NULL);
     test_assert(corto_typeof(o) == corto_type(test_TargetType_o));
@@ -321,13 +284,11 @@ void _test_Deserializer_tc_deserCompositeTargetNotOwned(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserEnum(
+void test_Deserializer_tc_deserEnum(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserEnum) */
     test_Color *o = corto_create(test_Color_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -336,13 +297,11 @@ void _test_Deserializer_tc_deserEnum(
     test_assertint(*o, Test_Yellow);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInheritance(
+void test_Deserializer_tc_deserInheritance(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInheritance) */
     test_Point3D *p = corto_create(test_Point3D_o);
     test_assert(p != NULL);
     test_assert(corto_typeof(p) == corto_type(test_Point3D_o));
@@ -357,13 +316,11 @@ void _test_Deserializer_tc_deserInheritance(
 
     corto_delete(p);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInheritanceRef(
+void test_Deserializer_tc_deserInheritanceRef(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInheritanceRef) */
     test_Point3D *p = corto_create(test_Point3D_o);
     test_assert(p != NULL);
     test_assert(corto_typeof(p) == corto_type(test_Point3D_o));
@@ -378,13 +335,11 @@ void _test_Deserializer_tc_deserInheritanceRef(
 
     corto_delete(p);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInt16(
+void test_Deserializer_tc_deserInt16(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInt16) */
     corto_int16 *o = corto_create(corto_int16_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -393,13 +348,11 @@ void _test_Deserializer_tc_deserInt16(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInt16Minus(
+void test_Deserializer_tc_deserInt16Minus(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInt16Minus) */
     corto_int16 *o = corto_create(corto_int16_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -408,13 +361,11 @@ void _test_Deserializer_tc_deserInt16Minus(
     test_assertint(*o, -10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInt32(
+void test_Deserializer_tc_deserInt32(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInt32) */
     corto_int32 *o = corto_create(corto_int32_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -423,13 +374,11 @@ void _test_Deserializer_tc_deserInt32(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInt32Minus(
+void test_Deserializer_tc_deserInt32Minus(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInt32Minus) */
     corto_int32 *o = corto_create(corto_int32_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -438,13 +387,11 @@ void _test_Deserializer_tc_deserInt32Minus(
     test_assertint(*o, -10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInt64(
+void test_Deserializer_tc_deserInt64(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInt64) */
     corto_int64 *o = corto_create(corto_int64_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -453,13 +400,11 @@ void _test_Deserializer_tc_deserInt64(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInt64Minus(
+void test_Deserializer_tc_deserInt64Minus(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInt64Minus) */
     corto_int64 *o = corto_create(corto_int64_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -468,13 +413,11 @@ void _test_Deserializer_tc_deserInt64Minus(
     test_assertint(*o, -10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInt8(
+void test_Deserializer_tc_deserInt8(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInt8) */
     corto_int8 *o = corto_create(corto_int8_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -483,13 +426,11 @@ void _test_Deserializer_tc_deserInt8(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserInt8Minus(
+void test_Deserializer_tc_deserInt8Minus(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserInt8Minus) */
     corto_int8 *o = corto_create(corto_int8_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -498,13 +439,11 @@ void _test_Deserializer_tc_deserInt8Minus(
     test_assertint(*o, -10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserList(
+void test_Deserializer_tc_deserList(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserList) */
     corto_int32List *l = corto_create(corto_int32List_o);
     test_assert(l != NULL);
     test_assert(corto_typeof(l) == corto_type(corto_int32List_o));
@@ -519,13 +458,11 @@ void _test_Deserializer_tc_deserList(
 
     corto_delete(l);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserNaN(
+void test_Deserializer_tc_deserNaN(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserNaN) */
     corto_float64 *o = corto_create(corto_float64_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -534,13 +471,11 @@ void _test_Deserializer_tc_deserNaN(
     test_assert(CORTO_ISNAN(*o));
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserObject(
+void test_Deserializer_tc_deserObject(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserObject) */
     corto_object o = NULL;
 
     corto_int16 r = json_toObject(&o, "{\"id\": \"a\", \"type\": \"int8\", \"value\": 8}");
@@ -551,26 +486,22 @@ void _test_Deserializer_tc_deserObject(
     test_assert(corto_typeof(o) == (corto_type)corto_int8_o);
     test_assertint(*(corto_int8*)o, 8);
     corto_delete(o);
-/* $end */
 }
 
-void _test_Deserializer_tc_deserObjectErrorParsing(
+void test_Deserializer_tc_deserObjectErrorParsing(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserObjectErrorParsing) */
     corto_object o = NULL;
     corto_int16 r = json_toObject(&o, "{\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}");
     test_assert(r != 0);
     char* lasterr = corto_lasterr();
     test_assertstr(lasterr, "json: error parsing '{\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}'");
     corto_seterr(NULL);
-/* $end */
 }
 
-void _test_Deserializer_tc_deserObjectNonFullyScopedName(
+void test_Deserializer_tc_deserObjectNonFullyScopedName(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserObjectNonFullyScopedName) */
 corto_object a = corto_createChild(root_o, "a", corto_int8_o);
 corto_object b = corto_createChild(a, "b", corto_int8_o);
 test_assert(a != NULL);
@@ -582,13 +513,11 @@ test_assert(corto_fullpath(NULL, c) != NULL);
 test_assertstr(corto_fullpath(NULL, c), "/a/b/c");
 test_assert(corto_typeof(c) == (corto_type)corto_int16_o);
 test_assert(*(corto_int16*)c == 9);
-/* $end */
 }
 
-void _test_Deserializer_tc_deserObjectScoped(
+void test_Deserializer_tc_deserObjectScoped(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserObjectScoped) */
     corto_object a = corto_createChild(root_o, "a", corto_int8_o);
     corto_object b = corto_createChild(a, "b", corto_int8_o);
     test_assert(a != NULL);
@@ -600,13 +529,11 @@ void _test_Deserializer_tc_deserObjectScoped(
     test_assertstr(corto_fullpath(NULL, c), "/a/b/c");
     test_assert(corto_typeof(c) == (corto_type)corto_int16_o);
     test_assert(*(corto_int16*)c == 9);
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReference(
+void test_Deserializer_tc_deserReference(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReference) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -615,13 +542,11 @@ void _test_Deserializer_tc_deserReference(
     test_assert(o->r == corto_package_o);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReferenceAnonymous(
+void test_Deserializer_tc_deserReferenceAnonymous(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReferenceAnonymous) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -633,13 +558,11 @@ void _test_Deserializer_tc_deserReferenceAnonymous(
     test_assertint(*(corto_int32*)o->r, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReferenceAnonymousCollection(
+void test_Deserializer_tc_deserReferenceAnonymousCollection(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReferenceAnonymousCollection) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -656,13 +579,11 @@ void _test_Deserializer_tc_deserReferenceAnonymousCollection(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
+void test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReferenceAnonymousCollectionAnonymousType) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -682,13 +603,11 @@ void _test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReferenceAnonymousComplex(
+void test_Deserializer_tc_deserReferenceAnonymousComplex(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReferenceAnonymousComplex) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -701,13 +620,11 @@ void _test_Deserializer_tc_deserReferenceAnonymousComplex(
     test_assertint(test_Point(o->r)->y, 20);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReferenceAnonymousComplexWithString(
+void test_Deserializer_tc_deserReferenceAnonymousComplexWithString(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReferenceAnonymousComplexWithString) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -720,13 +637,11 @@ void _test_Deserializer_tc_deserReferenceAnonymousComplexWithString(
     test_assertstr(test_StringType(o->r)->s2, "World");
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReferenceAnonymousComplexWithStringEsc(
+void test_Deserializer_tc_deserReferenceAnonymousComplexWithStringEsc(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReferenceAnonymousComplexWithStringEsc) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -739,13 +654,11 @@ void _test_Deserializer_tc_deserReferenceAnonymousComplexWithStringEsc(
     test_assertstr(test_StringType(o->r)->s2, "\"World\"");
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReferenceFromLang(
+void test_Deserializer_tc_deserReferenceFromLang(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReferenceFromLang) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -754,13 +667,11 @@ void _test_Deserializer_tc_deserReferenceFromLang(
     test_assert(o->r == corto_package_o);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserReferenceNull(
+void test_Deserializer_tc_deserReferenceNull(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserReferenceNull) */
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -772,13 +683,11 @@ void _test_Deserializer_tc_deserReferenceNull(
     test_assert(o->r == NULL);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserString(
+void test_Deserializer_tc_deserString(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserString) */
     corto_string *o = corto_create(corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -787,13 +696,11 @@ void _test_Deserializer_tc_deserString(
     test_assertstr(*o, "Hello World");
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserStringEmpty(
+void test_Deserializer_tc_deserStringEmpty(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserStringEmpty) */
     corto_string *o = corto_create(corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -802,13 +709,11 @@ void _test_Deserializer_tc_deserStringEmpty(
     test_assertstr(*o, "");
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserStringEscape(
+void test_Deserializer_tc_deserStringEscape(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserStringEscape) */
     corto_string *o = corto_create(corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -817,13 +722,11 @@ void _test_Deserializer_tc_deserStringEscape(
     test_assertstr(*o, "Hello World\n");
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserStringNull(
+void test_Deserializer_tc_deserStringNull(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserStringNull) */
     corto_string *o = corto_create(corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -832,13 +735,11 @@ void _test_Deserializer_tc_deserStringNull(
     test_assert(*o == NULL);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserStringWhitespace(
+void test_Deserializer_tc_deserStringWhitespace(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserStringWhitespace) */
     corto_string *o = corto_create(corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -847,13 +748,11 @@ void _test_Deserializer_tc_deserStringWhitespace(
     test_assertstr(*o, "  Hello World  ");
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserUint16(
+void test_Deserializer_tc_deserUint16(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserUint16) */
     corto_uint16 *o = corto_create(corto_uint16_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -862,13 +761,11 @@ void _test_Deserializer_tc_deserUint16(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserUint32(
+void test_Deserializer_tc_deserUint32(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserUint32) */
     corto_uint32 *o = corto_create(corto_uint32_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -877,13 +774,11 @@ void _test_Deserializer_tc_deserUint32(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserUint64(
+void test_Deserializer_tc_deserUint64(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserUint64) */
     corto_uint64 *o = corto_create(corto_uint64_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -892,13 +787,11 @@ void _test_Deserializer_tc_deserUint64(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserUint8(
+void test_Deserializer_tc_deserUint8(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserUint8) */
     corto_uint8 *o = corto_create(corto_uint8_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -907,13 +800,11 @@ void _test_Deserializer_tc_deserUint8(
     test_assertint(*o, 10);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserUnion(
+void test_Deserializer_tc_deserUnion(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserUnion) */
     test_UnionType *o = corto_create(test_UnionType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -924,13 +815,11 @@ void _test_Deserializer_tc_deserUnion(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserUnionChangeDiscriminator(
+void test_Deserializer_tc_deserUnionChangeDiscriminator(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserUnionChangeDiscriminator) */
     test_UnionType *o = corto_create(test_UnionType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -962,13 +851,11 @@ void _test_Deserializer_tc_deserUnionChangeDiscriminator(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserUnionComplex(
+void test_Deserializer_tc_deserUnionComplex(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserUnionComplex) */
     test_UnionType *o = corto_create(test_UnionType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -980,13 +867,11 @@ void _test_Deserializer_tc_deserUnionComplex(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserUnionDefault(
+void test_Deserializer_tc_deserUnionDefault(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserUnionDefault) */
     test_UnionType *o = corto_create(test_UnionType_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -1002,13 +887,11 @@ void _test_Deserializer_tc_deserUnionDefault(
 
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_deserVoid(
+void test_Deserializer_tc_deserVoid(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_deserVoid) */
     corto_void *o = corto_create(corto_void_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -1016,13 +899,11 @@ void _test_Deserializer_tc_deserVoid(
     test_assert(ret == 0);
     corto_delete(o);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_serAnyCollection(
+void test_Deserializer_tc_serAnyCollection(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_serAnyCollection) */
     corto_any *o = corto_create(corto_any_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -1040,13 +921,11 @@ void _test_Deserializer_tc_serAnyCollection(
 
     test_assert(corto_delete(o) == 0);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_serAnyComposite(
+void test_Deserializer_tc_serAnyComposite(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_serAnyComposite) */
     corto_any *o = corto_create(corto_any_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -1062,13 +941,11 @@ void _test_Deserializer_tc_serAnyComposite(
 
     test_assert(corto_delete(o) == 0);
 
-/* $end */
 }
 
-void _test_Deserializer_tc_serAnyPrimitive(
+void test_Deserializer_tc_serAnyPrimitive(
     test_Deserializer this)
 {
-/* $begin(test/Deserializer/tc_serAnyPrimitive) */
     corto_any *o = corto_create(corto_any_o);
 
     corto_value v = corto_value_object(o, NULL);
@@ -1082,5 +959,5 @@ void _test_Deserializer_tc_serAnyPrimitive(
 
     test_assert(corto_delete(o) == 0);
 
-/* $end */
 }
+

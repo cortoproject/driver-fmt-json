@@ -4,19 +4,19 @@
  * Only modify inside the header-end and body-end sections.
  */
 
-#ifndef CORTO_EXT_JSON_H
-#define CORTO_EXT_JSON_H
+#ifndef DRIVER_EXT_JSON_H
+#define DRIVER_EXT_JSON_H
 
 #include <corto/corto.h>
 #include <driver/ext/json/_project.h>
 #include <driver/fmt/json/json.h>
 
 /* $header() */
-/* Enter additional code here. */
+/* Definitions that are required by package headers (native types) go here. */
 /* $end */
 
 /* $body() */
-/* Enter code that requires types here */
+/* Definitions here that need your package headers go here. */
 /* $end */
 
 #endif

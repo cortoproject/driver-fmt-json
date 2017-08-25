@@ -602,7 +602,12 @@ corto_word json_fromResult(corto_result *r) {
     return 0;
 }
 
-static corto_int16 json_toObject_fromJsonObject(corto_object *o, JSON_Value *topValue, char *json) {
+static 
+corto_int16 json_toObject_fromJsonObject(
+    corto_object *o, 
+    JSON_Value *topValue, 
+    char *json) 
+{
     corto_result r;
     corto_object result = NULL;
     corto_bool newObject = FALSE;
@@ -664,7 +669,9 @@ errorDefine:
     if (newObject) {
         corto_delete(result);
     }
-    *o = NULL;
+    if (o) {
+        *o = NULL;
+    }
 errorDeclare:
     corto_dealloc(r.id);
     corto_dealloc(r.parent);
