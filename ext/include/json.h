@@ -8,7 +8,6 @@
 #define DRIVER_EXT_JSON_H
 
 #include <corto/corto.h>
-#include <driver/ext/json/_project.h>
 #include <driver/fmt/json/json.h>
 
 /* $header() */

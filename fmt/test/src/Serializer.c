@@ -405,7 +405,7 @@ void test_Serializer_tc_serReference(
 {
 
     corto_string s = json_fromCorto(test_reference_o);
-    test_assertstr(s, "{\"r\":\"/corto/core/package\"}");
+    test_assertstr(s, "{\"r\":\"/corto/vstore/package\"}");
     corto_dealloc(s);
 
 }

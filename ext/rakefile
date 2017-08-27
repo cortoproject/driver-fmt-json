@@ -1,6 +1,7 @@
 PACKAGE = 'driver/ext/json'
 
 NOAPI = true
+NOCORTO = true
 
 USE_PACKAGE = [
     "driver/fmt/json",

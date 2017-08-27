@@ -537,7 +537,7 @@ void test_Deserializer_tc_deserReference(
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":\"/corto/core/package\"}");
+    corto_int16 ret = json_toValue(&v, "{\"r\":\"/corto/vstore/package\"}");
     test_assert(ret == 0);
     test_assert(o->r == corto_package_o);
     corto_delete(o);
@@ -662,7 +662,7 @@ void test_Deserializer_tc_deserReferenceFromLang(
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":\"/corto/core/package\"}");
+    corto_int16 ret = json_toValue(&v, "{\"r\":\"/corto/vstore/package\"}");
     test_assert(ret == 0);
     test_assert(o->r == corto_package_o);
     corto_delete(o);
@@ -675,7 +675,7 @@ void test_Deserializer_tc_deserReferenceNull(
     test_ReferenceType *o = corto_create(test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":\"/corto/core/package\"}");
+    corto_int16 ret = json_toValue(&v, "{\"r\":\"/corto/vstore/package\"}");
     test_assert(ret == 0);
     test_assert(o->r == corto_package_o);
 
