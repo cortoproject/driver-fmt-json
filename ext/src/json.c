@@ -21,7 +21,7 @@ error:
     return -1;
 }
 
-int jsonMain(int argc, char *argv[]) {
+int cortomain(int argc, char *argv[]) {
 
     corto_load_register("json", json_loadFile, NULL);
 
