@@ -54,7 +54,7 @@ static corto_int16 serializeConstant(
         goto error;
     }
 
-    corto_asprintf(out, "\"%s\"", raw);
+    *out = corto_asprintf( "\"%s\"", raw);
     corto_dealloc(raw);
 
 
@@ -445,6 +445,7 @@ corto_walk_opt corto_json_ser(corto_modifier access, corto_operatorKind accessKi
 
 corto_string json_serialize(corto_value *v)
 {
+    corto_component_push("json");
     corto_walk_opt serializer = corto_json_ser(
       CORTO_PRIVATE, CORTO_NOT, CORTO_WALK_TRACE_NEVER
     );
@@ -453,7 +454,8 @@ corto_string json_serialize(corto_value *v)
     json_ser_t jsonData = {CORTO_BUFFER_INIT, 0};
     corto_walk_value(&serializer, v, &jsonData);
     corto_string result = corto_buffer_str(&jsonData.buffer);
-    corto_debug("json: serialized %s", result);
+    corto_debug("serialized %s", result);
+    corto_component_pop();
     return result;
 }
 

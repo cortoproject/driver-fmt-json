@@ -353,7 +353,8 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
         } else {
             corto_value mbr, v = corto_value_mem(p, t);
             if (corto_value_memberExpr(&v, (char*)memberName, &mbr)) {
-                goto error;
+                corto_warning("%s", corto_lasterr());
+                continue;
             }
 
             member_o = NULL;
@@ -538,10 +539,11 @@ error:
 corto_int16 json_deserialize(corto_value *v, corto_string s)
 {
     corto_assert(v != NULL, "NULL passed to json_deserialize");
+    corto_component_push("json");
 
     char *json = s;
     if ((json[0] != '{') && (json[1] != '[') && (json[0] != '[')) {
-        corto_asprintf(&json, "{\"value\": %s}", json);
+        json = corto_asprintf("{\"value\": %s}", json);
     }
 
     corto_debug("json: deserialize string %s", json);
@@ -576,6 +578,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     if (jsonValue) {
         json_value_free(jsonValue);
     }
+    corto_component_pop();
     return 0;
 error:
     if (json != s) {
@@ -585,5 +588,6 @@ error:
     if (jsonValue) {
         json_value_free(jsonValue);
     }
+    corto_component_pop();
     return -1;
 }
