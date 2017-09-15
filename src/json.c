@@ -500,11 +500,11 @@ static corto_object json_declare(corto_result *r)
     corto_object o = NULL;
     corto_object type = corto_resolve(NULL, r->type);
     if (!type) {
-        corto_seterr("json: cannot find '%s'", r->type);
+        corto_seterr("cannot find '%s'", r->type);
         goto errorTypeNotFound;
     }
     if (!corto_instanceof(corto_type_o, type)) {
-        corto_seterr("json: '%s' is not a type", r->type);
+        corto_seterr("'%s' is not a type", r->type);
         goto errorNotType;
     }
 
@@ -517,7 +517,7 @@ static corto_object json_declare(corto_result *r)
         }
         o = corto_declareChild(NULL, fullId, type);
         if (!o) {
-            corto_seterr("json: failed to create '%s': %s", corto_lasterr());
+            corto_seterr("failed to create '%s': %s", corto_lasterr());
         }
         corto_release(type);
     } else {
@@ -535,19 +535,19 @@ errorTypeNotFound:
 static corto_int16 json_toResultMeta(corto_result *r, JSON_Value *topValue, corto_string json) {
 
     if (!topValue) {
-        corto_seterr("json: error parsing '%s'", json);
+        corto_seterr("error parsing '%s'", json);
         goto error;
     }
 
     JSON_Object* topObject = json_value_get_object(topValue);
     if (!topObject) {
-        corto_seterr("json: '%s' is not a JSON object", json);
+        corto_seterr("'%s' is not a JSON object", json);
         goto error;
     }
 
     const char* type = json_object_get_string(topObject, "type");
     if (!type) {
-        corto_seterr("json: missing 'type' field in '%s'", json);
+        corto_seterr("missing 'type' field in '%s'", json);
         goto error;
     }
 
@@ -631,7 +631,7 @@ corto_int16 json_toObject_fromJsonObject(
         corto_type t = corto_resolve(NULL, r.type);
         if (t) {
             if (corto_typeof(*o) != t) {
-                corto_seterr("json: object '%s' is not of type '%s' (from '%s')",
+                corto_seterr("object '%s' is not of type '%s' (from '%s')",
                   corto_fullpath(NULL, *o),
                   corto_fullpath(NULL, t),
                   json);
@@ -639,7 +639,7 @@ corto_int16 json_toObject_fromJsonObject(
             }
             corto_release(t);
         } else {
-            corto_seterr("json: unresolved type '%s' from '%s'", r.type, json);
+            corto_seterr("unresolved type '%s' from '%s'", r.type, json);
             goto errorDeclare;
         }
     }
@@ -685,7 +685,7 @@ corto_int16 json_toObject(corto_object *o, corto_string json)
 {
     JSON_Value* topValue = json_parse_string(json);
     if (!topValue) {
-        corto_seterr("json: failed to parse %s", json);
+        corto_seterr("failed to parse %s", json);
         goto error;
     }
 
