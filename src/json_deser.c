@@ -253,17 +253,31 @@ error:
 static corto_int16 json_deserAny(void* p, corto_type t, JSON_Value *v)
 {
     CORTO_UNUSED(t);
-
+    JSON_Value *value = NULL;
+    corto_type type = NULL;
     corto_any *dst = p;
-    if (json_value_get_type(v) != JSONObject) {
-        corto_seterr("expected object for any, got %s", json_valueTypeToString(v));
-        goto error;
-    }
 
-    JSON_Object *obj = json_value_get_object(v);
-    corto_type type = json_deserInlineType(obj);
-    if (!type) {
-        goto error;
+    if (json_value_get_type(v) == JSONObject) {
+        JSON_Object *obj = json_value_get_object(v);
+        type = json_deserInlineType(obj);
+        if (!type) {
+            goto error;
+        }
+
+        value = json_object_get_value(obj, "value");
+    } else {
+        /* Figure out type from JSON value */
+        value = v;
+        switch (json_value_get_type(v)) {
+        case JSONBoolean: type = corto_type(corto_bool_o); break;
+        case JSONNumber: type = corto_type(corto_float64_o); break;
+        case JSONNull: type = corto_type(corto_string_o); break;
+        case JSONString: type = corto_type(corto_string_o); break;
+        default:
+            corto_seterr("unexpected JSON '%s' for any-value",
+                json_valueTypeToString(v));
+            break;
+        }
     }
 
     dst->type = type;
@@ -280,7 +294,6 @@ static corto_int16 json_deserAny(void* p, corto_type t, JSON_Value *v)
         ptr = &dst->value;
     }
 
-    JSON_Value *value = json_object_get_value(obj, "value");
     if (json_deserType(ptr, type, value)) {
         goto error;
     }
@@ -430,24 +443,17 @@ void* json_deser_allocElem(void *ptr, corto_collection t, corto_int32 i)
     void *result = NULL;
 
     switch(t->kind) {
-    case CORTO_SEQUENCE: {
-        corto_objectseq *seq = ptr; /* Use random built-in sequence type */
-        seq->buffer = corto_realloc(seq->buffer, (i + 1) * size);
-        seq->length = i + 1;
-        ptr = seq->buffer;
-        memset(CORTO_OFFSET(ptr, size * i), 0, size);
-    }
+    case CORTO_SEQUENCE:
+        ptr = ((corto_objectseq*)ptr)->buffer;
     case CORTO_ARRAY:
         result = CORTO_OFFSET(ptr, size * i);
         break;
     case CORTO_LIST: {
         corto_ll list = *(corto_ll*)ptr;
         if (corto_collection_requiresAlloc(t->elementType)) {
-            result = corto_calloc(size);
-            corto_ll_append(list, result);
+            result = corto_ll_get(list, i);
         } else {
-            corto_ll_append(list, NULL);
-            result = corto_ll_getPtr(list, corto_ll_size(list) - 1);
+            result = corto_ll_getPtr(list, i);
         }
         break;
     default:
@@ -464,21 +470,31 @@ static corto_int16 json_deserCollection(void* p, corto_type t, JSON_Value *v)
     corto_type elementType = corto_collection(t)->elementType;
 
     /* Deserialize elements */
-    JSON_Array* a = json_value_get_array(v);
-    if (!a) {
-        corto_seterr("invalid array");
-        goto error;
-    }
-
-    size_t count = json_array_get_count(a);
-    size_t i;
-
-    for (i = 0; i < count; i++) {
-        void *elementPtr = json_deser_allocElem(p, corto_collection(t), i);
-        JSON_Value *elem = json_array_get_value(a, i);
-        if (json_deserType(elementPtr, elementType, elem)) {
+    if (json_value_get_type(v) == JSONArray) {
+        JSON_Array* a = json_value_get_array(v);
+        size_t count = json_array_get_count(a);
+        if (corto_ptr_size(p, t, count)) {
             goto error;
         }
+
+        size_t i;
+        for (i = 0; i < count; i++) {
+            void *elementPtr = json_deser_allocElem(p, corto_collection(t), i);
+            corto_assert(elementPtr != NULL, "invalid element ptr for index %d returned by JSON deserializer", i);
+            JSON_Value *elem = json_array_get_value(a, i);
+            if (json_deserType(elementPtr, elementType, elem)) {
+                goto error;
+            }
+        }
+    } else if (json_value_get_type(v) == JSONNull) {
+        if (corto_ptr_size(p, t, 0)) {
+            goto error;
+        }
+    } else {
+        corto_seterr(
+            "expected array, got '%s'", 
+            json_valueTypeToString(v));
+        goto error;
     }
 
     return 0;
@@ -546,7 +562,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
         json = corto_asprintf("{\"value\": %s}", json);
     }
 
-    corto_debug("json: deserialize string %s", json);
+    corto_debug("deserialize string %s", json);
 
     JSON_Value *jsonValue = json_parse_string(json);
     if (!jsonValue) {
@@ -559,7 +575,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     if (type->kind == CORTO_PRIMITIVE) {
         JSON_Object* jsonObj = json_value_get_object(jsonValue);
         if (!jsonObj) {
-            corto_seterr("json: invalid JSON for primitive value '%s'", json);
+            corto_seterr("invalid JSON for primitive value '%s'", json);
             goto error;
         }
 
@@ -567,7 +583,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     }
 
     if (jsonValue && json_deserialize_from_JSON_Value(v, jsonValue)) {
-        corto_seterr("json: %s for JSON string '%s'", corto_lasterr(), json);
+        corto_seterr("%s in '%s'", corto_lasterr(), json);
         goto error;
     }
 
