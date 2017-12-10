@@ -256,13 +256,6 @@ static corto_int16 json_deserAny(void* p, corto_type t, JSON_Value *v)
     JSON_Value *value = NULL;
     corto_type type = NULL;
     corto_any *dst = p;
-<<<<<<< Updated upstream
-=======
-    if (json_value_get_type(v) != JSONObject) {
-        corto_throw("expected object for any, got %s", json_valueTypeToString(v));
-        goto error;
-    }
->>>>>>> Stashed changes
 
     if (json_value_get_type(v) == JSONObject) {
         JSON_Object *obj = json_value_get_object(v);
@@ -461,12 +454,7 @@ void* json_deser_allocElem(void *ptr, corto_collection t, corto_int32 i)
         if (corto_collection_requiresAlloc(t->elementType)) {
             result = corto_ll_get(list, i);
         } else {
-<<<<<<< Updated upstream
             result = corto_ll_getPtr(list, i);
-=======
-            corto_ll_append(list, NULL);
-            result = corto_ll_getPtr(list, corto_ll_count(list) - 1);
->>>>>>> Stashed changes
         }
         break;
     default:
@@ -483,23 +471,12 @@ static corto_int16 json_deserCollection(void* p, corto_type t, JSON_Value *v)
     corto_type elementType = corto_collection(t)->elementType;
 
     /* Deserialize elements */
-<<<<<<< Updated upstream
     if (json_value_get_type(v) == JSONArray) {
         JSON_Array* a = json_value_get_array(v);
         size_t count = json_array_get_count(a);
         if (corto_ptr_size(p, t, count)) {
             goto error;
         }
-=======
-    JSON_Array* a = json_value_get_array(v);
-    if (!a) {
-        corto_throw("invalid array");
-        goto error;
-    }
-
-    size_t count = json_array_get_count(a);
-    size_t i;
->>>>>>> Stashed changes
 
         size_t i;
         for (i = 0; i < count; i++) {
@@ -516,7 +493,7 @@ static corto_int16 json_deserCollection(void* p, corto_type t, JSON_Value *v)
         }
     } else {
         corto_seterr(
-            "expected array, got '%s'", 
+            "expected array, got '%s'",
             json_valueTypeToString(v));
         goto error;
     }
@@ -599,11 +576,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     if (type->kind == CORTO_PRIMITIVE) {
         JSON_Object* jsonObj = json_value_get_object(jsonValue);
         if (!jsonObj) {
-<<<<<<< Updated upstream
-            corto_seterr("invalid JSON for primitive value '%s'", json);
-=======
             corto_throw("invalid JSON for primitive value '%s'", json);
->>>>>>> Stashed changes
             goto error;
         }
 
@@ -611,11 +584,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     }
 
     if (jsonValue && json_deserialize_from_JSON_Value(v, jsonValue)) {
-<<<<<<< Updated upstream
-        corto_seterr("%s in '%s'", corto_lasterr(), json);
-=======
         corto_throw("%s for JSON string '%s'", corto_lasterr(), json);
->>>>>>> Stashed changes
         goto error;
     }
 
