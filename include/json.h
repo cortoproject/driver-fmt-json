@@ -12,7 +12,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "driver/fmt/json/parson.h"
+#include "parson/parson.h"
 
 #define CORTO_JSON_ROOT_NAME "::"
 #define CORTO_JSON_ROOT_PARENT ""

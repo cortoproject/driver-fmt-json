@@ -1,0 +1,10 @@
+{
+    "id": "driver/fmt/json",
+    "type": "package",
+    "value": {
+        "author": "Sander Mertens",
+        "description": "JSON serializer",
+        "managed": false,
+        "use": ["corto", "parson"]
+    }
+}
