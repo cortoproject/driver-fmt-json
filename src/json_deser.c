@@ -274,7 +274,7 @@ static corto_int16 json_deserAny(void* p, corto_type t, JSON_Value *v)
         case JSONNull: type = corto_type(corto_string_o); break;
         case JSONString: type = corto_type(corto_string_o); break;
         default:
-            corto_seterr("unexpected JSON '%s' for any-value",
+            corto_throw("unexpected JSON '%s' for any-value",
                 json_valueTypeToString(v));
             break;
         }
@@ -474,7 +474,7 @@ static corto_int16 json_deserCollection(void* p, corto_type t, JSON_Value *v)
     if (json_value_get_type(v) == JSONArray) {
         JSON_Array* a = json_value_get_array(v);
         size_t count = json_array_get_count(a);
-        if (corto_ptr_size(p, t, count)) {
+        if (corto_ptr_resize(p, t, count)) {
             goto error;
         }
 
@@ -488,11 +488,11 @@ static corto_int16 json_deserCollection(void* p, corto_type t, JSON_Value *v)
             }
         }
     } else if (json_value_get_type(v) == JSONNull) {
-        if (corto_ptr_size(p, t, 0)) {
+        if (corto_ptr_resize(p, t, 0)) {
             goto error;
         }
     } else {
-        corto_seterr(
+        corto_throw(
             "expected array, got '%s'",
             json_valueTypeToString(v));
         goto error;
