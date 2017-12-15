@@ -515,7 +515,7 @@ static corto_object json_declare(corto_result *r)
         } else {
             strcpy(fullId, r->id);
         }
-        o = corto_declareChild(NULL, fullId, type);
+        o = corto_declareChild(root_o, fullId, type);
         if (!o) {
             corto_throw("failed to create '%s': %s", corto_lasterr());
         }
