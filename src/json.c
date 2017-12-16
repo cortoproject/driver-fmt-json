@@ -604,11 +604,11 @@ corto_word json_fromResult(corto_result *r) {
     return 0;
 }
 
-static 
+static
 corto_int16 json_toObject_fromJsonObject(
-    corto_object *o, 
-    JSON_Value *topValue, 
-    char *json) 
+    corto_object *o,
+    JSON_Value *topValue,
+    char *json)
 {
     corto_result r;
     corto_object result = NULL;
@@ -641,6 +641,17 @@ corto_int16 json_toObject_fromJsonObject(
         } else {
             corto_throw("unresolved type '%s' from '%s'", r.type, json);
             goto errorDeclare;
+        }
+        if (o) {
+            result = *o;
+        }
+    }
+
+    if (result) {
+        if (corto_isbuiltin(result)) {
+            corto_throw("cannot deserialize JSON to builtin object '%s'",
+                corto_fullpath(NULL, result));
+            goto error_toResultMeta;
         }
     }
 
