@@ -1,2 +1,0 @@
-/corto/test
-/driver/fmt/json

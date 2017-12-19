@@ -74,7 +74,7 @@ struct StringType::
 
 list myList: int32
 
-ReferenceType reference: core/package
+ReferenceType reference: package
 ReferenceType referenceNull: null
 ReferenceType referenceFromLang: type
 ReferenceType referenceAnonymous: int32{10}

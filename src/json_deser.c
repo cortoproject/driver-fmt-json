@@ -203,7 +203,7 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
     switch(json_value_get_type(v)) {
     case JSONString: {
         const char* reference = json_value_get_string(v);
-        corto_object o = corto_lookup(NULL, (corto_string)reference);
+        corto_object o = corto_resolve(NULL, (corto_string)reference);
         if (!o) {
             corto_throw("unresolved reference \"%s\"", reference);
             goto error;
@@ -225,7 +225,7 @@ corto_int16 json_deserReference(void* p, corto_type t, JSON_Value* v)
 
         corto_object cortoObj = *(corto_object*)p;
         if (!cortoObj || (corto_typeof(cortoObj) != cortoType)) {
-            cortoObj = corto_create(cortoType);
+            cortoObj = corto_create(NULL, NULL, cortoType);
             corto_ptr_setref(p, cortoObj);
             corto_release(cortoObj);
         }
@@ -401,7 +401,7 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                 if (member_o && member_o->modifiers & CORTO_OBSERVABLE) {
                     offset = *(void**)offset;
                     if (json_deserType(offset, memberType, value)) {
-                        corto_throw("member '%s': %s", corto_idof(member_o), corto_lasterr());
+                        corto_throw("failed to deserialize member '%s'", corto_idof(member_o));
                         goto error;
                     }
                 } else {
@@ -416,12 +416,12 @@ static corto_int16 json_deserComposite(void* p, corto_type t, JSON_Value *v)
                     }
                     if (mbr.kind == CORTO_MEMBER) {
                         if (json_deserItem(offset, memberType, value)) {
-                            corto_throw("member '%s': %s", corto_idof(member_o), corto_lasterr());
+                            corto_throw("failed to deserialize member '%s'", corto_idof(member_o));
                             goto error;
                         }
                     } else if (mbr.kind == CORTO_BASE) {
                         if (json_deserType(offset, memberType, value)) {
-                            corto_throw("super: %s", corto_lasterr());
+                            corto_throw("failed to deserialize 'super'");
                             goto error;
                         }
                     } else {
@@ -584,7 +584,7 @@ corto_int16 json_deserialize(corto_value *v, corto_string s)
     }
 
     if (jsonValue && json_deserialize_from_JSON_Value(v, jsonValue)) {
-        corto_throw("%s for JSON string '%s'", corto_lasterr(), json);
+        corto_throw("failed to deserialize '%s'", json);
         goto error;
     }
 
