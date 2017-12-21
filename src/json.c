@@ -28,7 +28,7 @@ corto_int16 serializeNumber(
         out);
 
     if (!strcmp(*out, "nan")) {
-        corto_ptr_setstr(out, "null");
+        corto_set_str(out, "null");
     }
 
     return result;
