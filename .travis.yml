@@ -1,7 +1,7 @@
 
 language: c
 
-sudo: false
+sudo: required
 
 install:
   - curl https://corto.io/ci-dev | sh
