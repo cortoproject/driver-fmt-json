@@ -28,7 +28,7 @@ corto_int16 serializeNumber(
         out);
 
     if (!strcmp(*out, "nan")) {
-        corto_ptr_setstr(out, "null");
+        corto_set_str(out, "null");
     }
 
     return result;
@@ -214,7 +214,7 @@ static corto_int16 serializeReference(corto_walk_opt* s, corto_value *v, void *u
     object = *(corto_object*)o;
 
     if (object) {
-        if (corto_checkAttr(object, CORTO_ATTR_NAMED) || (corto_value_objectof(v) == object)) {
+        if (corto_check_attr(object, CORTO_ATTR_NAMED) || (corto_value_objectof(v) == object)) {
             corto_uint32 length;
             corto_fullpath(id, object);
 
@@ -515,13 +515,13 @@ static corto_object json_declare(corto_result *r)
         } else {
             strcpy(fullId, r->id);
         }
-        o = corto_declareChild(root_o, fullId, type);
+        o = corto_declare(root_o, fullId, type);
         if (!o) {
             corto_throw("failed to create '%s': %s", corto_lasterr());
         }
         corto_release(type);
     } else {
-        o = corto_declare(type);
+        o = corto_declare(NULL, NULL, type);
         corto_release(type);
     }
 
@@ -738,7 +738,7 @@ corto_string json_fromObject(corto_object o) {
 
     corto_buffer_append(&buff, "\"type\":\"%s\"", corto_fullpath(NULL, corto_typeof(o)));
 
-    if (corto_checkAttr(o, CORTO_ATTR_NAMED)) {
+    if (corto_check_attr(o, CORTO_ATTR_NAMED)) {
         corto_buffer_append(&buff, ",\"id\":\"%s\"", corto_idof(o));
         corto_buffer_append(&buff, ",\"parent\":\"%s\"", corto_fullpath(NULL, corto_parentof(o)));
     }

@@ -12,7 +12,7 @@ void test_Serializer_tc_serAnyCollection(
     test_Serializer this)
 {
 
-    corto_any *o = corto_create(corto_any_o);
+    corto_any *o = corto_create(NULL, NULL, corto_any_o);
     o->type = corto_type(corto_int32List_o);
     o->value = test_list_o;
     o->owner = FALSE;
@@ -26,7 +26,7 @@ void test_Serializer_tc_serAnyComposite(
     test_Serializer this)
 {
 
-    corto_any *o = corto_create(corto_any_o);
+    corto_any *o = corto_create(NULL, NULL, corto_any_o);
     o->type = corto_type(test_Point_o);
     o->value = test_p_o;
     o->owner = FALSE;
@@ -40,7 +40,7 @@ void test_Serializer_tc_serAnyPrimitive(
     test_Serializer this)
 {
 
-    corto_any *o = corto_create(corto_any_o);
+    corto_any *o = corto_create(NULL, NULL, corto_any_o);
     o->type = corto_type(corto_int8_o);
     o->value = test_int8_o;
     o->owner = FALSE;
@@ -405,7 +405,7 @@ void test_Serializer_tc_serReference(
 {
 
     corto_string s = json_fromCorto(test_reference_o);
-    test_assertstr(s, "{\"r\":\"/corto/vstore/package\"}");
+    test_assertstr(s, "{\"r\":\"package\"}");
     corto_dealloc(s);
 
 }
@@ -609,4 +609,3 @@ void test_Serializer_tc_serVoid(
     corto_dealloc(s);
 
 }
-
