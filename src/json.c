@@ -517,7 +517,7 @@ static corto_object json_declare(corto_result *r)
         }
         o = corto_declare(root_o, fullId, type);
         if (!o) {
-            corto_throw("failed to create '%s': %s", corto_lasterr());
+            corto_throw("failed to create '%s'", fullId);
         }
         corto_release(type);
     } else {
