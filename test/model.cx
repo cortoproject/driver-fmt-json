@@ -169,6 +169,7 @@ test/suite Deserializer::
     void tc_deserUnionDefault()
 
     void tc_deserList()
+    void tc_deserListTwice()
     void tc_deserCompositeList()
     void tc_deserCompositeReferenceList()
 

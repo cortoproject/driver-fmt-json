@@ -456,8 +456,35 @@ void test_Deserializer_tc_deserList(
     test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 2), 30);
 
     corto_delete(l);
-
 }
+
+void test_Deserializer_tc_deserListTwice(
+    test_Deserializer this)
+{
+    corto_int32List *l = corto_create(NULL, NULL, corto_int32List_o);
+    test_assert(l != NULL);
+    test_assert(corto_typeof(l) == corto_type(corto_int32List_o));
+
+    corto_value v = corto_value_object(l, NULL);
+    corto_int16 ret = json_toValue(&v, "[10, 20, 30]");
+    test_assert(ret == 0);
+    test_assert(corto_value_ptrof(&v) == l);
+    test_assertint(corto_ll_count(*l), 3);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 0), 10);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 1), 20);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 2), 30);
+
+    ret = json_toValue(&v, "[20, 30, 40]");
+    test_assert(ret == 0);
+    test_assert(corto_value_ptrof(&v) == l);
+    test_assertint(corto_ll_count(*l), 3);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 0), 20);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 1), 30);
+    test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 2), 40);
+
+    corto_delete(l);
+}
+
 
 void test_Deserializer_tc_deserNaN(
     test_Deserializer this)
