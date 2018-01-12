@@ -1,7 +1,6 @@
 /* This is a managed file. Do not delete this comment. */
 
 #include <include/test.h>
-
 void test_Deserializer_tc_deserBinary(
     test_Deserializer this)
 {
@@ -957,4 +956,22 @@ void test_Deserializer_tc_serAnyPrimitive(
 
     test_assert(corto_delete(o) == 0);
 
+}
+
+void test_Deserializer_tc_deserCompositeReferenceList(
+    test_Deserializer this)
+{
+    corto_classList *l = corto_create(NULL, NULL, corto_classList_o);
+    test_assert(l != NULL);
+    test_assert(corto_typeof(l) == corto_type(corto_classList_o));
+
+    corto_value v = corto_value_object(l, NULL);
+    corto_int16 ret = json_toValue(&v, "[\"class\", \"type\", \"interface\"]");
+    test_assert(ret == 0);
+    test_assertint(corto_ll_count(*l), 3);
+    test_assert(corto_ll_get(*l, 0) == corto_class_o);
+    test_assert(corto_ll_get(*l, 1) == corto_type_o);
+    test_assert(corto_ll_get(*l, 2) == corto_interface_o);
+
+    corto_delete(l);
 }

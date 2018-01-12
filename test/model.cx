@@ -110,6 +110,7 @@ sequence{int32} sequence: 10, 20, 30
 sequence{Point} sequenceComplex: {10, 20}, {30, 40}, {50, 60}
 list{int32} list: 10, 20, 30
 list{Point} listComplex: {10, 20}, {30, 40}, {50, 60}
+list{class} listComplexReference: class, type, interface
 
 test/suite Deserializer::
     void tc_deserVoid()
@@ -169,6 +170,7 @@ test/suite Deserializer::
 
     void tc_deserList()
     void tc_deserCompositeList()
+    void tc_deserCompositeReferenceList()
 
     void tc_deserReference()
     void tc_deserReferenceNull()
