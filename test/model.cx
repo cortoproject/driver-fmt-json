@@ -96,6 +96,9 @@ struct TargetType::
     x, y: int32
     z: target{int32}
 
+struct DefaultType: options={defaultType=int32} :/
+    x, y: int32
+
 union UnionType: int32::
     num: {0}, int64
     flt: {1}, float64
@@ -111,6 +114,8 @@ sequence{Point} sequenceComplex: {10, 20}, {30, 40}, {50, 60}
 list{int32} list: 10, 20, 30
 list{Point} listComplex: {10, 20}, {30, 40}, {50, 60}
 list{class} listComplexReference: class, type, interface
+
+list intList: int32
 
 test/suite Deserializer::
     void tc_deserVoid()
@@ -189,6 +194,22 @@ test/suite Deserializer::
     void tc_deserObjectErrorParsing()
 
     void tc_deserNaN()
+
+test/Suite DeserializeObject:/
+    void tc_deserBool()
+    void tc_deserNumber()
+    void tc_deserString()
+    void tc_deserComposite()
+    void tc_deserCollection()
+    void tc_deserAnonymousCollection()
+    void tc_deserDefaultType()
+    void tc_deserDefaultValue()
+    void tc_deserDefaultTypeAndValue()
+    void tc_deserTableType()
+    void tc_deserSingleChild()
+    void tc_deserMultipleChildren()
+    void tc_deserChildDefaultType()
+    void tc_deserStructType()
 
 test/suite Serializer::
     void tc_serVoid()

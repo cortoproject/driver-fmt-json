@@ -1,8 +1,13 @@
 
-#include "driver/fmt/json/json.h"
+#include "json.h"
 
-static int16_t json_deserType(void *p, corto_type t, JSON_Value *v);
+static
+int16_t json_deserType(
+    void *p,
+    corto_type t,
+    JSON_Value *v);
 
+static
 corto_type json_deserInlineType(
     JSON_Object *obj)
 {
@@ -635,15 +640,10 @@ error:
 
 int16_t json_deserialize(
     corto_value *v,
-    corto_string s)
+    char *json)
 {
     corto_assert(v != NULL, "NULL passed to json_deserialize");
     corto_log_push("json");
-
-    char *json = s;
-    if ((json[0] != '{') && (json[1] != '[') && (json[0] != '[')) {
-        json = corto_asprintf("{\"value\": %s}", json);
-    }
 
     corto_debug("deserialize string %s", json);
 
@@ -653,25 +653,9 @@ int16_t json_deserialize(
         goto error;
     }
 
-    corto_type type = corto_value_typeof(v);
-
-    if (type->kind == CORTO_PRIMITIVE) {
-        JSON_Object* jsonObj = json_value_get_object(jsonValue);
-        if (!jsonObj) {
-            corto_throw("invalid JSON for primitive value '%s'", json);
-            goto error;
-        }
-
-        jsonValue = json_object_get_value(jsonObj, "value");
-    }
-
     if (jsonValue && json_deserialize_from_JSON_Value(v, jsonValue)) {
         corto_throw("failed to deserialize '%s'", json);
         goto error;
-    }
-
-    if (json != s) {
-        corto_dealloc(json);
     }
 
     if (jsonValue) {
@@ -680,10 +664,6 @@ int16_t json_deserialize(
     corto_log_pop();
     return 0;
 error:
-    if (json != s) {
-        corto_dealloc(json);
-    }
-
     if (jsonValue) {
         json_value_free(jsonValue);
     }
