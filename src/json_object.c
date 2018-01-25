@@ -36,18 +36,13 @@ void json_splitId(
 /* Declare corto object from corto_result */
 static
 corto_object json_declare(
+    corto_object parent,
+    corto_type type,
     corto_result *r)
 {
     corto_object o = NULL;
-    corto_object type = corto_resolve(NULL, r->type);
-    if (!type) {
-        corto_throw("cannot find '%s'", r->type);
-        goto errorTypeNotFound;
-    }
-    if (!corto_instanceof(corto_type_o, type)) {
-        corto_throw("'%s' is not a type", r->type);
-        goto errorNotType;
-    }
+
+    corto_assert(type != NULL, "NULL provided for type");
 
     if (r->id && r->parent) {
         corto_id fullId;
@@ -56,27 +51,26 @@ corto_object json_declare(
         } else {
             strcpy(fullId, r->id);
         }
-        o = corto_declare(root_o, fullId, type);
+        o = corto_declare(parent ? parent : root_o, fullId, type);
         if (!o) {
             corto_throw("failed to create '%s'", fullId);
+            goto error;
         }
-        corto_release(type);
     } else {
         o = corto_declare(NULL, NULL, type);
-        corto_release(type);
     }
 
     return o;
-errorNotType:
-    corto_release(type);
-errorTypeNotFound:
+error:
     return NULL;
 }
 
 static
 int16_t json_toResultMeta(
+    corto_object parent,
     corto_result *r,
     JSON_Value *topValue,
+    char *id_buffer,
     corto_string json)
 {
     if (!topValue) {
@@ -93,17 +87,24 @@ int16_t json_toResultMeta(
     const char* type = json_object_get_string(topObject, "type");
     const char* fullId = json_object_get_string(topObject, "id");
 
-    char *parent = NULL, *id = NULL, *fullIdCpy = NULL;
+    char *parent_id = NULL, *id = NULL;
     if (fullId) {
-        fullIdCpy = corto_strdup(fullId);
-        json_splitId(fullIdCpy, &parent, &id);
+        /* If parent is provided, prepend parent to id_buffer */
+        if (parent && parent != root_o) {
+            corto_fullpath(id_buffer, parent);
+            strcat(id_buffer, "/");
+            strcat(id_buffer, fullId);
+        } else {
+            strcpy(id_buffer, fullId);
+        }
+        json_splitId(id_buffer, &parent_id, &id);
     }
 
-    /* If no id is provided, randomize id */
-    r->id = id ? corto_strdup(id) : NULL;
+    /* If no id is provided, id will be randomized (if object is declared) */
+    r->id = id;
 
     /* If no parent is provided, assume root */
-    r->parent = parent ? corto_strdup(parent) : NULL;
+    r->parent = parent_id;
 
     /* If no type is provided, check if parent type has a defaultType */
     r->type = (char*)type;
@@ -128,15 +129,13 @@ int16_t json_toResultMeta(
             corto_release(parent);
         }
         if (!type) {
-            corto_throw("missing 'type' field in '%s'", json);
+            corto_throw("missing 'type' field for '%s' in '%s'", r->id, json);
             goto error;
         } else {
             corto_id id;
             r->type = corto_strdup(corto_fullpath(id, type));
         }
     }
-
-    if (fullIdCpy) corto_dealloc(fullIdCpy);
 
     return 0;
 error:
@@ -149,16 +148,20 @@ int16_t json_toResult(
     corto_string json)
 {
     JSON_Value* topValue = json_parse_string(json);
+    corto_id id_buffer;
+
     if (!topValue) {
         corto_throw("error parsing JSON %s", json);
         goto error;
     }
 
     memset(r, 0, sizeof(corto_result));
-    if (json_toResultMeta(r, topValue, json)) {
+    if (json_toResultMeta(NULL, r, topValue, id_buffer, json)) {
         goto error_toResultMeta;
     }
 
+    r->id = corto_strdup(r->id);
+    r->parent = corto_strdup(r->parent);
     r->type = corto_strdup(r->type);
 
     JSON_Object *object = json_value_get_object(topValue);
@@ -179,57 +182,126 @@ corto_word json_fromResult(corto_result *r) {
     return 0;
 }
 
-/* Serialize object value to a corto object */
-int16_t json_serialize_from_JSON_Value(
+static
+int16_t json_serialize_child_from_JSON_Value(
+    corto_object parent,
     corto_object *o,
     JSON_Value *topValue,
+    int parent_defined,
+    char *json);
+
+static
+int16_t json_serialize_children(
+    corto_object parent,
+    JSON_Object *topObject,
+    int parent_defined,
+    char *json)
+{
+    JSON_Array *scope = json_object_get_array(topObject, "scope");
+
+    int i;
+    for (i = 0; i < json_array_get_count(scope); i++) {
+        JSON_Value *child = json_array_get_value(scope, i);
+
+        if (json_serialize_child_from_JSON_Value(
+            parent, NULL, child, parent_defined, json))
+        {
+            corto_throw(NULL);
+            goto error;
+        }
+    }
+
+    return 0;
+error:
+    return -1;
+}
+
+static
+int16_t json_serialize_child_from_JSON_Value(
+    corto_object parent,
+    corto_object *o,
+    JSON_Value *topValue,
+    int parent_defined,
     char *json)
 {
     corto_result r;
     corto_object result = NULL;
     bool newObject = FALSE;
+    corto_id id_buffer;
 
     JSON_Object* topObject = json_value_get_object(topValue);
 
     memset(&r, 0, sizeof(corto_result));
-    if (json_toResultMeta(&r, topValue, json)) {
-        goto error_toResultMeta;
+    if (json_toResultMeta(parent, &r, topValue, id_buffer, json)) {
+        goto error;
     }
 
+    /* Resolve type */
+    corto_type type = corto_resolve(NULL, r.type);
+    if (!type) {
+        corto_throw("cannot find '%s' ('%s')", r.type, json);
+        goto error;
+    }
+    if (!corto_instanceof(corto_type_o, type)) {
+        corto_throw("'%s' is not a type ('%s')", r.type, json);
+        goto errorDeclare;
+    }
+
+    /* If parent is not yet defined and parentState of type is DECLARED, object
+     * may only be created when parent is DECLARED. */
+    if (parent_defined != -1) {
+        if (type->options.parentState == CORTO_DECLARED) {
+            if (parent_defined) {
+                /* Object is already serialized */
+                goto serialize_later_or_serialized;
+            }
+        } else {
+            if (!parent_defined) {
+                /* Object will be serialized after parent is defined */
+                goto serialize_later_or_serialized;
+            }
+        }
+    } else {
+        /* Ignore parent_defined setting- used for top-level object in
+         * JSON string. */
+    }
+
+    /* If object does not exist, declare it. Otherwise, check if type of the
+     * provided object matches with the type in the JSON string */
     if (!o || !*o) {
-        result = json_declare(&r);
+        result = json_declare(parent, type, &r);
         if (!result) {
             goto errorDeclare;
         }
         newObject = TRUE;
     } else {
-        corto_type t = corto_resolve(NULL, r.type);
-        if (t) {
-            if (corto_typeof(*o) != t) {
-                corto_throw("object '%s' is not of type '%s' (from '%s')",
-                  corto_fullpath(NULL, *o),
-                  corto_fullpath(NULL, t),
-                  json);
-                goto errorDeclare;
-            }
-            corto_release(t);
-        } else {
-            corto_throw("unresolved type '%s' from '%s'", r.type, json);
+        if (corto_typeof(*o) != type) {
+            corto_throw("object '%s' is not of type '%s' ('%s')",
+              corto_fullpath(NULL, *o),
+              corto_fullpath(NULL, type),
+              json);
             goto errorDeclare;
         }
         if (o) {
             result = *o;
         }
     }
+    corto_release(type);
 
     if (result) {
+        /* Cannot serialize to builtin objects */
         if (corto_isbuiltin(result)) {
             corto_throw("cannot deserialize JSON to builtin object '%s'",
                 corto_fullpath(NULL, result));
             goto error_toResultMeta;
         }
+    } else {
+        /* Failed to create a new object */
+        corto_throw("failed to create JSON object from '%s'", json);
+        goto error_toResultMeta;
     }
 
+    /* Deserialize JSON into object value */
     JSON_Value* jsonValue = json_object_get_value(topObject, "value");
     if (jsonValue) {
         corto_value cortoValue = corto_value_object(result, NULL);
@@ -238,19 +310,28 @@ int16_t json_serialize_from_JSON_Value(
         }
     }
 
+    /* Serialize objects that should be defined before parent is defined */
+    if (json_serialize_children(result, topObject, false, json)) {
+        goto error;
+    }
+
+    /* If the object was created by the JSON deserializer, define it */
     if (newObject) {
         if (corto_define(result)) {
             goto errorDefine;
         }
     }
 
-    corto_dealloc(r.id);
-    corto_dealloc(r.parent);
+    /* Serialize objects that can/should be defined after parent is defined */
+    if (json_serialize_children(result, topObject, true, json)) {
+        goto error;
+    }
 
     if (o) {
         *o = result;
     }
 
+serialize_later_or_serialized:
     return 0;
 errorDeserialize:
 errorDefine:
@@ -261,8 +342,17 @@ errorDefine:
         *o = NULL;
     }
 errorDeclare:
-    corto_dealloc(r.id);
-    corto_dealloc(r.parent);
+    corto_release(type);
 error_toResultMeta:
+error:
     return -1;
+}
+
+/* Serialize object value to a corto object */
+int16_t json_serialize_from_JSON_Value(
+    corto_object *o,
+    JSON_Value *topValue,
+    char *json)
+{
+    return json_serialize_child_from_JSON_Value(NULL, o, topValue, -1, json);
 }

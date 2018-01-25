@@ -99,6 +99,9 @@ struct TargetType::
 struct DefaultType: options={defaultType=int32} :/
     x, y: int32
 
+struct ParentType: options={parentType=int32} :/
+    x, y: int32
+
 union UnionType: int32::
     num: {0}, int64
     flt: {1}, float64
@@ -210,6 +213,10 @@ test/Suite DeserializeObject:/
     void tc_deserMultipleChildren()
     void tc_deserChildDefaultType()
     void tc_deserStructType()
+    void tc_deserNotAType()
+    void tc_deserUnresolvedType()
+    void tc_deserUnresolvedChildType()
+    void tc_deserMismatchParentType()
 
 test/suite Serializer::
     void tc_serVoid()
