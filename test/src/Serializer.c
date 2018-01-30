@@ -177,7 +177,7 @@ void test_Serializer_tc_serCompositeNestedRef(
 void test_Serializer_tc_serCompositeObservable(
     test_Serializer this)
 {
-    test_ObservableTypeCreate_auto(o, 10, 20, 30);
+    test_ObservableType__create_auto(NULL, o, 10, 20, 30);
     test_assert(o != NULL);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":30}");
@@ -189,7 +189,7 @@ void test_Serializer_tc_serCompositeObservable(
 void test_Serializer_tc_serCompositeOptionalNotSet(
     test_Serializer this)
 {
-    test_OptionalTypeCreate_auto(o, 10, 20, NotSet);
+    test_OptionalType__create_auto(NULL, o, 10, 20, not_set);
     test_assert(o != NULL);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"x\":10,\"y\":20}");
@@ -201,7 +201,7 @@ void test_Serializer_tc_serCompositeOptionalNotSet(
 void test_Serializer_tc_serCompositeOptionalSet(
     test_Serializer this)
 {
-    test_OptionalTypeCreate_auto(o, 10, 20, Set(30));
+    test_OptionalType__create_auto(NULL, o, 10, 20, set(30));
     test_assert(o != NULL);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":30}");
@@ -223,7 +223,7 @@ void test_Serializer_tc_serCompositeRef(
 void test_Serializer_tc_serCompositeTarget(
     test_Serializer this)
 {
-    test_TargetTypeCreate_auto(o, 10, 20, 30);
+    test_TargetType__create_auto(NULL, o, 10, 20, 30);
     test_assert(o != NULL);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"x\":10,\"y\":20,\"z\":{\"actual\":30,\"target\":0,\"objective\":0}}");
@@ -235,7 +235,7 @@ void test_Serializer_tc_serCompositeTarget(
 void test_Serializer_tc_serCompositeUnion(
     test_Serializer this)
 {
-    test_UnionTypeCreate_flt_auto(o, 1, 10.5);
+    test_UnionType__create_flt_auto(NULL, o, 1, 10.5);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"_d\":1,\"flt\":10.500000}");
     corto_dealloc(s);
@@ -246,7 +246,7 @@ void test_Serializer_tc_serCompositeUnionComplex(
     test_Serializer this)
 {
     test_Point p = {10, 20};
-    test_UnionTypeCreate_pt_auto(o, 4, &p);
+    test_UnionType__create_pt_auto(NULL, o, 4, &p);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"_d\":4,\"pt\":{\"x\":10,\"y\":20}}");
     corto_dealloc(s);
@@ -256,7 +256,7 @@ void test_Serializer_tc_serCompositeUnionComplex(
 void test_Serializer_tc_serCompositeUnionDefault(
     test_Serializer this)
 {
-    test_UnionTypeCreate_other_auto(o, 5, 10);
+    test_UnionType__create_other_auto(NULL, o, 5, 10);
     corto_string s = json_fromCorto(o);
     test_assertstr(s, "{\"_d\":5,\"other\":10}");
     corto_dealloc(s);
