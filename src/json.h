@@ -4,7 +4,7 @@
 
 /* JSON serializer data */
 typedef struct json_ser_t {
-    corto_buffer buffer;
+    corto_buffer *buffer;
     unsigned int itemCount;
 } json_ser_t;
 
