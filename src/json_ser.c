@@ -203,8 +203,10 @@ int16_t json_serializeText(
             corto_buffer_appendstr_zerocpy_const(buf, str);
         }
     } else if (kind == CORTO_CHARACTER) {
+        char esc[3] = {*(char*)v, 0};
+        chresc(esc, *esc, '"');
         corto_buffer_appendstrn(buf, "\"", 1);
-        corto_buffer_appendstrn(buf, str, 1);
+        corto_buffer_appendstr(buf, esc);
         corto_buffer_appendstrn(buf, "\"", 1);
     } else {
         corto_buffer_appendstr(buf, "null");
