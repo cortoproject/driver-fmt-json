@@ -28,8 +28,8 @@ int16_t json_serializeReference(
 
             /* Escape value */
             corto_string escapedValue =
-                corto_alloc((length = stresc(NULL, 0, id)) + 1);
-            stresc(escapedValue, length + 1, id);
+                corto_alloc((length = stresc(NULL, 0, '"', id)) + 1);
+            stresc(escapedValue, length + 1, '"', id);
 
             if (!corto_buffer_append(
                 data->buffer, "\"%s\"", escapedValue))
@@ -191,9 +191,9 @@ int16_t json_serializeText(
         {
             /* Escape string, append to buffer */
             char *out = NULL;
-            length = stresc(NULL, 0, str);
+            length = stresc(NULL, 0, '"', str);
             out = corto_alloc(length + 3);
-            stresc(out + 1, length, str);
+            stresc(out + 1, length, '"', str);
             out[0] = '"';
             out[length + 1] = '"';
             out[length + 2] = '\0';
