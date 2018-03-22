@@ -110,8 +110,9 @@ int16_t json_serializeEnum(
 {
     void *v = corto_value_ptrof(value);
     corto_type t = corto_value_typeof(value);
-    corto_constant *c = corto_enum_constant(t, *(corto_int32*)v);
+    corto_constant *c = corto_enum_constant_from_value(t, *(corto_int32*)v);
     if (!c) {
+        corto_throw("failed to obtain enumeration constant");
         goto error;
     }
 
