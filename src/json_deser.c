@@ -251,7 +251,11 @@ int16_t json_deserReference(
         }
 
         if (!corto_instanceof(t, o)) {
-            corto_throw("%s is not an instance of \"%s\"", reference, corto_fullpath(NULL, t));
+            corto_throw("'%s' is not an instance of '%s' (type is '%s')",
+                reference,
+                corto_fullpath(NULL, t),
+                corto_fullpath(NULL,
+                corto_typeof(o)));
             goto error;
         }
 
@@ -385,6 +389,8 @@ bool json_deserMustSkip(
         if ((owned && !isActual) || (!owned && isActual)) {
             return TRUE;
         }
+    } else if (m->modifiers & CORTO_LOCAL) {
+        return TRUE;
     }
     return FALSE;
 }

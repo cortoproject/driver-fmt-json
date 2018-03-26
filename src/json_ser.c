@@ -491,7 +491,7 @@ char* json_serialize(
 {
     corto_log_push("json");
     corto_walk_opt serializer = json_ser(
-      CORTO_PRIVATE, CORTO_NOT, CORTO_WALK_TRACE_NEVER
+      CORTO_LOCAL, CORTO_NOT, CORTO_WALK_TRACE_NEVER
     );
     serializer.aliasAction = CORTO_WALK_ALIAS_IGNORE;
     serializer.optionalAction = CORTO_WALK_OPTIONAL_IF_SET;
