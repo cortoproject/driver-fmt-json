@@ -144,6 +144,7 @@ error:
 
 /* Serialize JSON encoded object to corto_result */
 int16_t json_toResult(
+    corto_fmt_opt* opt,
     corto_result *r,
     corto_string json)
 {
@@ -177,7 +178,10 @@ error_toResultMeta:
     return -1;
 }
 
-corto_word json_fromResult(corto_result *r) {
+corto_word json_fromResult(
+    corto_fmt_opt* opt,
+    corto_result *r)
+{
     CORTO_UNUSED(r);
     return 0;
 }

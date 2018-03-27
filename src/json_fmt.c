@@ -5,6 +5,7 @@
 
 /* Serialize JSON to a corto object */
 int16_t json_toObject(
+    corto_fmt_opt* opt,
     corto_object *o,
     char *json)
 {
@@ -49,6 +50,7 @@ error_toResultMeta:
 
 /* Serialize a corto object to a JSON string */
 corto_string json_fromObject(
+    corto_fmt_opt* opt,
     corto_object o)
 {
     corto_buffer buff = CORTO_BUFFER_INIT;
@@ -78,6 +80,7 @@ corto_string json_fromObject(
 
 /* Serialize corto_value to JSON */
 char* json_fromValue(
+    corto_fmt_opt* opt,
     corto_value *v)
 {
     return json_serialize(v);
@@ -85,6 +88,7 @@ char* json_fromValue(
 
 /* Deserialize JSON to corto_value */
 int16_t json_toValue(
+    corto_fmt_opt* opt,
     corto_value *v,
     char *json)
 {

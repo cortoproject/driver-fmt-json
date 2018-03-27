@@ -13,24 +13,30 @@ extern "C" {
 #endif
 
 int16_t json_toObject(
+    corto_fmt_opt* opt,
     corto_object* o,
     char *s);
 
 char* json_fromObject(
+    corto_fmt_opt* opt,
     corto_object o);
 
 int16_t json_toValue(
+    corto_fmt_opt* opt,
     corto_value *v,
     char *json);
 
 char* json_fromValue(
+    corto_fmt_opt* opt,
     corto_value *v);
 
 int16_t json_toResult(
+    corto_fmt_opt* opt,
     corto_result *r,
     char *json);
 
 corto_word json_fromResult(
+    corto_fmt_opt* opt,
     corto_result *r);
 
 void json_release(
