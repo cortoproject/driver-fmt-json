@@ -6,10 +6,12 @@
 typedef struct json_ser_t {
     corto_buffer *buffer;
     unsigned int itemCount;
+    corto_fmt_opt *opt;
 } json_ser_t;
 
 char* json_serialize(
-    corto_value *v);
+    corto_value *v,
+    corto_fmt_opt *opt);
 
 int16_t json_serialize_from_JSON_Value(
     corto_object *o,

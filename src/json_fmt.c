@@ -68,7 +68,7 @@ corto_string json_fromObject(
 
     if (corto_typeof(o)->kind != CORTO_VOID) {
         corto_value v = corto_value_object(o, NULL);
-        corto_string json = json_serialize(&v);
+        corto_string json = json_serialize(&v, opt);
         corto_buffer_append(&buff, ",\"value\":%s", json);
         corto_dealloc(json);
     }
@@ -83,7 +83,7 @@ char* json_fromValue(
     corto_fmt_opt* opt,
     corto_value *v)
 {
-    return json_serialize(v);
+    return json_serialize(v, opt);
 }
 
 /* Deserialize JSON to corto_value */

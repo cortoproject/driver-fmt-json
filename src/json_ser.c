@@ -13,18 +13,25 @@ int16_t json_serializeReference(
     json_ser_t *data;
     void *o;
     corto_object object;
-    corto_id id;
 
     data = userData;
     o = corto_value_ptrof(v);
     object = *(corto_object*)o;
 
     if (object) {
+
         if (corto_check_attr(object, CORTO_ATTR_NAMED) ||
            (corto_value_objectof(v) == object))
         {
             uint32_t length;
-            corto_fullpath(id, object);
+            corto_id full, idbuff;
+            char *id = full;
+
+            corto_fullpath(full, object);
+            if (data->opt) {
+                corto_path_offset(idbuff, data->opt->from, full, -1, false);
+                id = idbuff;
+            }
 
             /* Escape value */
             corto_string escapedValue =
@@ -60,6 +67,7 @@ int16_t json_serializeReference(
             goto finished;
         }
     }
+
     return 0;
 finished:
     return 1;
@@ -278,6 +286,7 @@ int16_t json_serializeComplex(
 
     privateData.buffer = data->buffer;
     privateData.itemCount = 0;
+    privateData.opt = data->opt;
 
     if (!corto_buffer_appendstr(
             data->buffer, (useCurlyBraces ? "{" : "["))) {
@@ -487,7 +496,8 @@ corto_walk_opt json_ser(
 
 /* JSON serializer entry function */
 char* json_serialize(
-    corto_value *v)
+    corto_value *v,
+    corto_fmt_opt *opt)
 {
     corto_log_push("json");
     corto_walk_opt serializer = json_ser(
@@ -496,7 +506,8 @@ char* json_serialize(
     serializer.aliasAction = CORTO_WALK_ALIAS_IGNORE;
     serializer.optionalAction = CORTO_WALK_OPTIONAL_IF_SET;
     corto_buffer b = CORTO_BUFFER_INIT;
-    json_ser_t jsonData = {&b, 0};
+    json_ser_t jsonData = {&b, 0, opt};
+
     corto_walk_value(&serializer, v, &jsonData);
     corto_string result = corto_buffer_str(jsonData.buffer);
     corto_debug("serialized %s", result);
