@@ -192,14 +192,16 @@ int16_t json_serialize_child_from_JSON_Value(
     corto_object *o,
     JSON_Value *topValue,
     int parent_defined,
-    char *json);
+    char *json,
+    corto_fmt_opt *opt);
 
 static
 int16_t json_serialize_children(
     corto_object parent,
     JSON_Object *topObject,
     int parent_defined,
-    char *json)
+    char *json,
+    corto_fmt_opt *opt)
 {
     JSON_Array *scope = json_object_get_array(topObject, "scope");
 
@@ -208,7 +210,7 @@ int16_t json_serialize_children(
         JSON_Value *child = json_array_get_value(scope, i);
 
         if (json_serialize_child_from_JSON_Value(
-            parent, NULL, child, parent_defined, json))
+            parent, NULL, child, parent_defined, json, opt))
         {
             corto_throw(NULL);
             goto error;
@@ -226,7 +228,8 @@ int16_t json_serialize_child_from_JSON_Value(
     corto_object *o,
     JSON_Value *topValue,
     int parent_defined,
-    char *json)
+    char *json,
+    corto_fmt_opt *opt)
 {
     corto_result r;
     corto_object result = NULL;
@@ -309,13 +312,13 @@ int16_t json_serialize_child_from_JSON_Value(
     JSON_Value* jsonValue = json_object_get_value(topObject, "value");
     if (jsonValue) {
         corto_value cortoValue = corto_value_object(result, NULL);
-        if (json_deserialize_from_JSON_Value(&cortoValue, jsonValue)) {
+        if (json_deserialize_from_JSON_Value(&cortoValue, jsonValue, opt)) {
             goto errorDeserialize;
         }
     }
 
     /* Serialize objects that should be defined before parent is defined */
-    if (json_serialize_children(result, topObject, false, json)) {
+    if (json_serialize_children(result, topObject, false, json, opt)) {
         goto error;
     }
 
@@ -327,7 +330,7 @@ int16_t json_serialize_child_from_JSON_Value(
     }
 
     /* Serialize objects that can/should be defined after parent is defined */
-    if (json_serialize_children(result, topObject, true, json)) {
+    if (json_serialize_children(result, topObject, true, json, opt)) {
         goto error;
     }
 
@@ -356,7 +359,8 @@ error:
 int16_t json_serialize_from_JSON_Value(
     corto_object *o,
     JSON_Value *topValue,
-    char *json)
+    char *json,
+    corto_fmt_opt *opt)
 {
-    return json_serialize_child_from_JSON_Value(NULL, o, topValue, -1, json);
+    return json_serialize_child_from_JSON_Value(NULL, o, topValue, -1, json, opt);
 }

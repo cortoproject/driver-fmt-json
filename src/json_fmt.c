@@ -29,12 +29,12 @@ int16_t json_toObject(
                 goto error;
             }
 
-            if (json_serialize_from_JSON_Value(o, elem, json)) {
+            if (json_serialize_from_JSON_Value(o, elem, json, opt)) {
                 goto error;
             }
         }
     } else if (json_value_get_type(topValue) == JSONObject) {
-        if (json_serialize_from_JSON_Value(o, topValue, json)) {
+        if (json_serialize_from_JSON_Value(o, topValue, json, opt)) {
             goto error_toResultMeta;
         }
     }
@@ -92,7 +92,7 @@ int16_t json_toValue(
     corto_value *v,
     char *json)
 {
-    return json_deserialize(v, json);
+    return json_deserialize(v, json, opt);
 }
 
 /* Copy JSON string */
