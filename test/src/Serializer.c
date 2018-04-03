@@ -5,7 +5,7 @@
 
 static corto_string json_fromCorto(corto_object object) {
     corto_value v = corto_value_object(object, NULL);
-    return json_fromValue(&v);
+    return json_fromValue(NULL, &v);
 }
 
 void test_Serializer_tc_serAnyCollection(
@@ -417,7 +417,6 @@ void test_Serializer_tc_serReferenceAnonymous(
     corto_string s = json_fromCorto(test_referenceAnonymous_o);
     test_assertstr(s, "{\"r\":{\"type\":\"int32\",\"value\":10}}");
     corto_dealloc(s);
-
 }
 
 void test_Serializer_tc_serReferenceAnonymousCollection(
@@ -427,7 +426,6 @@ void test_Serializer_tc_serReferenceAnonymousCollection(
     corto_string s = json_fromCorto(test_referenceAnonymousCollection_o);
     test_assertstr(s, "{\"r\":{\"type\":\"/test/myList\",\"value\":[10,20]}}");
     corto_dealloc(s);
-
 }
 
 void test_Serializer_tc_serReferenceAnonymousCollectionAnonymousType(
@@ -437,17 +435,14 @@ void test_Serializer_tc_serReferenceAnonymousCollectionAnonymousType(
     corto_string s = json_fromCorto(test_referenceAnonymousCollectionAnonymousType_o);
     test_assertstr(s, "{\"r\":{\"type\":\"array{int32,2}\",\"value\":[10,20]}}");
     corto_dealloc(s);
-
 }
 
 void test_Serializer_tc_serReferenceAnonymousComplex(
     test_Serializer this)
 {
-
     corto_string s = json_fromCorto(test_referenceAnonymousComplex_o);
     test_assertstr(s, "{\"r\":{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}}");
     corto_dealloc(s);
-
 }
 
 void test_Serializer_tc_serReferenceAnonymousComplexWithString(
@@ -457,7 +452,6 @@ void test_Serializer_tc_serReferenceAnonymousComplexWithString(
     corto_string s = json_fromCorto(test_referenceAnonymousComplexString_o);
     test_assertstr(s, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"Hello\",\"s2\":\"World\"}}}");
     corto_dealloc(s);
-
 }
 
 void test_Serializer_tc_serReferenceAnonymousComplexWithStringEsc(

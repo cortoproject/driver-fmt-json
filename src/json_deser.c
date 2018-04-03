@@ -252,7 +252,7 @@ int16_t json_deserReference(
         const char* reference = json_value_get_string(v);
         const char *ref_ptr = reference;
         corto_id ref;
-        if (data->opt->from && reference[0] != '/') {
+        if (data->opt && data->opt->from && reference[0] != '/') {
             corto_path_combine(ref, data->opt->from, reference);
             ref_ptr = ref;
         }

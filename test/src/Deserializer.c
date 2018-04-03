@@ -7,7 +7,7 @@ void test_Deserializer_tc_deserBinary(
     corto_word *o = corto_create(NULL, NULL, corto_word_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -20,7 +20,7 @@ void test_Deserializer_tc_deserBitmask(
     corto_word *o = corto_create(NULL, NULL, test_Sandwich_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "\"Beef|Lettuce|Tomato\"");
+    corto_int16 ret = json_toValue(NULL, &v, "\"Beef|Lettuce|Tomato\"");
     test_assert(ret == 0);
     test_assertint(*o, Test_Beef | Test_Lettuce | Test_Tomato);
     corto_delete(o);
@@ -33,7 +33,7 @@ void test_Deserializer_tc_deserBoolFalse(
     corto_bool *o = corto_create(NULL, NULL, corto_bool_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "false");
+    corto_int16 ret = json_toValue(NULL, &v, "false");
     test_assert(ret == 0);
     test_assertint(*o, FALSE);
     corto_delete(o);
@@ -46,7 +46,7 @@ void test_Deserializer_tc_deserBoolTrue(
     corto_bool *o = corto_create(NULL, NULL, corto_bool_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "true");
+    corto_int16 ret = json_toValue(NULL, &v, "true");
     test_assert(ret == 0);
     test_assertint(*o, TRUE);
     corto_delete(o);
@@ -59,7 +59,7 @@ void test_Deserializer_tc_deserChar(
     corto_char *o = corto_create(NULL, NULL, corto_char_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "\"a\"");
+    corto_int16 ret = json_toValue(NULL, &v, "\"a\"");
     test_assert(ret == 0);
     test_assertint(*o, 'a');
     corto_delete(o);
@@ -72,7 +72,7 @@ void test_Deserializer_tc_deserCharEscape(
     corto_char *o = corto_create(NULL, NULL, corto_char_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "\"\\n\"");
+    corto_int16 ret = json_toValue(NULL, &v, "\"\\n\"");
     test_assert(ret == 0);
     test_assertint(*o, '\n');
     corto_delete(o);
@@ -87,7 +87,7 @@ void test_Deserializer_tc_deserComposite(
     test_assert(corto_typeof(p) == corto_type(test_Point_o));
 
     corto_value v = corto_value_object(p, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"x\":10, \"y\":20}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"x\":10, \"y\":20}");
     test_assert(ret == 0);
 
     test_assertint(p->x, 10);
@@ -105,7 +105,7 @@ void test_Deserializer_tc_deserCompositeList(
     test_assert(corto_typeof(l) == corto_type(test_PointList_o));
 
     corto_value v = corto_value_object(l, NULL);
-    corto_int16 ret = json_toValue(&v, "[{\"x\":10, \"y\":20}, {\"x\":30, \"y\":40}]");
+    corto_int16 ret = json_toValue(NULL, &v, "[{\"x\":10, \"y\":20}, {\"x\":30, \"y\":40}]");
     test_assert(ret == 0);
     test_assertint(corto_ll_count(*l), 2);
 
@@ -129,7 +129,7 @@ void test_Deserializer_tc_deserCompositeNested(
     test_assert(corto_typeof(l) == corto_type(test_Line_o));
 
     corto_value v = corto_value_object(l, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"start\":{\"x\":10, \"y\":20}, \"stop\":{\"x\":30, \"y\":40}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"start\":{\"x\":10, \"y\":20}, \"stop\":{\"x\":30, \"y\":40}}");
     test_assert(ret == 0);
 
     test_assertint(l->start.x, 10);
@@ -150,6 +150,7 @@ void test_Deserializer_tc_deserCompositeNestedRef(
 
     corto_value v = corto_value_object(l, NULL);
     corto_int16 ret = json_toValue(
+      NULL,
       &v,
       "{\"start\":{\"type\":\"test/PointRef\",\"value\":{\"x\":10,\"y\":20}},\"stop\":{\"type\":\"test/PointRef\",\"value\":{\"x\":30,\"y\":40}}}"
     );
@@ -172,7 +173,7 @@ void test_Deserializer_tc_deserCompositeObservable(
     test_assert(corto_typeof(o) == corto_type(test_ObservableType_o));
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"x\":10, \"y\":20, \"z\":30}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"x\":10, \"y\":20, \"z\":30}");
     test_assert(ret == 0);
 
     test_assertint(o->x, 10);
@@ -191,7 +192,7 @@ void test_Deserializer_tc_deserCompositeOptional(
     test_assert(corto_typeof(o) == corto_type(test_OptionalType_o));
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"x\":10, \"y\":20, \"z\":30}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"x\":10, \"y\":20, \"z\":30}");
     test_assert(ret == 0);
 
     test_assertint(o->x, 10);
@@ -210,7 +211,7 @@ void test_Deserializer_tc_deserCompositeOptionalNotset(
     test_assert(corto_typeof(o) == corto_type(test_OptionalType_o));
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"x\":10, \"y\":20}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"x\":10, \"y\":20}");
     test_assert(ret == 0);
 
     test_assertint(o->x, 10);
@@ -229,7 +230,7 @@ void test_Deserializer_tc_deserCompositeRef(
     test_assert(corto_typeof(p) == corto_type(test_PointRef_o));
 
     corto_value v = corto_value_object(p, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"x\":10, \"y\":20}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"x\":10, \"y\":20}");
     test_assert(ret == 0);
 
     test_assertint(p->x, 10);
@@ -247,7 +248,7 @@ void test_Deserializer_tc_deserCompositeTarget(
     test_assert(corto_typeof(o) == corto_type(test_TargetType_o));
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"x\":10, \"y\":20, \"z\":{\"target\":30, \"actual\":40}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"x\":10, \"y\":20, \"z\":{\"target\":30, \"actual\":40}}");
     test_assert(ret == 0);
 
     test_assertint(o->x, 10);
@@ -271,7 +272,7 @@ void test_Deserializer_tc_deserCompositeTargetNotOwned(
     corto_set_source(m);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"x\":10, \"y\":20, \"z\":{\"target\":30, \"actual\":40}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"x\":10, \"y\":20, \"z\":{\"target\":30, \"actual\":40}}");
     test_assert(ret == 0);
 
     corto_set_source(NULL);
@@ -291,7 +292,7 @@ void test_Deserializer_tc_deserEnum(
     test_Color *o = corto_create(NULL, NULL, test_Color_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "\"Yellow\"");
+    corto_int16 ret = json_toValue(NULL, &v, "\"Yellow\"");
     test_assert(ret == 0);
     test_assertint(*o, Test_Yellow);
     corto_delete(o);
@@ -306,7 +307,7 @@ void test_Deserializer_tc_deserInheritance(
     test_assert(corto_typeof(p) == corto_type(test_Point3D_o));
 
     corto_value v = corto_value_object(p, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
     test_assert(ret == 0);
 
     test_assertint(p->super.x, 10);
@@ -325,7 +326,7 @@ void test_Deserializer_tc_deserInheritanceRef(
     test_assert(corto_typeof(p) == corto_type(test_Point3D_o));
 
     corto_value v = corto_value_object(p, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"super\":{\"x\":10, \"y\":20}, \"z\":30}");
     test_assert(ret == 0);
 
     test_assertint(p->super.x, 10);
@@ -342,7 +343,7 @@ void test_Deserializer_tc_deserInt16(
     corto_int16 *o = corto_create(NULL, NULL, corto_int16_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -355,7 +356,7 @@ void test_Deserializer_tc_deserInt16Minus(
     corto_int16 *o = corto_create(NULL, NULL, corto_int16_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "-10");
+    corto_int16 ret = json_toValue(NULL, &v, "-10");
     test_assert(ret == 0);
     test_assertint(*o, -10);
     corto_delete(o);
@@ -368,7 +369,7 @@ void test_Deserializer_tc_deserInt32(
     corto_int32 *o = corto_create(NULL, NULL, corto_int32_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -381,7 +382,7 @@ void test_Deserializer_tc_deserInt32Minus(
     corto_int32 *o = corto_create(NULL, NULL, corto_int32_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "-10");
+    corto_int16 ret = json_toValue(NULL, &v, "-10");
     test_assert(ret == 0);
     test_assertint(*o, -10);
     corto_delete(o);
@@ -394,7 +395,7 @@ void test_Deserializer_tc_deserInt64(
     corto_int64 *o = corto_create(NULL, NULL, corto_int64_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -407,7 +408,7 @@ void test_Deserializer_tc_deserInt64Minus(
     corto_int64 *o = corto_create(NULL, NULL, corto_int64_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "-10");
+    corto_int16 ret = json_toValue(NULL, &v, "-10");
     test_assert(ret == 0);
     test_assertint(*o, -10);
     corto_delete(o);
@@ -420,7 +421,7 @@ void test_Deserializer_tc_deserInt8(
     corto_int8 *o = corto_create(NULL, NULL, corto_int8_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -433,7 +434,7 @@ void test_Deserializer_tc_deserInt8Minus(
     corto_int8 *o = corto_create(NULL, NULL, corto_int8_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "-10");
+    corto_int16 ret = json_toValue(NULL, &v, "-10");
     test_assert(ret == 0);
     test_assertint(*o, -10);
     corto_delete(o);
@@ -448,7 +449,7 @@ void test_Deserializer_tc_deserList(
     test_assert(corto_typeof(l) == corto_type(corto_int32List_o));
 
     corto_value v = corto_value_object(l, NULL);
-    corto_int16 ret = json_toValue(&v, "[10, 20, 30]");
+    corto_int16 ret = json_toValue(NULL, &v, "[10, 20, 30]");
     test_assert(ret == 0);
     test_assertint(corto_ll_count(*l), 3);
     test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 0), 10);
@@ -466,7 +467,7 @@ void test_Deserializer_tc_deserListTwice(
     test_assert(corto_typeof(l) == corto_type(corto_int32List_o));
 
     corto_value v = corto_value_object(l, NULL);
-    corto_int16 ret = json_toValue(&v, "[10, 20, 30]");
+    corto_int16 ret = json_toValue(NULL, &v, "[10, 20, 30]");
     test_assert(ret == 0);
     test_assert(corto_value_ptrof(&v) == l);
     test_assertint(corto_ll_count(*l), 3);
@@ -474,7 +475,7 @@ void test_Deserializer_tc_deserListTwice(
     test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 1), 20);
     test_assertint((corto_int32)(corto_word)corto_ll_get(*l, 2), 30);
 
-    ret = json_toValue(&v, "[20, 30, 40]");
+    ret = json_toValue(NULL, &v, "[20, 30, 40]");
     test_assert(ret == 0);
     test_assert(corto_value_ptrof(&v) == l);
     test_assertint(corto_ll_count(*l), 3);
@@ -492,7 +493,7 @@ void test_Deserializer_tc_deserNaN(
     corto_float64 *o = corto_create(NULL, NULL, corto_float64_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "null");
+    corto_int16 ret = json_toValue(NULL, &v, "null");
     test_assert(ret == 0);
     test_assert(CORTO_ISNAN(*o));
     corto_delete(o);
@@ -504,7 +505,7 @@ void test_Deserializer_tc_deserObject(
 {
     corto_object o = NULL;
 
-    corto_int16 r = json_toObject(&o, "{\"id\": \"a\", \"type\": \"int8\", \"value\": 8}");
+    corto_int16 r = json_toObject(NULL, &o, "{\"id\": \"a\", \"type\": \"int8\", \"value\": 8}");
     test_assertint(r, 0);
     test_assert(o != NULL);
     test_assert(corto_fullpath(NULL, o) != NULL);
@@ -518,7 +519,7 @@ void test_Deserializer_tc_deserObjectErrorParsing(
     test_Deserializer this)
 {
     corto_object o = NULL;
-    corto_int16 r = json_toObject(&o, "{\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}");
+    corto_int16 r = json_toObject(NULL, &o, "{\"id\", \"/a/b/c\", \"value\": 9, \"type\", \"int16\"}");
     test_assert(r != 0);
     test_assert(corto_catch());
 }
@@ -531,7 +532,7 @@ void test_Deserializer_tc_deserObjectNonFullyScopedName(
     test_assert(a != NULL);
     test_assert(b != NULL);
     corto_object c = NULL;
-    corto_int16 r = json_toObject(&c, "{\"id\": \"a/b/c\", \"value\": 9, \"type\": \"int16\"}");
+    corto_int16 r = json_toObject(NULL, &c, "{\"id\": \"a/b/c\", \"value\": 9, \"type\": \"int16\"}");
     test_assert(r == 0);
     test_assert(corto_fullpath(NULL, c) != NULL);
     test_assertstr(corto_fullpath(NULL, c), "/a/b/c");
@@ -547,7 +548,7 @@ void test_Deserializer_tc_deserObjectScoped(
     test_assert(a != NULL);
     test_assert(b != NULL);
     corto_object c = NULL;
-    corto_int16 r = json_toObject(&c, "{\"id\": \"/a/b/c\", \"value\": 9, \"type\": \"int16\"}");
+    corto_int16 r = json_toObject(NULL, &c, "{\"id\": \"/a/b/c\", \"value\": 9, \"type\": \"int16\"}");
     test_assert(r == 0);
     test_assert(corto_fullpath(NULL, c) != NULL);
     test_assertstr(corto_fullpath(NULL, c), "/a/b/c");
@@ -561,7 +562,7 @@ void test_Deserializer_tc_deserReference(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":\"/corto/lang/package\"}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":\"/corto/lang/package\"}");
     test_assert(ret == 0);
     test_assert(o->r == corto_package_o);
     corto_delete(o);
@@ -574,7 +575,7 @@ void test_Deserializer_tc_deserReferenceAnonymous(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"int32\",\"value\":10}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":{\"type\":\"int32\",\"value\":10}}");
     test_assert(ret == 0);
     test_assert(o->r != NULL);
 
@@ -590,7 +591,7 @@ void test_Deserializer_tc_deserReferenceAnonymousCollection(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"/test/myList\",\"value\":[10,20,30]}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":{\"type\":\"/test/myList\",\"value\":[10,20,30]}}");
     test_assert(ret == 0);
     test_assert(o->r != NULL);
 
@@ -611,7 +612,7 @@ void test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"list{int32}\",\"value\":[10,20,30]}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":{\"type\":\"list{int32}\",\"value\":[10,20,30]}}");
     test_assert(ret == 0);
     test_assert(o->r != NULL);
 
@@ -635,7 +636,7 @@ void test_Deserializer_tc_deserReferenceAnonymousComplex(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}}");
     test_assert(ret == 0);
     test_assert(o->r != NULL);
 
@@ -652,7 +653,7 @@ void test_Deserializer_tc_deserReferenceAnonymousComplexWithString(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"Hello\",\"s2\":\"World\"}}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"Hello\",\"s2\":\"World\"}}}");
     test_assert(ret == 0);
     test_assert(o->r != NULL);
 
@@ -669,7 +670,7 @@ void test_Deserializer_tc_deserReferenceAnonymousComplexWithStringEsc(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"\\\"Hello\\\"\",\"s2\":\"\\\"World\\\"\"}}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":{\"type\":\"/test/StringType\",\"value\":{\"s1\":\"\\\"Hello\\\"\",\"s2\":\"\\\"World\\\"\"}}}");
     test_assert(ret == 0);
     test_assert(o->r != NULL);
 
@@ -686,7 +687,7 @@ void test_Deserializer_tc_deserReferenceFromLang(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":\"corto/lang/package\"}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":\"corto/lang/package\"}");
     test_assert(ret == 0);
     test_assert(o->r == corto_package_o);
     corto_delete(o);
@@ -699,11 +700,11 @@ void test_Deserializer_tc_deserReferenceNull(
     test_ReferenceType *o = corto_create(NULL, NULL, test_ReferenceType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"r\":\"corto/lang/package\"}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"r\":\"corto/lang/package\"}");
     test_assert(ret == 0);
     test_assert(o->r == corto_package_o);
 
-    ret = json_toValue(&v, "{\"r\":null}");
+    ret = json_toValue(NULL, &v, "{\"r\":null}");
     test_assert(o->r == NULL);
     corto_delete(o);
 
@@ -715,7 +716,7 @@ void test_Deserializer_tc_deserString(
     corto_string *o = corto_create(NULL, NULL, corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "\"Hello World\"");
+    corto_int16 ret = json_toValue(NULL, &v, "\"Hello World\"");
     test_assert(ret == 0);
     test_assertstr(*o, "Hello World");
     corto_delete(o);
@@ -728,7 +729,7 @@ void test_Deserializer_tc_deserStringEmpty(
     corto_string *o = corto_create(NULL, NULL, corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "\"\"");
+    corto_int16 ret = json_toValue(NULL, &v, "\"\"");
     test_assert(ret == 0);
     test_assertstr(*o, "");
     corto_delete(o);
@@ -741,7 +742,7 @@ void test_Deserializer_tc_deserStringEscape(
     corto_string *o = corto_create(NULL, NULL, corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "\"Hello World\\n\"");
+    corto_int16 ret = json_toValue(NULL, &v, "\"Hello World\\n\"");
     test_assert(ret == 0);
     test_assertstr(*o, "Hello World\n");
     corto_delete(o);
@@ -754,7 +755,7 @@ void test_Deserializer_tc_deserStringNull(
     corto_string *o = corto_create(NULL, NULL, corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "null");
+    corto_int16 ret = json_toValue(NULL, &v, "null");
     test_assert(ret == 0);
     test_assert(*o == NULL);
     corto_delete(o);
@@ -767,7 +768,7 @@ void test_Deserializer_tc_deserStringWhitespace(
     corto_string *o = corto_create(NULL, NULL, corto_string_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "\"  Hello World  \"");
+    corto_int16 ret = json_toValue(NULL, &v, "\"  Hello World  \"");
     test_assert(ret == 0);
     test_assertstr(*o, "  Hello World  ");
     corto_delete(o);
@@ -780,7 +781,7 @@ void test_Deserializer_tc_deserUint16(
     corto_uint16 *o = corto_create(NULL, NULL, corto_uint16_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -793,7 +794,7 @@ void test_Deserializer_tc_deserUint32(
     corto_uint32 *o = corto_create(NULL, NULL, corto_uint32_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -806,7 +807,7 @@ void test_Deserializer_tc_deserUint64(
     corto_uint64 *o = corto_create(NULL, NULL, corto_uint64_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -819,7 +820,7 @@ void test_Deserializer_tc_deserUint8(
     corto_uint8 *o = corto_create(NULL, NULL, corto_uint8_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "10");
+    corto_int16 ret = json_toValue(NULL, &v, "10");
     test_assert(ret == 0);
     test_assertint(*o, 10);
     corto_delete(o);
@@ -832,7 +833,7 @@ void test_Deserializer_tc_deserUnion(
     test_UnionType *o = corto_create(NULL, NULL, test_UnionType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"_d\":1,\"flt\":10.5}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"_d\":1,\"flt\":10.5}");
     test_assert(ret == 0);
     test_assertint(o->d, 1);
     test_assertflt(o->is.flt, 10.5);
@@ -847,28 +848,28 @@ void test_Deserializer_tc_deserUnionChangeDiscriminator(
     test_UnionType *o = corto_create(NULL, NULL, test_UnionType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"_d\":1,\"flt\":10.5}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"_d\":1,\"flt\":10.5}");
     test_assert(ret == 0);
     test_assertint(o->d, 1);
     test_assertflt(o->is.flt, 10.5);
 
-    ret = json_toValue(&v, "{\"_d\":2,\"str\":\"foo\"}");
+    ret = json_toValue(NULL, &v, "{\"_d\":2,\"str\":\"foo\"}");
     test_assert(ret == 0);
     test_assertint(o->d, 2);
     test_assertstr(o->is.str, "foo");
 
-    ret = json_toValue(&v, "{\"_d\":0,\"num\":20}");
+    ret = json_toValue(NULL, &v, "{\"_d\":0,\"num\":20}");
     test_assert(ret == 0);
     test_assertint(o->d, 0);
     test_assertint(o->is.num, 20);
 
-    ret = json_toValue(&v, "{\"_d\":4,\"pt\":{\"x\":10,\"y\":20}}");
+    ret = json_toValue(NULL, &v, "{\"_d\":4,\"pt\":{\"x\":10,\"y\":20}}");
     test_assert(ret == 0);
     test_assertint(o->d, 4);
     test_assertint(o->is.pt.x, 10);
     test_assertint(o->is.pt.y, 20);
 
-    ret = json_toValue(&v, "{\"_d\":3,\"str\":\"bar\"}");
+    ret = json_toValue(NULL, &v, "{\"_d\":3,\"str\":\"bar\"}");
     test_assert(ret == 0);
     test_assertint(o->d, 3);
     test_assertstr(o->is.str, "bar");
@@ -883,7 +884,7 @@ void test_Deserializer_tc_deserUnionComplex(
     test_UnionType *o = corto_create(NULL, NULL, test_UnionType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"_d\":4,\"pt\":{\"x\":10,\"y\":20}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"_d\":4,\"pt\":{\"x\":10,\"y\":20}}");
     test_assert(ret == 0);
     test_assertint(o->d, 4);
     test_assertflt(o->is.pt.x, 10);
@@ -899,12 +900,12 @@ void test_Deserializer_tc_deserUnionDefault(
     test_UnionType *o = corto_create(NULL, NULL, test_UnionType_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"_d\":5,\"other\":30}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"_d\":5,\"other\":30}");
     test_assert(ret == 0);
     test_assertint(o->d, 5);
     test_assertflt(o->is.other, 30);
 
-    ret = json_toValue(&v, "{\"_d\":6,\"other\":40}");
+    ret = json_toValue(NULL, &v, "{\"_d\":6,\"other\":40}");
     test_assert(ret == 0);
     test_assertint(o->d, 6);
     test_assertflt(o->is.other, 40);
@@ -919,7 +920,7 @@ void test_Deserializer_tc_deserVoid(
     corto_void *o = corto_create(NULL, NULL, corto_void_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{}");
+    corto_int16 ret = json_toValue(NULL, &v, "{}");
     test_assert(ret == 0);
     corto_delete(o);
 
@@ -931,7 +932,7 @@ void test_Deserializer_tc_serAnyCollection(
     corto_any *o = corto_create(NULL, NULL, corto_any_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"type\":\"list{int32}\",\"value\":[10,20,30]}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"type\":\"list{int32}\",\"value\":[10,20,30]}");
     test_assert(ret == 0);
     test_assertstr(corto_fullpath(NULL, o->type), "list{int32,0}");
     test_assert(o->value != NULL);
@@ -953,7 +954,7 @@ void test_Deserializer_tc_serAnyComposite(
     corto_any *o = corto_create(NULL, NULL, corto_any_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"type\":\"/test/Point\",\"value\":{\"x\":10,\"y\":20}}");
     test_assert(ret == 0);
     test_assert(corto_type(test_Point_o) == o->type);
     test_assert(o->value != NULL);
@@ -973,7 +974,7 @@ void test_Deserializer_tc_serAnyPrimitive(
     corto_any *o = corto_create(NULL, NULL, corto_any_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(&v, "{\"type\":\"int32\",\"value\":10}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"type\":\"int32\",\"value\":10}");
     test_assert(ret == 0);
     test_assert(corto_type(corto_int32_o) == o->type);
     test_assert(o->value != NULL);
@@ -993,7 +994,7 @@ void test_Deserializer_tc_deserCompositeReferenceList(
     test_assert(corto_typeof(l) == corto_type(corto_classList_o));
 
     corto_value v = corto_value_object(l, NULL);
-    corto_int16 ret = json_toValue(&v, "[\"class\", \"type\", \"interface\"]");
+    corto_int16 ret = json_toValue(NULL, &v, "[\"class\", \"type\", \"interface\"]");
     test_assert(ret == 0);
     test_assertint(corto_ll_count(*l), 3);
     test_assert(corto_ll_get(*l, 0) == corto_class_o);
