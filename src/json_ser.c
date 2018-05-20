@@ -297,7 +297,7 @@ int16_t json_serializeComplex(
             int32_t *d = corto_value_ptrof(v);
             corto_buffer_appendstr(data->buffer, "\"_d\":");
             corto_value discriminatorValue =
-                corto_value_value(d, corto_union(type)->discriminator);
+                corto_value_ptr(d, corto_union(type)->discriminator);
             if (json_serializePrimitive(s, &discriminatorValue, &privateData)) {
                 goto error;
             }
@@ -370,7 +370,7 @@ int16_t json_serializeAny(
         goto finished;
     }
 
-    corto_value anyValue = corto_value_value(ptr->value, ptr->type);
+    corto_value anyValue = corto_value_ptr(ptr->value, ptr->type);
     if ((result = corto_walk_value(s, &anyValue, userData))) {
         goto done;
     }
@@ -398,7 +398,7 @@ int16_t json_serializeItem(
         goto finished;
     }
     if (info->kind == CORTO_MEMBER) {
-        corto_member member = info->is.member.t;
+        corto_member member = info->is.member.member;
         corto_string name = corto_idof(member);
         if (!corto_buffer_append(data->buffer, "\"%s\":", name)) {
             goto finished;

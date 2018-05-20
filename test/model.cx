@@ -181,6 +181,20 @@ test/suite Deserializer::
     void tc_deserCompositeList()
     void tc_deserCompositeReferenceList()
 
+    void tc_deserList_set()
+    void tc_deserList_set_multiple()
+    void tc_deserList_remove()
+    void tc_deserList_remove_multiple()
+    void tc_deserList_append()
+    void tc_deserList_inc()
+    void tc_deserList_dec()
+
+    void tc_deserList_set_composite()
+    void tc_deserList_set_ref()
+
+    void tc_deserList_append_composite()
+    void tc_deserList_append_ref()
+
     void tc_deserReference()
     void tc_deserReferenceNull()
     void tc_deserReferenceFromLang()
