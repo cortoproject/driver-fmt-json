@@ -102,6 +102,12 @@ struct DefaultType: options={defaultType=int32} :/
 struct ParentType: options={parentType=int32} :/
     x, y: int32
 
+struct IntListMember:/
+    m: list{int32}, not_null
+
+struct CompositeListMember:/
+    m: list{Point}, not_null
+
 union UnionType: int32::
     num: {0}, int64
     flt: {1}, float64
@@ -175,6 +181,10 @@ test/suite Deserializer::
     void tc_deserComposite_dec()
     void tc_deserCompositeNested_inc()
     void tc_deserCompositeNested_dec()
+    void tc_deserCompositeListAfterComposite_inc()
+    void tc_deserCompositeListAfterComposite_dec()
+    void tc_deserIntListAfterComposite_inc()
+    void tc_deserIntListAfterComposite_dec()
 
     void tc_deserUnion()
     void tc_deserUnionChangeDiscriminator()
