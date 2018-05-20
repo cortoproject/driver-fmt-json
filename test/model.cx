@@ -171,6 +171,11 @@ test/suite Deserializer::
     void tc_deserCompositeTarget()
     void tc_deserCompositeTargetNotOwned()
 
+    void tc_deserComposite_inc()
+    void tc_deserComposite_dec()
+    void tc_deserCompositeNested_inc()
+    void tc_deserCompositeNested_dec()
+
     void tc_deserUnion()
     void tc_deserUnionChangeDiscriminator()
     void tc_deserUnionComplex()

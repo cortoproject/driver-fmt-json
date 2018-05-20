@@ -94,7 +94,6 @@ void test_Deserializer_tc_deserComposite(
     test_assertint(p->y, 20);
 
     corto_delete(p);
-
 }
 
 void test_Deserializer_tc_deserCompositeList(
@@ -1280,6 +1279,94 @@ void test_Deserializer_tc_deserCompositeReferenceList(
     test_assert(corto_ll_get(*l, 0) == corto_class_o);
     test_assert(corto_ll_get(*l, 1) == corto_type_o);
     test_assert(corto_ll_get(*l, 2) == corto_interface_o);
+
+    corto_delete(l);
+}
+
+void test_Deserializer_tc_deserComposite_dec(
+    test_Deserializer this)
+{
+    test_Point *p = corto_create(NULL, NULL, test_Point_o);
+    test_assert(p != NULL);
+    test_assert(corto_typeof(p) == corto_type(test_Point_o));
+
+    p->x = 10;
+    p->y = 20;
+
+    corto_value v = corto_value_object(p, NULL);
+    corto_int16 ret = json_toValue(NULL, &v, "{\"$dec\":{\"x\": 2}}");
+    test_assert(ret == 0);
+
+    test_assertint(p->x, 8);
+    test_assertint(p->y, 20);
+
+    corto_delete(p);
+}
+
+void test_Deserializer_tc_deserComposite_inc(
+    test_Deserializer this)
+{
+    test_Point *p = corto_create(NULL, NULL, test_Point_o);
+    test_assert(p != NULL);
+    test_assert(corto_typeof(p) == corto_type(test_Point_o));
+
+    p->x = 10;
+    p->y = 20;
+
+    corto_value v = corto_value_object(p, NULL);
+    corto_int16 ret = json_toValue(NULL, &v, "{\"$inc\":{\"x\": 2}}");
+    test_assert(ret == 0);
+
+    test_assertint(p->x, 12);
+    test_assertint(p->y, 20);
+
+    corto_delete(p);
+}
+
+void test_Deserializer_tc_deserCompositeNested_dec(
+    test_Deserializer this)
+{
+    test_Line *l = corto_create(NULL, NULL, test_Line_o);
+    test_assert(l != NULL);
+    test_assert(corto_typeof(l) == corto_type(test_Line_o));
+
+    l->start.x = 10;
+    l->start.y = 20;
+    l->stop.x = 30;
+    l->stop.y = 40;
+
+    corto_value v = corto_value_object(l, NULL);
+    corto_int16 ret = json_toValue(NULL, &v, "{\"$dec\":{\"stop.x\": 2}}");
+    test_assert(ret == 0);
+
+    test_assertint(l->start.x, 10);
+    test_assertint(l->start.y, 20);
+    test_assertint(l->stop.x, 28);
+    test_assertint(l->stop.y, 40);
+
+    corto_delete(l);
+}
+
+void test_Deserializer_tc_deserCompositeNested_inc(
+    test_Deserializer this)
+{
+    test_Line *l = corto_create(NULL, NULL, test_Line_o);
+    test_assert(l != NULL);
+    test_assert(corto_typeof(l) == corto_type(test_Line_o));
+
+    l->start.x = 10;
+    l->start.y = 20;
+    l->stop.x = 30;
+    l->stop.y = 40;
+
+    corto_value v = corto_value_object(l, NULL);
+    corto_int16 ret = json_toValue(NULL, &v, "{\"$inc\":{\"stop.x\": 2}}");
+    test_assert(ret == 0);
+
+    test_assertint(l->start.x, 10);
+    test_assertint(l->start.y, 20);
+    test_assertint(l->stop.x, 32);
+    test_assertint(l->stop.y, 40);
 
     corto_delete(l);
 }

@@ -393,6 +393,72 @@ error:
 }
 
 static
+int16_t json_deser_inc(
+    void *ptr,
+    corto_type t,
+    const char *key,
+    double inc,
+    json_deser_t *data)
+{
+    corto_value v = corto_value_pointer(ptr, t);
+    corto_value member = corto_value_init();
+
+    corto_try(corto_value_memberExpr(&v, key, &member),
+        "failed to find member for '$inc'");
+
+    corto_value inc_v = corto_value_float(inc);
+
+    corto_try( corto_value_binaryOp(CORTO_ADD, &member, &inc_v, &member), NULL);
+
+    return 0;
+error:
+    return -1;
+}
+
+static
+int16_t json_deser_oper(
+    void *p,
+    corto_type t,
+    const char *key,
+    JSON_Value *v,
+    json_deser_t *data)
+{
+    if (!strcmp(key, "$inc") || !strcmp(key, "$dec")) {
+        JSON_Object *obj = json_value_get_object(v);
+        if (!obj) {
+            corto_throw("expected object for '$inc' operation, got %s",
+              json_type_str(v));
+            goto error;
+        }
+
+        bool is_inc = !strcmp(key, "$inc");
+
+        int i;
+        for (i = 0; i < json_object_get_count(obj); i ++) {
+            const char *member = json_object_get_name(obj,  i);
+            JSON_Value *value = json_object_get_value_at(obj, i);
+            if (json_value_get_type(value) != JSONNumber) {
+                corto_throw("expected number for '$inc', got %s",
+                  json_type_str(v));
+                goto error;
+            }
+
+            double inc = json_value_get_number(value);
+            corto_try(
+              json_deser_inc(
+                p, t, member, is_inc ? inc : -inc, data), NULL);
+        }
+    } else {
+        corto_throw("unsupported collection operation '%s'", key);
+        goto error;
+    }
+
+    return 0;
+error:
+    return -1;
+}
+
+static
 bool json_deser_must_skip(
     corto_member m,
     void *ptr)
@@ -437,10 +503,13 @@ int16_t json_deser_composite(
 
     for (i = 0; i < count; i++) {
         const char* memberName = json_object_get_name(o, i);
+        JSON_Value* value = json_object_get_value_at(o, i);
         corto_member member_o;
 
+        if (memberName[0] == '$') {
+            corto_try( json_deser_oper(p, t, memberName, value, data), NULL);
+        } else
         if (!strcmp(memberName, "_d") && isUnion) {
-            JSON_Value* value = json_object_get_value_at(o, i);
             if (json_deser_primitive(
                 &discriminator,
                 corto_union(t)->discriminator,
@@ -476,15 +545,18 @@ int16_t json_deser_composite(
             } else if (isUnion) {
                 corto_int32 prev = *(corto_int32*)p;
                 if (prev != discriminator) {
-                    corto_member prevMember = corto_union_findCase(t, prev);
-                    corto_ptr_deinit(CORTO_OFFSET(p, prevMember->offset), prevMember->type);
-                    memset(CORTO_OFFSET(p, member_o->offset), 0, member_o->type->size);
+                    corto_member prevMember =
+                        corto_union_findCase(t, prev);
+                    corto_ptr_deinit(
+                        CORTO_OFFSET(p, prevMember->offset), prevMember->type);
+                    memset(
+                        CORTO_OFFSET(
+                            p, member_o->offset), 0, member_o->type->size);
                 }
                 *(corto_int32*)p = discriminator;
             }
 
             if (!member_o || !json_deser_must_skip(member_o, p)) {
-                JSON_Value* value = json_object_get_value(o, memberName);
                 void *offset = corto_value_ptrof(&mbr);
                 corto_type memberType = corto_value_typeof(&mbr);
 
@@ -561,29 +633,6 @@ void* json_deser_get_elem(
     }
 
     return result;
-}
-
-static
-int16_t json_deser_inc(
-    void *ptr,
-    corto_type t,
-    const char *key,
-    double inc,
-    json_deser_t *data)
-{
-    corto_value v = corto_value_pointer(ptr, t);
-    corto_value member = corto_value_init();
-
-    corto_try(corto_value_memberExpr(&v, key, &member),
-        "failed to find member for '$inc'");
-
-    corto_value inc_v = corto_value_float(inc);
-
-    corto_try( corto_value_binaryOp(CORTO_ADD, &member, &inc_v, &member), NULL);
-
-    return 0;
-error:
-    return -1;
 }
 
 static
@@ -682,35 +731,9 @@ int16_t json_deser_collection_oper(
                 last = index;
                 removed ++;
             }
-        } else if (!strcmp(key, "$inc") || !strcmp(key, "$dec")) {
-            JSON_Object *obj = json_value_get_object(v);
-            if (!obj) {
-                corto_throw("expected object for '$inc' operation, got %s",
-                  json_type_str(v));
-                goto error;
-            }
-
-            bool is_inc = !strcmp(key, "$inc");
-
-            int i;
-            for (i = 0; i < json_object_get_count(obj); i ++) {
-                const char *member = json_object_get_name(obj,  i);
-                JSON_Value *value = json_object_get_value_at(obj, i);
-                if (json_value_get_type(value) != JSONNumber) {
-                    corto_throw("expected number for '$inc', got %s",
-                      json_type_str(v));
-                    goto error;
-                }
-
-                double inc = json_value_get_number(value);
-                corto_try(
-                  json_deser_inc(
-                    p, corto_type(t), member, is_inc ? inc : -inc, data), NULL);
-            }
-
         } else {
-            corto_throw("unsupported collection operation '%s'", key);
-            goto error;
+            /* Try non-list operations */
+            corto_try(json_deser_oper(p, corto_type(t), key, v, data), NULL);
         }
     }
 
