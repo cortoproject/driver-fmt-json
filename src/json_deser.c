@@ -403,7 +403,7 @@ int16_t json_deser_inc(
     corto_value v = corto_value_pointer(ptr, t);
     corto_value member = corto_value_init();
 
-    corto_try(corto_value_memberExpr(&v, key, &member),
+    corto_try(corto_value_field(&v, key, &member),
         "failed to find member for '$inc'");
 
     corto_value inc_v = corto_value_float(inc);
@@ -524,7 +524,7 @@ int16_t json_deser_composite(
             }
         } else {
             corto_value mbr, v = corto_value_mem(p, t);
-            if (corto_value_memberExpr(&v, (char*)memberName, &mbr)) {
+            if (corto_value_field(&v, (char*)memberName, &mbr)) {
                 /* Ignore members not found in type */
                 corto_catch();
                 continue;
