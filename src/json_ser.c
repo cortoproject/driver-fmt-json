@@ -196,7 +196,7 @@ int16_t json_serializeText(
     {
         size_t length;
         if (corto_typeof(type) != corto_type(corto_verbatim_o) ||
-            strcmp(corto_verbatim(type)->contentType, "text/json"))
+            strcmp(corto_verbatim(type)->format, "text/json"))
         {
             /* Escape string, append to buffer */
             char *out = NULL;
@@ -470,7 +470,7 @@ finished:
 /* Create JSON serializer */
 static
 corto_walk_opt json_ser(
-    corto_modifier access,
+    corto_modifierMask access,
     corto_operatorKind accessKind,
     corto_walk_traceKind trace)
 {

@@ -96,10 +96,10 @@ struct TargetType::
     x, y: int32
     z: target{int32}
 
-struct DefaultType: options={defaultType=int32} :/
+struct DefaultType: scope_type=int32 :/
     x, y: int32
 
-struct ParentType: options={parentType=int32} :/
+struct ParentType: parent_type=int32 :/
     x, y: int32
 
 struct IntListMember:/

@@ -304,7 +304,7 @@ void test_DeserializeObject_tc_deserAnonymousCollection(
     test_assertstr(corto_idof(dst), "obj");
     test_assert(type->kind == CORTO_COLLECTION);
     test_assert(corto_collection(type)->kind == CORTO_LIST);
-    test_assert(corto_collection(type)->elementType == (corto_type)corto_int32_o);
+    test_assert(corto_collection(type)->element_type == (corto_type)corto_int32_o);
     test_assert(corto_parentof(dst) == data_o);
     test_assert(corto_ll_count(*dst) == 3);
     test_assert((intptr_t)corto_ll_get(*dst, 0) == 10);
@@ -392,7 +392,7 @@ void test_DeserializeObject_tc_deserDefaultValue(
     test_assertstr(corto_idof(dst), "obj");
     test_assert(type->kind == CORTO_COLLECTION);
     test_assert(corto_collection(type)->kind == CORTO_LIST);
-    test_assert(corto_collection(type)->elementType == (corto_type)corto_int32_o);
+    test_assert(corto_collection(type)->element_type == (corto_type)corto_int32_o);
     test_assert(corto_ll_count(*dst) == 0);
     test_assert(corto_parentof(dst) == data_o);
     test_assert(corto_check_state(dst, CORTO_VALID));

@@ -1000,7 +1000,7 @@ void test_Deserializer_tc_deserReferenceAnonymousCollectionAnonymousType(
     corto_type t = corto_typeof(o->r);
     test_assert(t->kind == CORTO_COLLECTION);
     test_assert(corto_collection(t)->kind == CORTO_LIST);
-    test_assert(corto_collection(t)->elementType == corto_type(corto_int32_o));
+    test_assert(corto_collection(t)->element_type == corto_type(corto_int32_o));
     test_assertint(corto_ll_count(*(corto_ll*)o->r), 3);
 
     test_assertint((corto_int32)(corto_word)corto_ll_get(*(corto_ll*)o->r, 0), 10);

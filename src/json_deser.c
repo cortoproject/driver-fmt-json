@@ -217,7 +217,7 @@ bool json_deser_primitive(
         }
         break;
     case CORTO_TEXT:
-        if (corto_typeof(ptype) != corto_type(corto_verbatim_o) || strcmp(corto_verbatim(ptype)->contentType, "text/json")) {
+        if (corto_typeof(ptype) != corto_type(corto_verbatim_o) || strcmp(corto_verbatim(ptype)->format, "text/json")) {
             if (json_deser_text(p, ptype, v)) {
                 goto error;
             }
@@ -591,7 +591,10 @@ int16_t json_deser_composite(
                             goto error;
                         }
                     } else {
-                        corto_error("unexpected value kind '%d'", mbr.kind);
+                        corto_error(
+                            "unexpected value kind '%d' for member '%s'",
+                            mbr.kind, 
+                            memberName);
                         goto error;
                     }
                 }
@@ -610,7 +613,7 @@ void* json_deser_get_elem(
     corto_collection t,
     corto_int32 i)
 {
-    corto_int32 size = corto_type_sizeof(t->elementType);
+    corto_int32 size = corto_type_sizeof(t->element_type);
     void *result = NULL;
 
     switch(t->kind) {
@@ -621,7 +624,7 @@ void* json_deser_get_elem(
         break;
     case CORTO_LIST: {
         corto_ll list = *(corto_ll*)ptr;
-        if (corto_collection_requiresAlloc(t->elementType)) {
+        if (corto_collection_requires_alloc(t->element_type)) {
             result = corto_ll_get(list, i);
         } else {
             result = corto_ll_getPtr(list, i);
@@ -652,14 +655,14 @@ int16_t json_deser_collection_oper(
 
         if (!strcmp(key, "$append")) {
             void *ptr = NULL;
-            if (corto_collection_requiresAlloc(t->elementType)) {
-                ptr = corto_ptr_new(t->elementType);
+            if (corto_collection_requires_alloc(t->element_type)) {
+                ptr = corto_ptr_new(t->element_type);
                 corto_ll_append(list, ptr);
             } else {
                 ptr = corto_ll_append(list, NULL);
             }
 
-            corto_try (json_deser_item(ptr, t->elementType, v, data), NULL);
+            corto_try (json_deser_item(ptr, t->element_type, v, data), NULL);
 
         } else if (!strcmp(key, "$set")) {
             void *ptr = NULL;
@@ -682,14 +685,14 @@ int16_t json_deser_collection_oper(
                     goto error;
                 }
 
-                if (corto_collection_requiresAlloc(t->elementType)) {
+                if (corto_collection_requires_alloc(t->element_type)) {
                     ptr = corto_ll_get(list, index);
                 } else {
                     ptr = corto_ll_getPtr(list, index);
                 }
 
                 corto_try (
-                  json_deser_item(ptr, t->elementType, value, data), NULL);
+                  json_deser_item(ptr, t->element_type, value, data), NULL);
             }
 
         } else if (!strcmp(key, "$remove")) {
@@ -750,7 +753,7 @@ int16_t json_deser_collection(
     json_deser_t *data)
 {
     corto_assert(t->kind == CORTO_COLLECTION, "not deserializing collection");
-    corto_type elementType = corto_collection(t)->elementType;
+    corto_type element_type = corto_collection(t)->element_type;
 
     /* Deserialize elements */
     if (json_value_get_type(v) == JSONArray) {
@@ -768,7 +771,7 @@ int16_t json_deser_collection(
               "invalid element ptr for index %d returned by JSON deserializer",
               i);
             JSON_Value *elem = json_array_get_value(a, i);
-            if (json_deser_item(elementPtr, elementType, elem, data)) {
+            if (json_deser_item(elementPtr, element_type, elem, data)) {
                 goto error;
             }
         }

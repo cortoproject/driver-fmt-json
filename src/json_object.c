@@ -124,7 +124,7 @@ int16_t json_toResultMeta(
                 type = corto_tableinstance(parent)->type;
             } else {
                 corto_type parentType = corto_typeof(parent);
-                type = parentType->options.defaultType;
+                type = parentType->scope_type;
             }
             corto_release(parent);
         }
@@ -257,7 +257,7 @@ int16_t json_serialize_child_from_JSON_Value(
     /* If parent is not yet defined and parentState of type is DECLARED, object
      * may only be created when parent is DECLARED. */
     if (parent_defined != -1) {
-        if (type->options.parentState == CORTO_DECLARED) {
+        if (type->parent_state == CORTO_DECLARED) {
             if (parent_defined) {
                 /* Object is already serialized */
                 goto serialize_later_or_serialized;
