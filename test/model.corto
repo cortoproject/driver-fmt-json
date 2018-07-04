@@ -1,0 +1,356 @@
+in test
+
+octet binary: 10
+
+bool boolTrue: true
+bool boolFalse: false
+
+char char: 'a'
+char charNull: '\0'
+char charEscape: '\\'
+
+int8 int8: 10
+int8 int8Minus: -10
+int16 int16: 10
+int16 int16Minus: -10
+int32 int32: 10
+int32 int32Minus: -10
+int64 int64: 10
+int64 int64Minus: -10
+
+uint8 uint8: 10
+uint16 uint16: 10
+uint32 uint32: 10
+uint64 uint64: 10
+
+float64 fltNan: nan
+
+void void;
+
+string string: "Hello World"
+string stringEscape: "\\"
+string stringWhitespace: " "
+string stringEmpty: "\0"
+string stringNull: null
+
+enum Color {
+    Red,
+    Yellow,
+    Green,
+    Blue
+}
+
+bitmask Sandwich {
+    Chicken,
+    Pork,
+    Beef,
+    Cheese,
+    Lettuce,
+    Tomato,
+    Pickle,
+    Pepper,
+    Onion
+}
+
+Color enum: Yellow
+Sandwich bitmask: Beef | Cheese | Lettuce | Tomato
+
+struct Point {
+    x, y: int32
+}
+
+struct Line {
+    start, stop: Point
+}
+
+struct Point3D: Point {
+    z: int32
+}
+
+class PointRef {
+    x, y: int32
+}
+
+class LineRef {
+    start, stop: PointRef
+}
+
+class Point3DRef: PointRef {
+    z: int32
+}
+
+Point p: 10, 20
+Point3D p3d: 10, 20, 30
+Line l: {10, 20}, {30, 40}
+
+PointRef p_ref: 10, 20
+Point3DRef p3d_ref: 10, 20, 30
+LineRef l_ref: PointRef[10, 20], PointRef[30, 40]
+
+struct ReferenceType {
+    r: object
+}
+
+struct StringType {
+    s1: string
+    s2: string
+}
+
+list myList: int32
+
+ReferenceType reference: package
+ReferenceType referenceNull: null
+ReferenceType referenceFromLang: type
+ReferenceType referenceAnonymous: int32[10]
+ReferenceType referenceAnonymousComplex: Point[10, 20]
+ReferenceType referenceAnonymousComplexString: StringType["Hello", "World"]
+ReferenceType referenceAnonymousComplexStringEsc: StringType["\"Hello\"", "\"World\""]
+ReferenceType referenceAnonymousCollection: myList[10, 20]
+ReferenceType referenceAnonymousCollectionAnonymousType: array[int32, 2][10, 20]
+
+struct OptionalType {
+    x, y: int32
+    z: int32, optional
+}
+
+struct ObservableType {
+    x, y: int32
+    z: int32, observable
+}
+
+struct TargetType {
+    x, y: int32
+    z: target[int32]
+}
+
+struct DefaultType: scope_type:int32 {
+    x, y: int32
+}
+
+struct ParentType: parent_type:int32 {
+    x, y: int32
+}
+
+struct IntListMember {
+    m: list[int32], not_null
+}
+
+struct CompositeListMember {
+    m: list[Point], not_null
+}
+
+union UnionType: int32 {
+    num: {0}, int64
+    flt: {1}, float64
+    str: {2, 3}, string
+    pt: {4}, Point
+    default other: word
+    init() int16
+}
+
+array[int32, 3] array: 10, 20, 30
+array[Point, 3] arrayComplex: {10, 20}, {30, 40}, {50, 60}
+sequence[int32] sequence: 10, 20, 30
+sequence[Point] sequenceComplex: {10, 20}, {30, 40}, {50, 60}
+list[int32] list: 10, 20, 30
+list[Point] listComplex: {10, 20}, {30, 40}, {50, 60}
+list[class] listComplexReference: class, type, interface
+
+list intList: int32
+
+test/suite Deserializer {
+    tc_deserVoid()
+    tc_serAnyPrimitive()
+    tc_serAnyComposite()
+    tc_serAnyCollection()
+
+    tc_deserBinary()
+    tc_deserBoolTrue()
+    tc_deserBoolFalse()
+
+    tc_deserChar()
+    tc_deserCharEscape()
+
+    tc_deserInt8()
+    tc_deserInt8Minus()
+
+    tc_deserInt16()
+    tc_deserInt16Minus()
+
+    tc_deserInt32()
+    tc_deserInt32Minus()
+
+    tc_deserInt64()
+    tc_deserInt64Minus()
+
+    tc_deserUint8()
+    tc_deserUint16()
+    tc_deserUint32()
+    tc_deserUint64()
+
+    tc_deserString()
+    tc_deserStringEscape()
+    tc_deserStringWhitespace()
+    tc_deserStringNull()
+    tc_deserStringEmpty()
+
+    tc_deserEnum()
+    tc_deserBitmask()
+
+    tc_deserComposite()
+    tc_deserInheritance()
+    tc_deserCompositeNested()
+    tc_deserCompositeRef()
+    tc_deserInheritanceRef()
+    tc_deserCompositeNestedRef()
+    tc_deserCompositeOptional()
+    tc_deserCompositeOptionalNotset()
+    tc_deserCompositeObservable()
+    tc_deserCompositeTarget()
+    tc_deserCompositeTargetNotOwned()
+
+    tc_deserComposite_inc()
+    tc_deserComposite_dec()
+    tc_deserCompositeNested_inc()
+    tc_deserCompositeNested_dec()
+    tc_deserCompositeListAfterComposite_inc()
+    tc_deserCompositeListAfterComposite_dec()
+    tc_deserIntListAfterComposite_inc()
+    tc_deserIntListAfterComposite_dec()
+
+    tc_deserUnion()
+    tc_deserUnionChangeDiscriminator()
+    tc_deserUnionComplex()
+    tc_deserUnionDefault()
+
+    tc_deserList()
+    tc_deserListTwice()
+    tc_deserCompositeList()
+    tc_deserCompositeReferenceList()
+
+    tc_deserList_set()
+    tc_deserList_set_multiple()
+    tc_deserList_remove()
+    tc_deserList_remove_multiple()
+    tc_deserList_append()
+    tc_deserList_inc()
+    tc_deserList_dec()
+
+    tc_deserList_set_composite()
+    tc_deserList_set_ref()
+
+    tc_deserList_append_composite()
+    tc_deserList_append_ref()
+
+    tc_deserReference()
+    tc_deserReferenceNull()
+    tc_deserReferenceFromLang()
+    tc_deserReferenceAnonymous()
+    tc_deserReferenceAnonymousComplex()
+    tc_deserReferenceAnonymousComplexWithString()
+    tc_deserReferenceAnonymousComplexWithStringEsc()
+    tc_deserReferenceAnonymousCollection()
+    tc_deserReferenceAnonymousCollectionAnonymousType()
+
+    tc_deserObject()
+    tc_deserObjectScoped()
+    tc_deserObjectNonFullyScopedName()
+    tc_deserObjectErrorParsing()
+
+    tc_deserNaN()
+}
+
+test/Suite DeserializeObject {
+    tc_deserBool()
+    tc_deserNumber()
+    tc_deserString()
+    tc_deserComposite()
+    tc_deserCollection()
+    tc_deserAnonymousCollection()
+    tc_deserDefaultType()
+    tc_deserDefaultValue()
+    tc_deserDefaultTypeAndValue()
+    tc_deserTableType()
+    tc_deserSingleChild()
+    tc_deserMultipleChildren()
+    tc_deserChildDefaultType()
+    tc_deserStructType()
+    tc_deserNotAType()
+    tc_deserUnresolvedType()
+    tc_deserUnresolvedChildType()
+    tc_deserMismatchParentType()
+}
+
+test/suite Serializer {
+    tc_serVoid()
+    tc_serAnyPrimitive()
+    tc_serAnyComposite()
+    tc_serAnyCollection()
+
+    tc_serBinary()
+    tc_serBoolTrue()
+    tc_serBoolFalse()
+
+    tc_serChar()
+    tc_serCharNull()
+    tc_serCharEscape()
+
+    tc_serInt8()
+    tc_serInt8Minus()
+
+    tc_serInt16()
+    tc_serInt16Minus()
+
+    tc_serInt32()
+    tc_serInt32Minus()
+
+    tc_serInt64()
+    tc_serInt64Minus()
+
+    tc_serUint8()
+    tc_serUint16()
+    tc_serUint32()
+    tc_serUint64()
+
+    tc_serString()
+    tc_serStringEscape()
+    tc_serStringWhitespace()
+    tc_serStringNull()
+    tc_serStringEmpty()
+
+    tc_serEnum()
+    tc_serBitmask()
+
+    tc_serComposite()
+    tc_serInheritance()
+    tc_serCompositeNested()
+    tc_serCompositeRef()
+    tc_serInheritanceRef()
+    tc_serCompositeNestedRef()
+    tc_serCompositeOptionalSet()
+    tc_serCompositeOptionalNotSet()
+    tc_serCompositeObservable()
+    tc_serCompositeTarget()
+    tc_serCompositeUnion()
+    tc_serCompositeUnionDefault()
+    tc_serCompositeUnionComplex()
+
+    tc_serArray()
+    tc_serArrayComplex()
+    tc_serSequence()
+    tc_serSequenceComplex()
+    tc_serList()
+    tc_serListComplex()
+
+    tc_serReference()
+    tc_serReferenceNull()
+    tc_serReferenceFromLang()
+    tc_serReferenceAnonymous()
+    tc_serReferenceAnonymousComplex()
+    tc_serReferenceAnonymousComplexWithString()
+    tc_serReferenceAnonymousComplexWithStringEsc()
+    tc_serReferenceAnonymousCollection()
+    tc_serReferenceAnonymousCollectionAnonymousType()
+
+    tc_serNaN()
+}
