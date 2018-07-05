@@ -449,8 +449,7 @@ int16_t json_deser_oper(
                 p, t, member, is_inc ? inc : -inc, data), NULL);
         }
     } else {
-        corto_throw("unsupported collection operation '%s'", key);
-        goto error;
+        corto_trace("unsupported collection operation '%s'", key);
     }
 
     return 0;
@@ -593,7 +592,7 @@ int16_t json_deser_composite(
                     } else {
                         corto_error(
                             "unexpected value kind '%d' for member '%s'",
-                            mbr.kind, 
+                            mbr.kind,
                             memberName);
                         goto error;
                     }
