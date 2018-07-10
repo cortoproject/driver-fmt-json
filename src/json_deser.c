@@ -523,6 +523,7 @@ int16_t json_deser_composite(
             }
         } else {
             corto_value mbr, v = corto_value_mem(p, t);
+
             if (corto_value_field(&v, (char*)memberName, &mbr)) {
                 /* Ignore members not found in type */
                 corto_catch();
@@ -557,6 +558,7 @@ int16_t json_deser_composite(
 
             if (!member_o || !json_deser_must_skip(member_o, p)) {
                 void *offset = corto_value_ptrof(&mbr);
+
                 corto_type memberType = corto_value_typeof(&mbr);
 
                 if (member_o && member_o->modifiers & CORTO_OBSERVABLE) {

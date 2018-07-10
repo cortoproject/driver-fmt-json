@@ -33,12 +33,12 @@ void json_splitId(
     }
 }
 
-/* Declare corto object from corto_result */
+/* Declare corto object from corto_record */
 static
 corto_object json_declare(
     corto_object parent,
     corto_type type,
-    corto_result *r)
+    corto_record *r)
 {
     corto_object o = NULL;
 
@@ -68,7 +68,7 @@ error:
 static
 int16_t json_toResultMeta(
     corto_object parent,
-    corto_result *r,
+    corto_record *r,
     JSON_Value *topValue,
     char *id_buffer,
     corto_string json)
@@ -142,10 +142,10 @@ error:
     return -1;
 }
 
-/* Serialize JSON encoded object to corto_result */
+/* Serialize JSON encoded object to corto_record */
 int16_t json_toResult(
     corto_fmt_opt* opt,
-    corto_result *r,
+    corto_record *r,
     corto_string json)
 {
     JSON_Value* topValue = json_parse_string(json);
@@ -156,7 +156,7 @@ int16_t json_toResult(
         goto error;
     }
 
-    memset(r, 0, sizeof(corto_result));
+    memset(r, 0, sizeof(corto_record));
     if (json_toResultMeta(NULL, r, topValue, id_buffer, json)) {
         goto error_toResultMeta;
     }
@@ -180,7 +180,7 @@ error_toResultMeta:
 
 corto_word json_fromResult(
     corto_fmt_opt* opt,
-    corto_result *r)
+    corto_record *r)
 {
     CORTO_UNUSED(r);
     return 0;
@@ -231,14 +231,14 @@ int16_t json_serialize_child_from_JSON_Value(
     char *json,
     corto_fmt_opt *opt)
 {
-    corto_result r;
+    corto_record r;
     corto_object result = NULL;
     bool newObject = FALSE;
     corto_id id_buffer;
 
     JSON_Object* topObject = json_value_get_object(topValue);
 
-    memset(&r, 0, sizeof(corto_result));
+    memset(&r, 0, sizeof(corto_record));
     if (json_toResultMeta(parent, &r, topValue, id_buffer, json)) {
         goto error;
     }

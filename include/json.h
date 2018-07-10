@@ -32,12 +32,12 @@ char* json_fromValue(
 
 int16_t json_toResult(
     corto_fmt_opt* opt,
-    corto_result *r,
+    corto_record *r,
     char *json);
 
 corto_word json_fromResult(
     corto_fmt_opt* opt,
-    corto_result *r);
+    corto_record *r);
 
 void json_release(
     char *json);
