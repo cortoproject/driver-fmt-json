@@ -1313,9 +1313,9 @@ void test_Deserializer_tc_serAnyCollection(
     corto_any *o = corto_create(NULL, NULL, corto_any_o);
 
     corto_value v = corto_value_object(o, NULL);
-    corto_int16 ret = json_toValue(NULL, &v, "{\"type\":\"list{int32}\",\"value\":[10,20,30]}");
+    corto_int16 ret = json_toValue(NULL, &v, "{\"type\":\"list[int32]\",\"value\":[10,20,30]}");
     test_assert(ret == 0);
-    test_assertstr(corto_fullpath(NULL, o->type), "list{int32,0}");
+    test_assertstr(corto_fullpath(NULL, o->type), "list[int32,0]");
     test_assert(o->value != NULL);
     test_assert(o->owner == TRUE);
 

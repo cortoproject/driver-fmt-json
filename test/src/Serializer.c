@@ -18,7 +18,7 @@ void test_Serializer_tc_serAnyCollection(
     o->owner = FALSE;
 
     corto_string s = json_fromCorto(o);
-    test_assertstr(s, "{\"type\":\"list{int32,0}\",\"value\":[10,20,30]}");
+    test_assertstr(s, "{\"type\":\"list[int32,0]\",\"value\":[10,20,30]}");
 
 }
 
@@ -433,7 +433,7 @@ void test_Serializer_tc_serReferenceAnonymousCollectionAnonymousType(
 {
 
     corto_string s = json_fromCorto(test_referenceAnonymousCollectionAnonymousType_o);
-    test_assertstr(s, "{\"r\":{\"type\":\"array{int32,2}\",\"value\":[10,20]}}");
+    test_assertstr(s, "{\"r\":{\"type\":\"array[int32,2]\",\"value\":[10,20]}}");
     corto_dealloc(s);
 }
 
