@@ -23,6 +23,9 @@ void json_splitId(
     char** id_out)
 {
     char *ptr = strrchr(fullpath, '/');
+    if (!ptr) {
+        ptr = strrchr(fullpath, '.');
+    }
     if (ptr) {
         *id_out = ptr + 1;
         *parent_out = fullpath;
