@@ -38,7 +38,7 @@ void test_DeserializeObject_tc_deserCollection(
         "   \"value\":[10, 20, 30]"
         "}";
 
-    corto_ll *dst = NULL;
+    ut_ll *dst = NULL;
     int16_t ret = corto_deserialize(&dst, "text/json", json);
     test_assert(ret == 0);
     test_assert(dst != NULL);
@@ -48,10 +48,10 @@ void test_DeserializeObject_tc_deserCollection(
     test_assertstr(corto_idof(dst), "obj");
     test_assert(corto_typeof(dst) == (corto_type)test_intList_o);
     test_assert(corto_parentof(dst) == data_o);
-    test_assert(corto_ll_count(*dst) == 3);
-    test_assert((intptr_t)corto_ll_get(*dst, 0) == 10);
-    test_assert((intptr_t)corto_ll_get(*dst, 1) == 20);
-    test_assert((intptr_t)corto_ll_get(*dst, 2) == 30);
+    test_assert(ut_ll_count(*dst) == 3);
+    test_assert((intptr_t)ut_ll_get(*dst, 0) == 10);
+    test_assert((intptr_t)ut_ll_get(*dst, 1) == 20);
+    test_assert((intptr_t)ut_ll_get(*dst, 2) == 30);
     test_assert(corto_check_state(dst, CORTO_VALID));
 
     test_assert(corto_delete(dst) == 0);
@@ -293,7 +293,7 @@ void test_DeserializeObject_tc_deserAnonymousCollection(
         "   \"value\":[10, 20, 30]"
         "}";
 
-    corto_ll *dst = NULL;
+    ut_ll *dst = NULL;
     int16_t ret = corto_deserialize(&dst, "text/json", json);
     test_assert(ret == 0);
     test_assert(dst != NULL);
@@ -306,10 +306,10 @@ void test_DeserializeObject_tc_deserAnonymousCollection(
     test_assert(corto_collection(type)->kind == CORTO_LIST);
     test_assert(corto_collection(type)->element_type == (corto_type)corto_int32_o);
     test_assert(corto_parentof(dst) == data_o);
-    test_assert(corto_ll_count(*dst) == 3);
-    test_assert((intptr_t)corto_ll_get(*dst, 0) == 10);
-    test_assert((intptr_t)corto_ll_get(*dst, 1) == 20);
-    test_assert((intptr_t)corto_ll_get(*dst, 2) == 30);
+    test_assert(ut_ll_count(*dst) == 3);
+    test_assert((intptr_t)ut_ll_get(*dst, 0) == 10);
+    test_assert((intptr_t)ut_ll_get(*dst, 1) == 20);
+    test_assert((intptr_t)ut_ll_get(*dst, 2) == 30);
     test_assert(corto_check_state(dst, CORTO_VALID));
 
     test_assert(corto_delete(dst) == 0);
@@ -381,7 +381,7 @@ void test_DeserializeObject_tc_deserDefaultValue(
         "   \"type\":\"list{int32}\""
         "}";
 
-    corto_ll *dst = NULL;
+    ut_ll *dst = NULL;
     int16_t ret = corto_deserialize(&dst, "text/json", json);
     test_assert(ret == 0);
     test_assert(dst != NULL);
@@ -393,7 +393,7 @@ void test_DeserializeObject_tc_deserDefaultValue(
     test_assert(type->kind == CORTO_COLLECTION);
     test_assert(corto_collection(type)->kind == CORTO_LIST);
     test_assert(corto_collection(type)->element_type == (corto_type)corto_int32_o);
-    test_assert(corto_ll_count(*dst) == 0);
+    test_assert(ut_ll_count(*dst) == 0);
     test_assert(corto_parentof(dst) == data_o);
     test_assert(corto_check_state(dst, CORTO_VALID));
 
@@ -474,9 +474,9 @@ void test_DeserializeObject_tc_deserNotAType(
         "   \"type\":\"/data\""
         "}";
 
-    corto_ll *dst = NULL;
+    ut_ll *dst = NULL;
     int16_t ret = corto_deserialize(&dst, "text/json", json);
-    corto_catch();
+    ut_catch();
 
     test_assert(ret != 0);
     test_assert(dst == NULL);
@@ -499,7 +499,7 @@ void test_DeserializeObject_tc_deserUnresolvedChildType(
 
     test_DefaultType *parent = NULL;
     int16_t ret = corto_deserialize(&parent, "text/json", json);
-    corto_catch();
+    ut_catch();
 
     test_assert(ret != 0);
     test_assert(parent == NULL);
@@ -517,9 +517,9 @@ void test_DeserializeObject_tc_deserUnresolvedType(
         "   \"type\":\"/data/does_not_exist\""
         "}";
 
-    corto_ll *dst = NULL;
+    ut_ll *dst = NULL;
     int16_t ret = corto_deserialize(&dst, "text/json", json);
-    corto_catch();
+    ut_catch();
 
     test_assert(ret != 0);
     test_assert(dst == NULL);
@@ -541,7 +541,7 @@ void test_DeserializeObject_tc_deserMismatchParentType(
 
     test_DefaultType *parent = NULL;
     int16_t ret = corto_deserialize(&parent, "text/json", json);
-    corto_catch();
+    ut_catch();
 
     test_assert(ret != 0);
     test_assert(parent == NULL);

@@ -45,7 +45,7 @@ corto_object json_declare(
 {
     corto_object o = NULL;
 
-    corto_assert(type != NULL, "NULL provided for type");
+    ut_assert(type != NULL, "NULL provided for type");
 
     if (r->id && r->parent) {
         corto_id fullId;
@@ -56,7 +56,7 @@ corto_object json_declare(
         }
         o = corto_declare(parent ? parent : root_o, fullId, type);
         if (!o) {
-            corto_throw("failed to create '%s'", fullId);
+            ut_throw("failed to create '%s'", fullId);
             goto error;
         }
     } else {
@@ -77,13 +77,13 @@ int16_t json_toResultMeta(
     corto_string json)
 {
     if (!topValue) {
-        corto_throw("error parsing '%s'", json);
+        ut_throw("error parsing '%s'", json);
         goto error;
     }
 
     JSON_Object* topObject = json_value_get_object(topValue);
     if (!topObject) {
-        corto_throw("'%s' is not a JSON object", json);
+        ut_throw("'%s' is not a JSON object", json);
         goto error;
     }
 
@@ -132,11 +132,11 @@ int16_t json_toResultMeta(
             corto_release(parent);
         }
         if (!type) {
-            corto_throw("missing 'type' field for '%s' in '%s'", r->id, json);
+            ut_throw("missing 'type' field for '%s' in '%s'", r->id, json);
             goto error;
         } else {
             corto_id id;
-            r->type = corto_strdup(corto_fullpath(id, type));
+            r->type = ut_strdup(corto_fullpath(id, type));
         }
     }
 
@@ -155,7 +155,7 @@ int16_t json_toResult(
     corto_id id_buffer;
 
     if (!topValue) {
-        corto_throw("error parsing JSON %s", json);
+        ut_throw("error parsing JSON %s", json);
         goto error;
     }
 
@@ -164,9 +164,9 @@ int16_t json_toResult(
         goto error_toResultMeta;
     }
 
-    r->id = corto_strdup(r->id);
-    r->parent = corto_strdup(r->parent);
-    r->type = corto_strdup(r->type);
+    r->id = ut_strdup(r->id);
+    r->parent = ut_strdup(r->parent);
+    r->type = ut_strdup(r->type);
 
     JSON_Object *object = json_value_get_object(topValue);
     JSON_Value *value = json_object_get_value(object, "value");
@@ -215,7 +215,7 @@ int16_t json_serialize_children(
         if (json_serialize_child_from_JSON_Value(
             parent, NULL, child, parent_defined, json, opt))
         {
-            corto_throw(NULL);
+            ut_throw(NULL);
             goto error;
         }
     }
@@ -249,11 +249,11 @@ int16_t json_serialize_child_from_JSON_Value(
     /* Resolve type */
     corto_type type = corto_resolve(NULL, r.type);
     if (!type) {
-        corto_throw("cannot find '%s' ('%s')", r.type, json);
+        ut_throw("cannot find '%s' ('%s')", r.type, json);
         goto error;
     }
     if (!corto_instanceof(corto_type_o, type)) {
-        corto_throw("'%s' is not a type ('%s')", r.type, json);
+        ut_throw("'%s' is not a type ('%s')", r.type, json);
         goto errorDeclare;
     }
 
@@ -286,7 +286,7 @@ int16_t json_serialize_child_from_JSON_Value(
         newObject = TRUE;
     } else {
         if (corto_typeof(*o) != type) {
-            corto_throw("object '%s' is not of type '%s' ('%s')",
+            ut_throw("object '%s' is not of type '%s' ('%s')",
               corto_fullpath(NULL, *o),
               corto_fullpath(NULL, type),
               json);
@@ -301,13 +301,13 @@ int16_t json_serialize_child_from_JSON_Value(
     if (result) {
         /* Cannot serialize to builtin objects */
         if (corto_isbuiltin(result)) {
-            corto_throw("cannot deserialize JSON to builtin object '%s'",
+            ut_throw("cannot deserialize JSON to builtin object '%s'",
                 corto_fullpath(NULL, result));
             goto error_toResultMeta;
         }
     } else {
         /* Failed to create a new object */
-        corto_throw("failed to create JSON object from '%s'", json);
+        ut_throw("failed to create JSON object from '%s'", json);
         goto error_toResultMeta;
     }
 

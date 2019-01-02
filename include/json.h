@@ -6,7 +6,7 @@
 #ifndef CORTO_FMT_JSON_H
 #define CORTO_FMT_JSON_H
 
-#include <corto/corto.h>
+#include <corto>
 
 #ifdef __cplusplus
 extern "C" {

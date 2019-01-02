@@ -29,7 +29,7 @@ int16_t json_serializeReference(
 
             corto_fullpath(full, object);
             if (data->opt) {
-                corto_path_offset(idbuff, data->opt->from, full, -1, false);
+                ut_path_offset(idbuff, data->opt->from, full, -1, false);
                 id = idbuff;
             }
 
@@ -38,7 +38,7 @@ int16_t json_serializeReference(
                 corto_alloc((length = stresc(NULL, 0, '"', id)) + 1);
             stresc(escapedValue, length + 1, '"', id);
 
-            if (!corto_buffer_append(
+            if (!ut_strbuf_append(
                 data->buffer, "\"%s\"", escapedValue))
             {
                 corto_dealloc(escapedValue);
@@ -50,7 +50,7 @@ int16_t json_serializeReference(
             corto_id type;
             corto_fullpath(type, corto_typeof(object));
 
-            if (!corto_buffer_append(
+            if (!ut_strbuf_append(
                 data->buffer, "{\"type\":\"%s\",\"value\":", type))
             {
                 goto finished;
@@ -58,12 +58,12 @@ int16_t json_serializeReference(
             if (corto_walk(s, object, data)) {
                 goto error;
             }
-            if (!corto_buffer_appendstr(data->buffer, "}")) {
+            if (!ut_strbuf_appendstr(data->buffer, "}")) {
                 goto finished;
             }
         }
     } else {
-        if (!corto_buffer_appendstr(data->buffer, "null")) {
+        if (!ut_strbuf_appendstr(data->buffer, "null")) {
             goto finished;
         }
     }
@@ -78,7 +78,7 @@ error:
 /* Serialize number */
 static
 int16_t json_serializeNumber(
-    corto_buffer *buf,
+    ut_strbuf *buf,
     corto_value *value,
     json_ser_t *data)
 {
@@ -104,7 +104,7 @@ int16_t json_serializeNumber(
         corto_set_str(&str, "null");
     }
 
-    corto_buffer_appendstr_zerocpy(buf, str);
+    ut_strbuf_appendstr_zerocpy(buf, str);
 
     return result;
 }
@@ -112,7 +112,7 @@ int16_t json_serializeNumber(
 /* Serialize enum value */
 static
 int16_t json_serializeEnum(
-    corto_buffer *buf,
+    ut_strbuf *buf,
     corto_value *value,
     json_ser_t *data)
 {
@@ -120,13 +120,13 @@ int16_t json_serializeEnum(
     corto_type t = corto_value_typeof(value);
     corto_constant *c = corto_enum_constant_from_value(t, *(corto_int32*)v);
     if (!c) {
-        corto_throw("failed to obtain enumeration constant");
+        ut_throw("failed to obtain enumeration constant");
         goto error;
     }
 
-    corto_buffer_appendstr(buf, "\"");
-    corto_buffer_appendstr(buf, corto_idof(c));
-    corto_buffer_appendstr(buf, "\"");
+    ut_strbuf_appendstr(buf, "\"");
+    ut_strbuf_appendstr(buf, corto_idof(c));
+    ut_strbuf_appendstr(buf, "\"");
 
     return 0;
 error:
@@ -136,7 +136,7 @@ error:
 /* Serialize bitmask value */
 static
 int16_t json_serializeBitmask(
-    corto_buffer *buf,
+    ut_strbuf *buf,
     corto_value *value,
     json_ser_t *data)
 {
@@ -144,16 +144,16 @@ int16_t json_serializeBitmask(
     corto_type t = corto_value_typeof(value);
     char *str = NULL;
 
-    corto_try (
+    ut_try (
       corto_ptr_cast(
         corto_primitive(t),
         v,
         corto_primitive(corto_string_o),
         &str), NULL);
 
-    corto_buffer_appendstr(buf, "\"");
-    corto_buffer_appendstr_zerocpy(buf, str);
-    corto_buffer_appendstr(buf, "\"");
+    ut_strbuf_appendstr(buf, "\"");
+    ut_strbuf_appendstr_zerocpy(buf, str);
+    ut_strbuf_appendstr(buf, "\"");
 
     return 0;
 error:
@@ -163,7 +163,7 @@ error:
 /* Serialize boolean value (PRIMITIVE) */
 static
 int16_t json_serializeBoolean(
-    corto_buffer *buf,
+    ut_strbuf *buf,
     corto_value *value,
     json_ser_t *data)
 {
@@ -171,9 +171,9 @@ int16_t json_serializeBoolean(
 
     bool b = *(bool*)corto_value_ptrof(value);
     if (b) {
-        corto_buffer_appendstr(buf, "true");
+        ut_strbuf_appendstr(buf, "true");
     } else {
-        corto_buffer_appendstr(buf, "false");
+        ut_strbuf_appendstr(buf, "false");
     }
 
     return 0;
@@ -182,7 +182,7 @@ int16_t json_serializeBoolean(
 /* Serialize text value (PRIMITIVE) */
 static
 int16_t json_serializeText(
-    corto_buffer *buf,
+    ut_strbuf *buf,
     corto_value *value,
     json_ser_t *data)
 {
@@ -206,19 +206,19 @@ int16_t json_serializeText(
             out[0] = '"';
             out[length + 1] = '"';
             out[length + 2] = '\0';
-            corto_buffer_appendstr_zerocpy(buf, out);
+            ut_strbuf_appendstr_zerocpy(buf, out);
         } else {
             /* If string is a verbatim JSON string, copy string as-is */
-            corto_buffer_appendstr_zerocpy_const(buf, str);
+            ut_strbuf_appendstr_zerocpy_const(buf, str);
         }
     } else if (kind == CORTO_CHARACTER) {
         char esc[3] = {*(char*)v, 0};
         chresc(esc, *esc, '"');
-        corto_buffer_appendstrn(buf, "\"", 1);
-        corto_buffer_appendstr(buf, esc);
-        corto_buffer_appendstrn(buf, "\"", 1);
+        ut_strbuf_appendstrn(buf, "\"", 1);
+        ut_strbuf_appendstr(buf, esc);
+        ut_strbuf_appendstrn(buf, "\"", 1);
     } else {
-        corto_buffer_appendstr(buf, "null");
+        ut_strbuf_appendstr(buf, "null");
     }
 
     return 0;
@@ -288,14 +288,14 @@ int16_t json_serializeComplex(
     privateData.itemCount = 0;
     privateData.opt = data->opt;
 
-    if (!corto_buffer_appendstr(
+    if (!ut_strbuf_appendstr(
             data->buffer, (useCurlyBraces ? "{" : "["))) {
         goto finished;
     }
     if (type->kind == CORTO_COMPOSITE) {
         if (corto_interface(type)->kind == CORTO_UNION) {
             int32_t *d = corto_value_ptrof(v);
-            corto_buffer_appendstr(data->buffer, "\"_d\":");
+            ut_strbuf_appendstr(data->buffer, "\"_d\":");
             corto_value discriminatorValue =
                 corto_value_ptr(d, corto_union(type)->discriminator);
             if (json_serializePrimitive(s, &discriminatorValue, &privateData)) {
@@ -314,7 +314,7 @@ int16_t json_serializeComplex(
         goto error;
     }
 
-    if (!corto_buffer_appendstr(
+    if (!ut_strbuf_appendstr(
         data->buffer, (useCurlyBraces ? "}" : "]")))
     {
         goto finished;
@@ -339,7 +339,7 @@ int16_t json_serializeVoid(
     CORTO_UNUSED(s);
     CORTO_UNUSED(v);
 
-    if (!corto_buffer_appendstr(data->buffer, "{}")) {
+    if (!ut_strbuf_appendstr(data->buffer, "{}")) {
         goto finished;
     }
 
@@ -362,7 +362,7 @@ int16_t json_serializeAny(
     CORTO_UNUSED(s);
     CORTO_UNUSED(v);
 
-    if (!corto_buffer_append(
+    if (!ut_strbuf_append(
         data->buffer,
         "{\"type\":\"%s\",\"value\":",
         corto_fullpath(NULL, ptr->type)))
@@ -375,7 +375,7 @@ int16_t json_serializeAny(
         goto done;
     }
 
-    if (!corto_buffer_appendstr( data->buffer, "}")) {
+    if (!ut_strbuf_appendstr( data->buffer, "}")) {
         goto finished;
     }
 
@@ -394,13 +394,13 @@ int16_t json_serializeItem(
 {
     json_ser_t *data = userData;
 
-    if (data->itemCount && !corto_buffer_appendstr(data->buffer, ",")) {
+    if (data->itemCount && !ut_strbuf_appendstr(data->buffer, ",")) {
         goto finished;
     }
     if (info->kind == CORTO_MEMBER) {
         corto_member member = info->is.member.member;
         corto_string name = corto_idof(member);
-        if (!corto_buffer_append(data->buffer, "\"%s\":", name)) {
+        if (!ut_strbuf_append(data->buffer, "\"%s\":", name)) {
             goto finished;
         }
     }
@@ -426,7 +426,7 @@ int16_t json_serializeBase(
 {
     json_ser_t *data = userData;
 
-    if (!corto_buffer_append(data->buffer, "\"super\":")) {
+    if (!ut_strbuf_append(data->buffer, "\"super\":")) {
         goto finished;
     }
     if (corto_walk_value(s, v, userData)) {
@@ -455,7 +455,7 @@ int16_t json_serializeObject(
             goto error;
         }
      } else {
-        if (!corto_buffer_appendstr(data->buffer, "")) {
+        if (!ut_strbuf_appendstr(data->buffer, "")) {
             goto finished;
         }
      }
@@ -499,18 +499,18 @@ char* json_serialize(
     corto_value *v,
     corto_fmt_opt *opt)
 {
-    corto_log_push("json");
+    ut_log_push("json");
     corto_walk_opt serializer = json_ser(
       CORTO_LOCAL, CORTO_NOT, CORTO_WALK_TRACE_NEVER
     );
     serializer.aliasAction = CORTO_WALK_ALIAS_IGNORE;
     serializer.optionalAction = CORTO_WALK_OPTIONAL_IF_SET;
-    corto_buffer b = CORTO_BUFFER_INIT;
+    ut_strbuf b = UT_STRBUF_INIT;
     json_ser_t jsonData = {&b, 0, opt};
 
     corto_walk_value(&serializer, v, &jsonData);
-    corto_string result = corto_buffer_str(jsonData.buffer);
-    corto_debug("serialized %s", result);
-    corto_log_pop();
+    corto_string result = ut_strbuf_get(jsonData.buffer);
+    ut_debug("serialized %s", result);
+    ut_log_pop();
     return result;
 }
