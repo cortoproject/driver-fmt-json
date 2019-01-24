@@ -875,7 +875,7 @@ int16_t json_deserialize(
     ut_log_push("json");
     ut_debug("deserialize string %s", json);
 
-    JSON_Value *jsonValue = json_parse_string(json);
+    JSON_Value *jsonValue = json_parse_string_with_comments(json);
     if (!jsonValue) {
         ut_throw("invalid JSON '%s'", json);
         goto error;

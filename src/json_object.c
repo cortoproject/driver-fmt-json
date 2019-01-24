@@ -151,7 +151,7 @@ int16_t json_toResult(
     corto_record *r,
     corto_string json)
 {
-    JSON_Value* topValue = json_parse_string(json);
+    JSON_Value* topValue = json_parse_string_with_comments(json);
     corto_id id_buffer;
 
     if (!topValue) {

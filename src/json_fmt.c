@@ -9,7 +9,7 @@ int16_t json_toObject(
     corto_object *o,
     char *json)
 {
-    JSON_Value* topValue = json_parse_string(json);
+    JSON_Value* topValue = json_parse_string_with_comments(json);
     if (!topValue) {
         ut_throw("failed to parse '%s'", json);
         goto error;
