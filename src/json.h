@@ -1,10 +1,10 @@
 
-#include <driver/fmt/json/json.h>
-#include <parson/parson.h>
+#include <driver.fmt.json>
+#include <parson>
 
 /* JSON serializer data */
 typedef struct json_ser_t {
-    corto_buffer *buffer;
+    ut_strbuf *buffer;
     unsigned int itemCount;
     corto_fmt_opt *opt;
 } json_ser_t;

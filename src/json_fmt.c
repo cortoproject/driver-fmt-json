@@ -9,9 +9,9 @@ int16_t json_toObject(
     corto_object *o,
     char *json)
 {
-    JSON_Value* topValue = json_parse_string(json);
+    JSON_Value* topValue = json_parse_string_with_comments(json);
     if (!topValue) {
-        corto_throw("failed to parse '%s'", json);
+        ut_throw("failed to parse '%s'", json);
         goto error;
     }
 
@@ -24,7 +24,7 @@ int16_t json_toObject(
             JSON_Value *elem = json_array_get_value(array, i);
 
             if (json_value_get_type(elem) != JSONObject) {
-                corto_throw(
+                ut_throw(
                     "invalid element in JSON array, expected object");
                 goto error;
             }
@@ -53,15 +53,15 @@ corto_string json_fromObject(
     corto_fmt_opt* opt,
     corto_object o)
 {
-    corto_buffer buff = CORTO_BUFFER_INIT;
-    corto_buffer_appendstr(&buff, "{");
+    ut_strbuf buff = UT_STRBUF_INIT;
+    ut_strbuf_appendstr(&buff, "{");
 
-    corto_buffer_append(
+    ut_strbuf_append(
         &buff, "\"type\":\"%s\"", corto_fullpath(NULL, corto_typeof(o)));
 
     if (corto_check_attr(o, CORTO_ATTR_NAMED)) {
-        corto_buffer_append(&buff, ",\"id\":\"%s\"", corto_idof(o));
-        corto_buffer_append(
+        ut_strbuf_append(&buff, ",\"id\":\"%s\"", corto_idof(o));
+        ut_strbuf_append(
             &buff, ",\"parent\":\"%s\"",
             corto_fullpath(NULL, corto_parentof(o)));
     }
@@ -69,13 +69,13 @@ corto_string json_fromObject(
     if (corto_typeof(o)->kind != CORTO_VOID) {
         corto_value v = corto_value_object(o, NULL);
         corto_string json = json_serialize(&v, opt);
-        corto_buffer_append(&buff, ",\"value\":%s", json);
+        ut_strbuf_append(&buff, ",\"value\":%s", json);
         corto_dealloc(json);
     }
 
-    corto_buffer_appendstr(&buff, "}");
+    ut_strbuf_appendstr(&buff, "}");
 
-    return corto_buffer_str(&buff);
+    return ut_strbuf_get(&buff);
 }
 
 /* Serialize corto_value to JSON */
@@ -99,7 +99,7 @@ int16_t json_toValue(
 char* json_copy(
     char *json)
 {
-    return corto_strdup(json);
+    return ut_strdup(json);
 }
 
 /* Free JSON string */
